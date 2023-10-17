@@ -1,18 +1,20 @@
 package com.douzon.blooming.employee.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.io.File;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
-public class EmployeeDto {
-    private Integer employeeNo;
+@AllArgsConstructor
+public class RequestEmployeeDto {
+    private Long employeeNo;
     private String id;
     private String password;
     private String name;
-    private File img;
+    private Byte[] img;
+    private Long role;
     private String tel;
     private String email;
 }
