@@ -1,5 +1,6 @@
 package com.douzon.blooming.employee.controller;
 
+import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.RequestEmployeeDto;
 import com.douzon.blooming.employee.dto.request.LoginDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
@@ -69,7 +70,7 @@ public class EmployeeController {
     @GetMapping("/id-check")
     public ResponseEntity<Void> idCheck(String id){
         return ResponseEntity
-                .status(employeeService.idCheck(id) ? HttpStatus.OK : HttpStatus.UNAUTHORIZED)
+                .status(!employeeService.idCheck(id).isEmpty() ? HttpStatus.OK : HttpStatus.UNAUTHORIZED)
                 .build();
     }
 
@@ -85,6 +86,7 @@ public class EmployeeController {
      */
     @PostMapping("/insert")
     public ResponseEntity<Void> insertEmployee(RequestEmployeeDto dto){
+        // 추후 Security적용 관리자 권한 check
         employeeService.insertEmployee(new RequestEmployeeDto(dto.getEmployeeNo(),
                                                             dto.getId(),
                                                             dto.getPassword(),
@@ -100,18 +102,9 @@ public class EmployeeController {
      * 조회(list, list(search), id)
      */
     @GetMapping("/list")
-    public ResponseEntity<List<ResponseListEmployeeDto>> getAllEmployeeList(){
+    public ResponseEntity<List<ResponseListEmployeeDto>> getAllEmployeeList(EmployeeSearchDto searchDto){
+        employeeService.getEmployeeListWithFilter(searchDto);
         return null;
-    }
-
-    @GetMapping("/list-by-search")
-    public ResponseEntity<List<ResponseListEmployeeDto>> getEmployeeListByNo(Long employeeNo){
-        return null;
-    }
-
-    @GetMapping("/{employeeNo}")
-    public ResponseEntity<ResponseEmployeeDto> getEmployeeByNo(@PathVariable Long employeeNo){
-        return new ResponseEntity<>(employeeService.getEmployeeByNo(employeeNo), HttpStatus.OK);
     }
 
     /**
@@ -119,45 +112,50 @@ public class EmployeeController {
      */
     @DeleteMapping("/delete-employee")
     public ResponseEntity<Void> deleteEmployee(Long employeeNo){
-        // 추후 Security와 함께 관리자 권한 check
+        // 추후 Security적용 관리자 권한 check
         employeeService.deleteEmployee(employeeNo);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
     /**
      * 수정(id, password, name, img, tel, email)
      */
     @PutMapping("/{employeeNo}/update-id")
     public ResponseEntity<Void> updateId(@PathVariable Long employeeNo, String id){
-        // 추후 Security와 함께 관리자 권한 check
-        return null;
+        // 추후 Security적용 관리자 권한 check
+        employeeService.updateId(employeeNo, id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{employeeNo}/update-name")
     public ResponseEntity<Void> updateName(@PathVariable Long employeeNo, String name){
-        // 추후 Security와 함께 관리자 권한 check
-        return null;
+        // 추후 Security적용 관리자 권한 check
+        employeeService.updateName(employeeNo, name);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{employeeNo}/update-password")
     public ResponseEntity<Void> updatePassword(@PathVariable Long employeeNo, String password){
-        return null;
+        employeeService.updatePassword(employeeNo, password);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{employeeNo}/update-img")
     public ResponseEntity<Void> updateImg(@PathVariable Long employeeNo, String img){
-        return null;
+        employeeService.updateImg(employeeNo, img);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{employeeNo}/update-tel")
     public ResponseEntity<Void> updateTel(@PathVariable Long employeeNo, String tel){
-        return null;
+        employeeService.updateTel(employeeNo, tel);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{employeeNo}/update-email")
     public ResponseEntity<Void> updateEmail(@PathVariable Long employeeNo, String email){
-        return null;
+        employeeService.updateEmail(employeeNo, email);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 

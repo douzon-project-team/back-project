@@ -1,12 +1,15 @@
 package com.douzon.blooming.employee.service;
 
+import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.LoginDto;
 import com.douzon.blooming.employee.dto.request.RequestEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
+import com.douzon.blooming.employee.dto.response.ResponseListEmployeeDto;
 import com.douzon.blooming.employee.repo.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -26,8 +29,8 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public boolean idCheck(String id) {
-        return employeeRepository.idCheck(id) != null;
+    public String idCheck(String id) {
+        return employeeRepository.idCheck(id);
     }
 
     @Override
@@ -36,13 +39,39 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public ResponseEmployeeDto getEmployeeByNo(Long employeeNo) {
-        return employeeRepository.getEmployeeByNo(employeeNo);
+    public List<ResponseListEmployeeDto> getEmployeeListWithFilter(EmployeeSearchDto dto) {
+        return employeeRepository.getEmployeeListWithFilter(dto);
+    }
+
+
+    @Override
+    public void updateId(Long employeeNo, String id) {
+        employeeRepository.updateId(employeeNo, id);
     }
 
     @Override
-    public void updateEmployee(RequestEmployeeDto dto) {
-        employeeRepository.updateEmployee(dto);
+    public void updateName(Long employeeNo, String name) {
+        employeeRepository.updateName(employeeNo, name);
+    }
+
+    @Override
+    public void updatePassword(Long employeeNo, String password) {
+        employeeRepository.updatePassword(employeeNo, password);
+    }
+
+    @Override
+    public void updateImg(Long employeeNo, String img) {
+        employeeRepository.updateImg(employeeNo, img);
+    }
+
+    @Override
+    public void updateTel(Long employeeNo, String tel) {
+        employeeRepository.updateTel(employeeNo, tel);
+    }
+
+    @Override
+    public void updateEmail(Long employeeNo, String email) {
+        employeeRepository.updateEmail(employeeNo, email);
     }
 
     @Override
