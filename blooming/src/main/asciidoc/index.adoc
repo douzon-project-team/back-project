@@ -1,0 +1,20 @@
+= Blooming Service Rest Docs
+douzone project 5 team
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[Product]]
+== Product API
+
+=== Product 추가
+
+operation::/product-controller-test/add-product[snippets='http-request,http-response']
+
+
+=== Product 조회
+
+operation::/product-controller-test/get-product[snippets='http-request,path-parameters,http-response,response-fields']
