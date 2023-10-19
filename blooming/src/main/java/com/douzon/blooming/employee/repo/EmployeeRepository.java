@@ -3,11 +3,13 @@ package com.douzon.blooming.employee.repo;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.LoginDto;
 import com.douzon.blooming.employee.dto.request.RequestEmployeeDto;
+import com.douzon.blooming.employee.dto.response.ListEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseListEmployeeDto;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface EmployeeRepository {
@@ -22,30 +24,75 @@ public interface EmployeeRepository {
     @Select("SELECT id FROM employee WHERE id = #{id}")
     String idCheck(String id);
 
-    @Select("SELECT employee_no as employeeNo FROM employee WHERE employee_no = #{employeeId}")
+    @Select("SELECT employee_no FROM employee WHERE employee_no = #{employeeId}")
     Long employeeNoCheck(Long employeeNo);
 
-    @Select("SELECT employee_no, id, password, name, img, role, tel, email" +
+
+    @Select("SELECT employee_no, id, password, name, img, tel, email " +
             "FROM employee WHERE employee_no = #{employeeId}")
-    @ResultType(ResponseEmployeeDto.class)
-    ResponseEmployeeDto getEmployeeByNo(Long employeeNo);
+    Optional<ResponseEmployeeDto> findEmployeeByNo(Long employeeNo);
+
+    @Select("<script>" +
+            "SELECT COUNT(*)" +
+            "<where>" +
+                "<if test='employeeNo != null'>" +
+                    "employee_no LIKE CONCAT('%', #{dto.employeeNo}, '%')" +
+                "</if>" +
+                "<if test='name != null and name != \"\"'>" +
+                    "<choose>" +
+                        "<when test='employee == null'>" +
+                            "name LIKE CONCAT('%', #{dto.name}, '%')" +
+                        "</when>"+
+                        "<otherwise>"+
+                            "And name LIKE CONCAT('%', #{dto.name}, '%')" +
+                        "</otherwise>"+
+                    "</choose>"+
+                "</if>" +
+                "<if test='role != null and role != \"\"'>" +
+                    "<choose>" +
+                        "<when test='employee == null and name == null'>" +
+                            "role = #{dto.role}" +
+                        "</when>"+
+                        "<otherwise>"+
+                            "And role = #{dto.role}" +
+                        "</otherwise>"+
+                    "</choose>"+
+                "</if>" +
+            "</where>" +
+            "</script>")
+    Integer getCountEmployees(EmployeeSearchDto dto);
 
     @Select("<script>" +
             "SELECT employee_no as employeeNo, name, tel, email, role  FROM employee" +
             "<where>" +
-            "<if test='employeeNo != null'>" +
-            "employee_no LIKE CONCAT('%', #{employeeNo}, '%')" +
-            "</if>" +
-            "<if test='name != null and name != \"\"'>" +
-            " AND name LIKE CONCAT('%', #{name}, '%')" +
-            "</if>" +
-            "<if test='role != null and role != \"\"'>" +
-            " AND role = #{role}" +
-            "</if>" +
+                "<if test='employeeNo != null'>" +
+                    "employee_no LIKE CONCAT('%', #{dto.employeeNo}, '%')" +
+                "</if>" +
+                "<if test='name != null and name != \"\"'>" +
+                    "<choose>" +
+                        "<when test='employee == null'>" +
+                            "name LIKE CONCAT('%', #{dto.name}, '%')" +
+                        "</when>"+
+                        "<otherwise>"+
+                             "And name LIKE CONCAT('%', #{dto.name}, '%')" +
+                        "</otherwise>"+
+                    "</choose>"+
+                "</if>" +
+                "<if test='role != null and role != \"\"'>" +
+                    "<choose>" +
+                        "<when test='employee == null and name == null'>" +
+                            "role = #{dto.role}" +
+                    "</when>"+
+                        "<otherwise>"+
+                            "And role = #{dto.role}" +
+                        "</otherwise>"+
+                    "</choose>"+
+                "</if>" +
             "</where>" +
+            "LIMIT #{start}, #{pageSize}" +
             "</script>")
-    @ResultType(ResponseListEmployeeDto.class)
-    List<ResponseListEmployeeDto> getEmployeeListWithFilter(EmployeeSearchDto dto);
+    @ResultType(ListEmployeeDto.class)
+    List<ListEmployeeDto> findEmployeeListWithFilter(EmployeeSearchDto dto, int page, int size);
 
 
     @Update("UPDATE employee SET id = #{id} WHERE employee_no = #{employeeNo}")

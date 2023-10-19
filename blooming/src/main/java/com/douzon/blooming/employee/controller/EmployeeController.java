@@ -3,6 +3,7 @@ package com.douzon.blooming.employee.controller;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.RequestEmployeeDto;
 import com.douzon.blooming.employee.dto.request.LoginDto;
+import com.douzon.blooming.employee.dto.response.ListEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseListEmployeeDto;
 import com.douzon.blooming.employee.service.EmployeeService;
@@ -101,10 +102,19 @@ public class EmployeeController {
     /**
      * 조회(list, list(search), id)
      */
+
+    @GetMapping("/{employeeNo}")
+    public ResponseEntity<ResponseEmployeeDto> getEmployeeByNo(@PathVariable Long employeeNo){
+        return
+                new ResponseEntity<>(employeeService.findEmployeeByNo(employeeNo), HttpStatus.OK);
+    }
+
     @GetMapping("/list")
-    public ResponseEntity<List<ResponseListEmployeeDto>> getAllEmployeeList(EmployeeSearchDto searchDto){
-        employeeService.getEmployeeListWithFilter(searchDto);
-        return null;
+    public ResponseEntity<ResponseListEmployeeDto> findEmployeeList(EmployeeSearchDto searchDto,
+                                                                    @RequestParam(defaultValue = "1") int page,
+                                                                    @RequestParam(defaultValue = "8") int size){
+
+        return new ResponseEntity<>(employeeService.findEmployeeListWithFilter(searchDto, page, size), HttpStatus.OK);
     }
 
     /**

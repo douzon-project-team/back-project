@@ -12,8 +12,7 @@ public class ResponseEmployeeDto {
     private String id;
     private String password;
     private String name;
-    private Byte[] img;
-    private Long role;
+    private String img;
     private String tel;
     private String email;
 }

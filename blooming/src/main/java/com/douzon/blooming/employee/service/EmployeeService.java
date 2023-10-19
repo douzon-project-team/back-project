@@ -16,7 +16,9 @@ public interface EmployeeService {
     String idCheck(String id);
     boolean employeeNoCheck(Long employeeNo);
 
-    List<ResponseListEmployeeDto> getEmployeeListWithFilter(EmployeeSearchDto dto);
+    ResponseEmployeeDto findEmployeeByNo(Long employeeNo);
+
+    ResponseListEmployeeDto findEmployeeListWithFilter(EmployeeSearchDto dto, int page, int size);
 
     void updateId(Long employeeNo, String id);
     void updateName(Long employeeNo, String name);

@@ -7,6 +7,13 @@ douzone project 5 team
 :toclevels: 2
 :sectlinks:
 
+[[Employee]]
+== Employee API
+
+=== Employee 조회
+
+operation::/employee-controller-test/find-employee-by-no[snippets='http-request,path-parameters,http-response,response-fields']
+
 [[Product]]
 == Product API
 
@@ -18,3 +25,4 @@ operation::/product-controller-test/add-product[snippets='http-request,http-resp
 === Product 조회
 
 operation::/product-controller-test/get-product[snippets='http-request,path-parameters,http-response,response-fields']
+

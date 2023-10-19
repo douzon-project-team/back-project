@@ -3,11 +3,14 @@ package com.douzon.blooming.employee.service;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.LoginDto;
 import com.douzon.blooming.employee.dto.request.RequestEmployeeDto;
+import com.douzon.blooming.employee.dto.response.ListEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseListEmployeeDto;
+import com.douzon.blooming.employee.exception.EmployeeNotFoundException;
 import com.douzon.blooming.employee.repo.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -39,8 +42,21 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public List<ResponseListEmployeeDto> getEmployeeListWithFilter(EmployeeSearchDto dto) {
-        return employeeRepository.getEmployeeListWithFilter(dto);
+    public ResponseEmployeeDto findEmployeeByNo(Long employeeNo) {
+        return employeeRepository.findEmployeeByNo(employeeNo)
+                .orElseThrow(EmployeeNotFoundException :: new);
+    }
+
+    @Override
+    public ResponseListEmployeeDto findEmployeeListWithFilter(EmployeeSearchDto dto, int page, int pageSize) {
+        int start = (page - 1) * pageSize;
+        List<ListEmployeeDto> employeeList = employeeRepository.findEmployeeListWithFilter(dto, start, pageSize);
+        int searchEmployeeCount = employeeRepository.getCountEmployees(dto);
+
+        boolean hasNextPage = pageSize < searchEmployeeCount;
+        boolean hasPreviousPage = start > 0;
+
+        return new ResponseListEmployeeDto(employeeList, page, hasNextPage, hasPreviousPage);
     }
 
 
