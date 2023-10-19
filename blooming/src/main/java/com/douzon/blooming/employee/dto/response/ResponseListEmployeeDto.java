@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseListEmployeeDto {
-    private Long employeeNo;
-    private String name;
-    private Long role;
-    private String tel;
-    private String email;
+    private List<ListEmployeeDto> employeeList;
+    private Integer currentPage;
+    private boolean hasNextPage;
+    private boolean hasPreviousPage;
 }
