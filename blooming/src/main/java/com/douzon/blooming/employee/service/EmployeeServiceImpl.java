@@ -9,6 +9,7 @@ import com.douzon.blooming.employee.dto.response.ResponseListEmployeeDto;
 import com.douzon.blooming.employee.exception.EmployeeNotFoundException;
 import com.douzon.blooming.employee.repo.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,17 +18,21 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmployeeServiceImpl implements EmployeeService{
 
     private final EmployeeRepository employeeRepository;
 
     @Override
     public boolean login(LoginDto dto) {
+        log.error("password={}", employeeRepository.login(dto));
+        log.error(String.valueOf(Objects.equals(employeeRepository.login(dto), dto.getPassword())));
         return Objects.equals(employeeRepository.login(dto), dto.getPassword());
     }
 
     @Override
     public void insertEmployee(RequestEmployeeDto dto) {
+        log.error(String.valueOf(dto.getEmployeeNo()));
         employeeRepository.insertEmployee(dto);
     }
 
@@ -53,7 +58,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         List<ListEmployeeDto> employeeList = employeeRepository.findEmployeeListWithFilter(dto, start, pageSize);
         int searchEmployeeCount = employeeRepository.getCountEmployees(dto);
 
-        boolean hasNextPage = pageSize < searchEmployeeCount;
+        boolean hasNextPage = start + page < searchEmployeeCount;
         boolean hasPreviousPage = start > 0;
 
         return new ResponseListEmployeeDto(employeeList, page, hasNextPage, hasPreviousPage);

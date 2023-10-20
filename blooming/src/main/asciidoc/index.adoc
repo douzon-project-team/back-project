@@ -10,9 +10,21 @@ douzone project 5 team
 [[Employee]]
 == Employee API
 
+=== Employee 로그인
+
+operation::employee-controller-test/login[snippets='http-request,http-response']
+
+=== Employee 추가
+
+operation::/employee-controller-test/insert-employee[snippets='http-request,http-response']
+
 === Employee 조회
 
 operation::/employee-controller-test/find-employee-by-no[snippets='http-request,path-parameters,http-response,response-fields']
+
+=== EmployeeList 조회
+
+operation::/employee-controller-test/find-employee-list[snippets='http-request,http-response,response-fields']
 
 [[Product]]
 == Product API

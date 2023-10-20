@@ -8,6 +8,7 @@ import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseListEmployeeDto;
 import com.douzon.blooming.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/employees")
+@Slf4j
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -52,7 +54,7 @@ public class EmployeeController {
      * 로그인
      */
     @GetMapping("/login")
-    public ResponseEntity<Void> login(LoginDto dto){
+    public ResponseEntity<Void> login(@RequestBody LoginDto dto){
         return ResponseEntity
                 .status(employeeService.login(dto) ? HttpStatus.OK : HttpStatus.UNAUTHORIZED)
                 .build();
@@ -86,7 +88,7 @@ public class EmployeeController {
      * 사원 등록
      */
     @PostMapping("/insert")
-    public ResponseEntity<Void> insertEmployee(RequestEmployeeDto dto){
+    public ResponseEntity<Void> insertEmployee(@RequestBody RequestEmployeeDto dto){
         // 추후 Security적용 관리자 권한 check
         employeeService.insertEmployee(new RequestEmployeeDto(dto.getEmployeeNo(),
                                                             dto.getId(),
@@ -110,10 +112,9 @@ public class EmployeeController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<ResponseListEmployeeDto> findEmployeeList(EmployeeSearchDto searchDto,
-                                                                    @RequestParam(defaultValue = "1") int page,
-                                                                    @RequestParam(defaultValue = "8") int size){
-
+    public ResponseEntity<ResponseListEmployeeDto> findEmployeeList(@RequestBody EmployeeSearchDto searchDto,
+                                                                    @RequestParam(defaultValue = "1") Integer page,
+                                                                    @RequestParam(defaultValue = "8") Integer size){
         return new ResponseEntity<>(employeeService.findEmployeeListWithFilter(searchDto, page, size), HttpStatus.OK);
     }
 

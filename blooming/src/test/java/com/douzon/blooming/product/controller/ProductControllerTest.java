@@ -59,8 +59,8 @@ class ProductControllerTest {
   void getProduct() throws Exception {
     mockMvc.perform(get("/products/{productCode}", "VV0001")
             .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andDo(restDocs.document(
+            .andExpect(status().isOk())
+            .andDo(restDocs.document(
             pathParameters(
                 parameterWithName("productCode").description("제품 코드").attributes(field("constraints","길이 6 이하"))
             ),

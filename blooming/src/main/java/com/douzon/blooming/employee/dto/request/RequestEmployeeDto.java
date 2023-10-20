@@ -9,11 +9,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestEmployeeDto {
-    private Long employeeNo;
+    private Integer employeeNo;
     private String id;
     private String password;
     private String name;
-    private Byte[] img;
+    private String img;
     private Long role;
     private String tel;
     private String email;

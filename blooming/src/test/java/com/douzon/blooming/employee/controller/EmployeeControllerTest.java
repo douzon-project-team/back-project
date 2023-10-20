@@ -1,17 +1,16 @@
 package com.douzon.blooming.employee.controller;
 
-import static com.douzon.blooming.restdocs.RestDocsConfig.field;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.douzon.blooming.product.dto.request.RequestProductDto;
+import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
+import com.douzon.blooming.employee.dto.request.LoginDto;
+import com.douzon.blooming.employee.dto.request.RequestEmployeeDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,10 +47,32 @@ public class EmployeeControllerTest {
     public void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(documentationConfiguration(restDocumentation))
-                .alwaysDo(MockMvcResultHandlers.print()) // andDo(print()) 코드 포함 -> 3번 문제 해결
-                .alwaysDo(restDocs) // pretty 패턴과 문서 디렉토리 명 정해준것 적용
-                .addFilters(new CharacterEncodingFilter("UTF-8", true)) // 한글 깨짐 방지
+                .alwaysDo(MockMvcResultHandlers.print())
+                .alwaysDo(restDocs)
+                .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .build();
+    }
+
+    @Test
+    void login() throws Exception {
+        LoginDto loginMember = new LoginDto("user1", "password1");
+        mockMvc.perform(get("/employees/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginMember)))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+
+                )).andReturn();
+    }
+    @Test
+    void insertEmployee() throws Exception {
+        RequestEmployeeDto dto = new RequestEmployeeDto(20, "user20", "password20", "jonson20","img" , 0L, "010-123-3422", "asmrl@aslrm.com");
+        mockMvc.perform(post("/employees/insert")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isCreated())
+                .andDo(restDocs.document()
+                ).andReturn();
     }
 
     @Test
@@ -74,4 +95,24 @@ public class EmployeeControllerTest {
                         )))
                 .andReturn();
     }
+
+    @Test
+    void findEmployeeList() throws Exception {
+        EmployeeSearchDto searchDto = new EmployeeSearchDto(null,"a",null);
+//        EmployeeSearchDto searchDto = new EmployeeSearchDto();
+        int page = 1;
+        mockMvc.perform(get("/employees/list")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", String.valueOf(page))
+                .content(objectMapper.writeValueAsString(searchDto)))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                responseFields(
+                        subsectionWithPath("employeeList").description("List of employees"),
+                        fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("Current page number"),
+                        fieldWithPath("hasNextPage").type(JsonFieldType.BOOLEAN).description("Indicates whether there is a next page"),
+                        fieldWithPath("hasPreviousPage").type(JsonFieldType.BOOLEAN).description("Indicates whether there is a previous page")
+                )));
+    }
 }
+
