@@ -14,6 +14,14 @@ douzone project 5 team
 
 operation::employee-controller-test/login[snippets='http-request,http-response']
 
+=== Id 중복 체크
+
+operation::employee-controller-test/id-duplicate-check[snippets='http-request,http-response']
+
+=== Employee_No 중복 체크
+
+operation::employee-controller-test/employee-no-duplicate-check[snippets='http-request,http-response']
+
 === Employee 추가
 
 operation::/employee-controller-test/insert-employee[snippets='http-request,http-response']
@@ -25,6 +33,14 @@ operation::/employee-controller-test/find-employee-by-no[snippets='http-request,
 === EmployeeList 조회
 
 operation::/employee-controller-test/find-employee-list[snippets='http-request,http-response,response-fields']
+
+=== Employee 수정
+
+operation::employee-controller-test/update-employee[snippets='http-request,path-parameters,http-response']
+
+=== Employee 삭제
+
+operation::/employee-controller-test/delete-employee[snippets='http-request,path-parameters,http-response']
 
 [[Product]]
 == Product API

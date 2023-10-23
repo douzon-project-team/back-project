@@ -3,9 +3,10 @@ package com.douzon.blooming.employee.controller;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
@@ -55,7 +56,7 @@ public class EmployeeControllerTest {
 
     @Test
     void login() throws Exception {
-        LoginDto loginMember = new LoginDto("user1", "password1");
+        LoginDto loginMember = new LoginDto("user2", "password2");
         mockMvc.perform(get("/employees/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginMember)))
@@ -64,6 +65,31 @@ public class EmployeeControllerTest {
 
                 )).andReturn();
     }
+
+    @Test
+    void idDuplicateCheck() throws Exception {
+        String id = "user21";
+        mockMvc.perform(get("/employees/id-check")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(id)))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+
+                )).andReturn();
+    }
+
+    @Test
+    void employeeNoDuplicateCheck() throws Exception {
+        long employeeNo = 20L;
+        mockMvc.perform(get("/employees/employee-no-check")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Long.toString(employeeNo)))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                    requestBody()
+                )).andReturn();
+    }
+
     @Test
     void insertEmployee() throws Exception {
         RequestEmployeeDto dto = new RequestEmployeeDto(20, "user20", "password20", "jonson20","img" , 0L, "010-123-3422", "asmrl@aslrm.com");
@@ -114,5 +140,30 @@ public class EmployeeControllerTest {
                         fieldWithPath("hasPreviousPage").type(JsonFieldType.BOOLEAN).description("Indicates whether there is a previous page")
                 )));
     }
-}
 
+    @Test
+    void updateEmployee() throws Exception {
+        String password = "1234";
+        mockMvc.perform(put("/employees/{employeeNo}/update-password", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(password))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        pathParameters(
+                                parameterWithName("employeeNo").description("사번")
+                        )
+                )).andReturn();
+    }
+
+    @Test
+    void deleteEmployee() throws Exception{
+        mockMvc.perform(delete("/employees/{employeeNo}/delete-employee", 20L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(restDocs.document(
+                        pathParameters(
+                                parameterWithName("employeeNo").description("사번")
+                        )
+                )).andReturn();
+    }
+}

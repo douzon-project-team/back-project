@@ -71,14 +71,14 @@ public class EmployeeController {
     }
 
     @GetMapping("/id-check")
-    public ResponseEntity<Void> idCheck(String id){
+    public ResponseEntity<Void> idCheck(@RequestBody String id){
         return ResponseEntity
-                .status(!employeeService.idCheck(id).isEmpty() ? HttpStatus.OK : HttpStatus.UNAUTHORIZED)
+                .status(employeeService.idCheck(id) == null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED)
                 .build();
     }
 
     @GetMapping("/employee-no-check")
-    public ResponseEntity<Void> idCheck(Long employeeNo){
+    public ResponseEntity<Void> idCheck(@RequestBody Long employeeNo){
         return ResponseEntity
                 .status(employeeService.employeeNoCheck(employeeNo) ? HttpStatus.OK : HttpStatus.UNAUTHORIZED)
                 .build();
@@ -121,11 +121,12 @@ public class EmployeeController {
     /**
      * 사원 삭제
      */
-    @DeleteMapping("/delete-employee")
-    public ResponseEntity<Void> deleteEmployee(Long employeeNo){
+    @DeleteMapping("/{employeeNo}/delete-employee")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long employeeNo){
+        log.error(String.valueOf(employeeNo));
         // 추후 Security적용 관리자 권한 check
         employeeService.deleteEmployee(employeeNo);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**
@@ -146,7 +147,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/{employeeNo}/update-password")
-    public ResponseEntity<Void> updatePassword(@PathVariable Long employeeNo, String password){
+    public ResponseEntity<Void> updatePassword(@PathVariable Long employeeNo,@RequestBody String password){
         employeeService.updatePassword(employeeNo, password);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -29,7 +29,7 @@ INSERT INTO product (product_code,designation,standard,unit) VALUES ('VV0001','p
 
 CREATE TABLE `customer`
 (
-    `customer_no` BIGINT      NOT NULL,
+    `customer_no` BIGINT      NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `code`        VARCHAR(5)  NOT NULL UNIQUE,
     `name`        VARCHAR(10) NOT NULL,
     `tel`         VARCHAR(13) NOT NULL

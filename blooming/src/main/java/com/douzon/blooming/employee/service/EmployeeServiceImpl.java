@@ -38,12 +38,13 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public String idCheck(String id) {
+        log.error(String.valueOf(id));
         return employeeRepository.idCheck(id);
     }
 
     @Override
     public boolean employeeNoCheck(Long employeeNo) {
-        return employeeRepository.employeeNoCheck(employeeNo) != null;
+        return employeeRepository.employeeNoCheck(employeeNo) == null;
     }
 
     @Override
