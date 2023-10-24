@@ -1,0 +1,58 @@
+POST http://localhost:8080/products
+Content-Type: application/json;charset=UTF-8
+
+{
+  "productNo": null,
+  "productCode": "TT0002",
+  "designation": "Test Product",
+  "standard": "standard : X",
+  "unit": 10
+}
+
+###
+
+GET http://localhost:8080/products/1
+Content-Type: application/json
+
+###
+
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNjk4MTQxMzAyfQ.F2FxzvltENhJfk4k3jZQCXNzccIGsWL4DNfaU6j5jqw
+
+{
+  "id": "tester",
+  "password": "1234",
+  "name": "tester",
+  "role": 1
+}
+
+### 어드민 로그인
+
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "id": "admin",
+  "password": "admin"
+}
+
+### 맴버 로그인
+
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "id": "member",
+  "password": "member"
+}
+
+### 맴버 로그인
+
+PUT http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "id": "member",
+  "password": "member"
+}
