@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+@Component
 @RequiredArgsConstructor
 public class ProductLogInterceptor implements HandlerInterceptor {
 
@@ -30,8 +32,15 @@ public class ProductLogInterceptor implements HandlerInterceptor {
     EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
     return ProductLogDto.builder()
+        .idAddress(getClientIp(req))
+        .productNo(1L) // 나중에 Refactor 필요
         .modifierNo(employeeDetails.getEmployeeNo())
-        .type(ProductLogType.fromMethod(req.getMethod()))
+        .type(ProductLogType.fromRequestMethod(req.getMethod()))
         .build();
+  }
+
+  private String getClientIp(HttpServletRequest req) {
+    String ip = req.getHeader("X-Forwarded-For");
+    return ip != null ? ip : req.getRemoteAddr();
   }
 }

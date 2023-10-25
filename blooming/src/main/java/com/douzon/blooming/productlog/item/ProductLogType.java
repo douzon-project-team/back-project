@@ -3,7 +3,7 @@ package com.douzon.blooming.productlog.item;
 import lombok.Getter;
 
 public enum ProductLogType {
-  SELECT("GET"), INSERT("PUT"), UPDATE("UPDATE"), DELETE("DELETE");
+  SELECT("GET"), INSERT("POST"), UPDATE("PUT"), DELETE("DELETE"), NU_KNOWN("UN_KNOWN");
 
   @Getter
   private final String method;
@@ -12,12 +12,12 @@ public enum ProductLogType {
     this.method = method;
   }
 
-  public static ProductLogType fromMethod(String method) {
+  public static ProductLogType fromRequestMethod(String method) {
     for (ProductLogType type : values()) {
       if (type.method.equalsIgnoreCase(method)) {
         return type;
       }
     }
-    throw new IllegalArgumentException("Invalid method: " + method);
+    return NU_KNOWN;
   }
 }
