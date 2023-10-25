@@ -1,4 +1,4 @@
-package com.douzon.blooming.auth.config;
+package com.douzon.blooming;
 
 import com.douzon.blooming.auth.filter.JwtFilter;
 import com.douzon.blooming.auth.provider.TokenProvider;

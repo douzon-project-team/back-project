@@ -1,4 +1,4 @@
-package com.douzon.blooming.auth.config;
+package com.douzon.blooming;
 
 import com.douzon.blooming.auth.advice.JwtAccessDeniedHandler;
 import com.douzon.blooming.auth.advice.JwtAuthenticationEntryPoint;

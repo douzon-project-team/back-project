@@ -1,5 +1,14 @@
 package com.douzon.blooming.auth.item;
 
 public enum EmployeeRole {
-  ROLE_ADMIN, ROLE_MEMBER
+  ROLE_ADMIN, ROLE_MEMBER;
+
+  public static EmployeeRole fromRoleName(String name) {
+    for (EmployeeRole type : values()) {
+      if (type.name().equalsIgnoreCase(name)) {
+        return type;
+      }
+    }
+    throw new IllegalArgumentException("Invalid name: " + name);
+  }
 }

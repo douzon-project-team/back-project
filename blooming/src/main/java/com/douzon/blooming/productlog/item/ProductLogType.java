@@ -3,12 +3,21 @@ package com.douzon.blooming.productlog.item;
 import lombok.Getter;
 
 public enum ProductLogType {
-  INSERT("입력"), UPDATE("수정"), DELETE("삭제");
+  SELECT("GET"), INSERT("PUT"), UPDATE("UPDATE"), DELETE("DELETE");
 
   @Getter
-  private final String korean;
+  private final String method;
 
-  ProductLogType(String korean) {
-    this.korean = korean;
+  ProductLogType(String method) {
+    this.method = method;
+  }
+
+  public static ProductLogType fromMethod(String method) {
+    for (ProductLogType type : values()) {
+      if (type.method.equalsIgnoreCase(method)) {
+        return type;
+      }
+    }
+    throw new IllegalArgumentException("Invalid method: " + method);
   }
 }

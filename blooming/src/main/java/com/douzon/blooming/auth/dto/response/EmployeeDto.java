@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EmployeeDto {
 
+  private Long employeeNo;
   private String id;
   private String password;
   private EmployeeRole role;
