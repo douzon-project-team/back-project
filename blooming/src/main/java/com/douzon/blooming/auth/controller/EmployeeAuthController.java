@@ -18,7 +18,6 @@ public class EmployeeAuthController {
 
   @PostMapping("/login")
   public ResponseEntity<TokenDto> login(@RequestBody LoginEmployeeDto loginEmployeeDto) {
-    System.out.println(loginEmployeeDto);
     return ResponseEntity.ok().body(employeeAuthService.login(loginEmployeeDto));
   }
 
