@@ -1,5 +1,6 @@
 package com.douzon.blooming.product.repo;
 
+import com.douzon.blooming.product.dto.SearchProductDto;
 import com.douzon.blooming.product.dto.request.RequestProductDto;
 import com.douzon.blooming.product.dto.response.ListProductDto;
 import com.douzon.blooming.product.dto.response.ProductDto;
@@ -26,10 +27,6 @@ public interface ProductRepository {
   @Select("SELECT * FROM project.product WHERE product_code = #{productCode}")
   Optional<ProductDto> findByProductCode(String productCode);
 
-  @Select("SELECT * FROM project.product WHERE product_code LIKE #{productCode}")
-  List<ListProductDto> findAllByProductCodeLike(String productCode);
-
-  @Select("SELECT * FROM project.product WHERE product_code LIKE #{designation}")
-  List<ListProductDto> findAllByDesignationLike(String designation);
-
+  @Select("SELECT * FROM project.product WHERE ${query}")
+  List<ListProductDto> findAllBySearchProductDto(String query);
 }
