@@ -29,4 +29,5 @@ public interface ProductRepository {
 
   @Select("SELECT * FROM project.product WHERE ${query}")
   List<ListProductDto> findAllBySearchProductDto(String query);
+
 }

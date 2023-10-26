@@ -134,10 +134,10 @@ public class EmployeeControllerTest {
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
                 responseFields(
-                        subsectionWithPath("employeeList").description("List of employees"),
-                        fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("Current page number"),
-                        fieldWithPath("hasNextPage").type(JsonFieldType.BOOLEAN).description("Indicates whether there is a next page"),
-                        fieldWithPath("hasPreviousPage").type(JsonFieldType.BOOLEAN).description("Indicates whether there is a previous page")
+                        subsectionWithPath("employeeList").description("사원 List"),
+                        fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
+                        fieldWithPath("hasNextPage").type(JsonFieldType.BOOLEAN).description("다음 페이지 존재 여부"),
+                        fieldWithPath("hasPreviousPage").type(JsonFieldType.BOOLEAN).description("이전 페이지 존재 여부")
                 )));
     }
 

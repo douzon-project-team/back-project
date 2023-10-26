@@ -31,7 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public void insertEmployee(RequestEmployeeDto dto) {
+    public void addEmployee(RequestEmployeeDto dto) {
         log.error(String.valueOf(dto.getEmployeeNo()));
         employeeRepository.insertEmployee(dto);
     }
@@ -48,13 +48,13 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public ResponseEmployeeDto findEmployeeByNo(Long employeeNo) {
+    public ResponseEmployeeDto getEmployeeByNo(Long employeeNo) {
         return employeeRepository.findEmployeeByNo(employeeNo)
                 .orElseThrow(EmployeeNotFoundException :: new);
     }
 
     @Override
-    public ResponseListEmployeeDto findEmployeeListWithFilter(EmployeeSearchDto dto, int page, int pageSize) {
+    public ResponseListEmployeeDto getEmployeeList(EmployeeSearchDto dto, int page, int pageSize) {
         int start = (page - 1) * pageSize;
         List<ListEmployeeDto> employeeList = employeeRepository.findEmployeeListWithFilter(dto, start, pageSize);
         int searchEmployeeCount = employeeRepository.getCountEmployees(dto);
@@ -97,7 +97,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public void deleteEmployee(Long employeeNo) {
+    public void removeEmployee(Long employeeNo) {
         employeeRepository.deleteEmployee(employeeNo);
     }
 }

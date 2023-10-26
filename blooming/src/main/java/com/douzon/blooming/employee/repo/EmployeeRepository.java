@@ -27,6 +27,8 @@ public interface EmployeeRepository {
     @Select("SELECT employee_no FROM employee WHERE employee_no = #{employeeId}")
     Long employeeNoCheck(Long employeeNo);
 
+    @Select("SELECT employee_no FROM employee WHERE name = #{employeeName}")
+    Long findEmployeeNoByName(String employeeName);
 
     @Select("SELECT employee_no, id, password, name, img, tel, email " +
             "FROM employee WHERE employee_no = #{employeeId}")
