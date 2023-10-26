@@ -1,5 +1,6 @@
 package com.douzon.blooming.product.service;
 
+import com.douzon.blooming.product.dto.SearchProductDto;
 import com.douzon.blooming.product.dto.request.RequestProductDto;
 import com.douzon.blooming.product.dto.response.ListProductDto;
 import com.douzon.blooming.product.dto.response.ProductDto;
@@ -39,13 +40,9 @@ public class ProductServiceImpl implements ProductService {
         .orElseThrow(NotFoundProductException::new);
   }
 
+  @Transactional(readOnly = true)
   @Override
-  public List<ListProductDto> findAllProductCode(String productCode) {
-    return productRepository.findAllByProductCodeLike(productCode);
-  }
-
-  @Override
-  public List<ListProductDto> findAllDesignation(String designation) {
-    return productRepository.findAllByDesignationLike(designation);
+  public List<ListProductDto> findAllBySearchQuery(SearchProductDto searchProductDto) {
+    return productRepository.findAllBySearchProductDto(searchProductDto.toQuery());
   }
 }

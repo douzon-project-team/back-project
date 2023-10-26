@@ -1,5 +1,6 @@
 package com.douzon.blooming.product.service;
 
+import com.douzon.blooming.product.dto.SearchProductDto;
 import com.douzon.blooming.product.dto.request.RequestProductDto;
 import com.douzon.blooming.product.dto.response.ListProductDto;
 import com.douzon.blooming.product.dto.response.ProductDto;
@@ -15,7 +16,5 @@ public interface ProductService {
 
   ProductDto findProduct(String productNo);
 
-  List<ListProductDto> findAllProductCode(String productCode);
-
-  List<ListProductDto> findAllDesignation(String designation);
+  List<ListProductDto> findAllBySearchQuery(SearchProductDto searchProductDto);
 }

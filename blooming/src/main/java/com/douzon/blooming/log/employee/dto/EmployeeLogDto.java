@@ -1,4 +1,4 @@
-package com.douzon.blooming.log.product.dto;
+package com.douzon.blooming.log.employee.dto;
 
 import com.douzon.blooming.log.LogType;
 import lombok.AccessLevel;
@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductLogDto {
+public class EmployeeLogDto {
 
   private String ipAddress;
   private Long modifierNo;
-  private Long productNo;
+  private Long employeeNo;
   private LogType type;
 }

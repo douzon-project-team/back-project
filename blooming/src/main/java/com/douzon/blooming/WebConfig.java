@@ -1,6 +1,7 @@
 package com.douzon.blooming;
 
 import com.douzon.blooming.log.delivery.interceptor.DeliveryLogInterceptor;
+import com.douzon.blooming.log.employee.interceptor.EmployeeLogInterceptor;
 import com.douzon.blooming.log.instruction.interceptor.InstructionLogInterceptor;
 import com.douzon.blooming.log.product.interceptor.ProductLogInterceptor;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
   private final ProductLogInterceptor productLogInterceptor;
   private final DeliveryLogInterceptor deliveryLogInterceptor;
   private final InstructionLogInterceptor instructionLogInterceptor;
+  private final EmployeeLogInterceptor employeeLogInterceptor;
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
@@ -24,5 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
         .addPathPatterns("/delivery/**");
     registry.addInterceptor(instructionLogInterceptor)
         .addPathPatterns("/instruction/**");
+    registry.addInterceptor(employeeLogInterceptor)
+        .addPathPatterns("/employee/**");
   }
 }

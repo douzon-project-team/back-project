@@ -49,9 +49,9 @@ class ProductControllerTest {
       RestDocumentationContextProvider restDocumentation) {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
         .apply(documentationConfiguration(restDocumentation))
-        .alwaysDo(MockMvcResultHandlers.print()) // andDo(print()) 코드 포함 -> 3번 문제 해결
-        .alwaysDo(restDocs) // pretty 패턴과 문서 디렉토리 명 정해준것 적용
-        .addFilters(new CharacterEncodingFilter("UTF-8", true)) // 한글 깨짐 방지
+        .alwaysDo(MockMvcResultHandlers.print())
+        .alwaysDo(restDocs)
+        .addFilters(new CharacterEncodingFilter("UTF-8", true))
         .build();
   }
 

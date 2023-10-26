@@ -31,7 +31,7 @@ public class InstructionLogInterceptor implements HandlerInterceptor {
     EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
     return InstructionLogDto.builder()
-        .idAddress(getClientIp(req))
+        .ipAddress(getClientIp(req))
         .instructionNo(1L) // TODO : 나중에 Refactor 필요
         .modifierNo(employeeDetails.getEmployeeNo())
         .type(LogType.fromRequestMethod(req.getMethod()))
