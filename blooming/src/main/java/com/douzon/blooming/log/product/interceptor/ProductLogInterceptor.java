@@ -32,7 +32,7 @@ public class ProductLogInterceptor implements HandlerInterceptor {
     EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
     return ProductLogDto.builder()
-        .idAddress(getClientIp(req))
+        .ipAddress(getClientIp(req))
         .productNo(1L) // TODO : 나중에 Refactor 필요
         .modifierNo(employeeDetails.getEmployeeNo())
         .type(LogType.fromRequestMethod(req.getMethod()))
