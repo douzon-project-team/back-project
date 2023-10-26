@@ -63,7 +63,7 @@ public class InstructionServiceImpl implements InstructionService {
         Optional<ResponseInstructionDto> getInstruction = repository.findByInstructionNo(instructionNo);
         if (getInstruction.isPresent()) {
             ResponseInstructionDto dto = getInstruction.get();
-            dto.setProductList(repository.getProductList(instructionNo));
+            dto.setProductList(productInstructionRepository.getProductList(instructionNo));
             return dto;
         } else {
             throw new InstructionNotFoundException();
@@ -89,6 +89,7 @@ public class InstructionServiceImpl implements InstructionService {
 
     @Override
     public RequestInstructionDto removeInstruction(String instructionNo) {
+        repository.deleteInstruction(instructionNo);
         return null;
     }
 }

@@ -2,6 +2,7 @@ package com.douzon.blooming.instruction;
 
 
 import com.douzon.blooming.instruction.dto.ProductListDto;
+import com.douzon.blooming.instruction.dto.request.SearchDto;
 import com.douzon.blooming.instruction.dto.request.TestDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,15 +55,15 @@ public class InstructionControllerTest {
     @Test
     public void insertInstruction() throws Exception {
         List<ProductListDto> productList = new ArrayList<>();
-        productList.add(new ProductListDto("VV0001", 10));
-        productList.add(new ProductListDto("VV0002", 20));
+        productList.add(new ProductListDto("VV0001", 15));
+        productList.add(new ProductListDto("VV0002", 30));
 
 
         TestDto dto = new TestDto(
-                "jonson", "samsung", productList,  "2023-10-24", "2023-11-24", 1L
+                "Sophia Garcia 15", "Lg", productList,  "2023-10-25", "2023-11-25", 1L
         );
 
-        mockMvc.perform(post("/instruction/insert")
+        mockMvc.perform(post("/instructions/insert")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())
@@ -74,8 +75,23 @@ public class InstructionControllerTest {
 
     @Test
     public void getInstruction() throws Exception {
-        mockMvc.perform(get("/instruction/{instructionNo}", "WO2310000001")
+        mockMvc.perform(get("/instructions/{instructionNo}", "WO2310000001")
                 .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+
+                )).andReturn();
+    }
+
+    @Test
+    public void getInstructions() throws Exception {
+//        SearchDto dto = new SearchDto(1L, "jonson", "2023-11-24", "2023-11-24", 1, 8);
+        mockMvc.perform(get("/instructions/list")
+                .contentType(MediaType.APPLICATION_JSON)
+                        .param("progressStatus", "1")
+                        .param("employeeName", "jonson")
+                        .param("startDate", "2023-10-24")
+                        .param("endDate", "2023-10-24"))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
 
