@@ -1,7 +1,7 @@
-package com.douzon.blooming.productlog.service;
+package com.douzon.blooming.log.product.service;
 
-import com.douzon.blooming.productlog.dto.ProductLogDto;
-import com.douzon.blooming.productlog.repo.ProductLogRepository;
+import com.douzon.blooming.log.product.dto.ProductLogDto;
+import com.douzon.blooming.log.product.repo.ProductLogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +15,6 @@ public class ProductLogServiceImpl implements ProductLogService {
 
   @Override
   public void addProductLog(ProductLogDto productLogDto) {
-    productLogRepository.insertProductLogByInsertProductDto(productLogDto);
+    productLogRepository.insertProductLogByProductLogDto(productLogDto);
   }
 }

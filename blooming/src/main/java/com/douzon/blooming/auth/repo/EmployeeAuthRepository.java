@@ -13,6 +13,6 @@ public interface EmployeeAuthRepository {
   @Insert("INSERT INTO project.employee (id, password, name, img, role, tel, email) VALUE (#{id}, #{password}, #{name}, #{img}, #{role}, #{tel}, #{email})")
   void insertEmployee(InsertEmployeeDto insertEmployeeDto);
 
-  @Select("SELECT id, password, role FROM project.employee WHERE id = #{id}")
+  @Select("SELECT employee_no, id, password, role FROM project.employee WHERE id = #{id}")
   Optional<EmployeeDto> findEmployeeById(String id);
 }

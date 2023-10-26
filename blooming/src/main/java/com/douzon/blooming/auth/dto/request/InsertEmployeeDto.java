@@ -1,5 +1,6 @@
 package com.douzon.blooming.auth.dto.request;
 
+import com.douzon.blooming.auth.EmployeeRole;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class InsertEmployeeDto {
   private String password;
   private String name;
   private String img;
-  private Long role;
+  private EmployeeRole role;
   private String tel;
   private String email;
 
