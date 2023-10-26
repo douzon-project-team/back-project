@@ -32,4 +32,7 @@ public interface ProductRepository {
   @Select("SELECT * FROM project.product WHERE product_code LIKE #{designation}")
   List<ListProductDto> findAllByDesignationLike(String designation);
 
+  @Select("SELECT product_no FROM project.product WHERE product_code = #{productCode}")
+  Long getProductNoByCode(String productCode);
+
 }

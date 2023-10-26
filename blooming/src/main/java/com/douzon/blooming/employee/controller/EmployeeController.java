@@ -90,7 +90,7 @@ public class EmployeeController {
     @PostMapping("/insert")
     public ResponseEntity<Void> insertEmployee(@RequestBody RequestEmployeeDto dto){
         // 추후 Security적용 관리자 권한 check
-        employeeService.insertEmployee(new RequestEmployeeDto(dto.getEmployeeNo(),
+        employeeService.addEmployee(new RequestEmployeeDto(dto.getEmployeeNo(),
                                                             dto.getId(),
                                                             dto.getPassword(),
                                                             dto.getName(),
@@ -108,14 +108,14 @@ public class EmployeeController {
     @GetMapping("/{employeeNo}")
     public ResponseEntity<ResponseEmployeeDto> getEmployeeByNo(@PathVariable Long employeeNo){
         return
-                new ResponseEntity<>(employeeService.findEmployeeByNo(employeeNo), HttpStatus.OK);
+                new ResponseEntity<>(employeeService.getEmployeeByNo(employeeNo), HttpStatus.OK);
     }
 
     @GetMapping("/list")
     public ResponseEntity<ResponseListEmployeeDto> findEmployeeList(@RequestBody EmployeeSearchDto searchDto,
                                                                     @RequestParam(defaultValue = "1") Integer page,
                                                                     @RequestParam(defaultValue = "8") Integer size){
-        return new ResponseEntity<>(employeeService.findEmployeeListWithFilter(searchDto, page, size), HttpStatus.OK);
+        return new ResponseEntity<>(employeeService.getEmployeeList(searchDto, page, size), HttpStatus.OK);
     }
 
     /**
@@ -125,7 +125,7 @@ public class EmployeeController {
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long employeeNo){
         log.error(String.valueOf(employeeNo));
         // 추후 Security적용 관리자 권한 check
-        employeeService.deleteEmployee(employeeNo);
+        employeeService.removeEmployee(employeeNo);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
