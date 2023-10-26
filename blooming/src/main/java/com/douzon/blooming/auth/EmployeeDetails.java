@@ -1,4 +1,4 @@
-package com.douzon.blooming.auth.item;
+package com.douzon.blooming.auth;
 
 import java.util.Collection;
 import java.util.List;

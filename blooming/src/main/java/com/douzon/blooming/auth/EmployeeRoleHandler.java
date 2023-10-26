@@ -1,4 +1,4 @@
-package com.douzon.blooming.auth.item;
+package com.douzon.blooming.auth;
 
 import com.douzon.blooming.auth.exception.UnsupportedEmployeeRoleException;
 import java.sql.CallableStatement;

@@ -2,10 +2,9 @@ package com.douzon.blooming.auth.service;
 
 import com.douzon.blooming.auth.dto.response.EmployeeDto;
 import com.douzon.blooming.auth.exception.NotFoundEmployeeAuthException;
-import com.douzon.blooming.auth.item.EmployeeDetails;
+import com.douzon.blooming.auth.EmployeeDetails;
 import com.douzon.blooming.auth.repo.EmployeeAuthRepository;
 import java.util.Collections;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

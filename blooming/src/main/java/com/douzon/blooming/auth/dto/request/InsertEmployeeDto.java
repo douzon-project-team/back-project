@@ -1,6 +1,6 @@
 package com.douzon.blooming.auth.dto.request;
 
-import com.douzon.blooming.auth.item.EmployeeRole;
+import com.douzon.blooming.auth.EmployeeRole;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package com.douzon.blooming.auth.provider;
 
 import com.douzon.blooming.auth.dto.response.TokenDto;
 import com.douzon.blooming.auth.exception.TokenMissingAuthorizationInfoException;
-import com.douzon.blooming.auth.item.EmployeeDetails;
+import com.douzon.blooming.auth.EmployeeDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
