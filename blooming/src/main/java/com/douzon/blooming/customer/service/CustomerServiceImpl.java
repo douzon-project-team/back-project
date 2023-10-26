@@ -16,7 +16,12 @@ public class CustomerServiceImpl implements CustomerService{
     private final CustomerRepository repository;
 
     @Override
-    public void insertCustomer(RequestCustomerDto dto) {
+    public String customerCodeCheck(String customerCode) {
+        return repository.customerCodeCheck(customerCode);
+    }
+
+    @Override
+    public void addCustomer(RequestCustomerDto dto) {
         repository.insertCustomer(dto);
     }
 
@@ -43,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public void deleteCustomer(Long customerNo) {
+    public void removeCustomer(Long customerNo) {
         repository.deleteCustomer(customerNo);
     }
 }

@@ -6,9 +6,10 @@ import com.douzon.blooming.customer.dto.response.ResponseCustomerDto;
 import com.douzon.blooming.customer.dto.response.ResponseListCustomerDto;
 
 public interface CustomerService {
-    void insertCustomer(RequestCustomerDto dto);
+    String customerCodeCheck(String customerCode);
+    void addCustomer(RequestCustomerDto dto);
     ResponseCustomerDto getCustomer(Long customerNo);
     ResponseListCustomerDto getCustomerList(String customerCode, int page, int pageSize);
     void updateCustomer(UpdateCustomerDto dto, Long customerNo);
-    void deleteCustomer(Long customerNo);
+    void removeCustomer(Long customerNo);
 }
