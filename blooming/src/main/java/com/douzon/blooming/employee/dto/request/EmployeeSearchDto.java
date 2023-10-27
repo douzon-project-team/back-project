@@ -10,7 +10,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class EmployeeSearchDto {
-    private Long employeeNo;
-    private String name;
-    private Long role;
+
+  private Long employeeNo;
+  private String name;
+  private Long role;
 }

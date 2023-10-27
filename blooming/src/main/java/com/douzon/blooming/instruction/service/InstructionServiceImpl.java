@@ -42,7 +42,7 @@ public class InstructionServiceImpl implements InstructionService {
         stringBuffer.append("INSERT INTO product_instruction VALUES ");
         dto.getProducts().forEach(product -> {
             stringBuffer.append("(")
-                    .append(productRepository.getProductNoByCode(product.getProductCode()))
+//                    .append(productRepository.getProductNoByCode(product.getProductCode()))
                     .append(", ")
                     .append("'")
                     .append(instructionNo)

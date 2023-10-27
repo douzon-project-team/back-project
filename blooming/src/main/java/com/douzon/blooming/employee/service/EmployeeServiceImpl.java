@@ -1,103 +1,82 @@
 package com.douzon.blooming.employee.service;
 
+import com.douzon.blooming.auth.dto.request.InsertEmployeeDto;
+import com.douzon.blooming.auth.dto.request.LoginEmployeeDto;
+import com.douzon.blooming.auth.dto.response.TokenDto;
+import com.douzon.blooming.auth.provider.TokenProvider;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
-import com.douzon.blooming.employee.dto.request.LoginDto;
-import com.douzon.blooming.employee.dto.request.RequestEmployeeDto;
+import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ListEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseListEmployeeDto;
 import com.douzon.blooming.employee.exception.EmployeeNotFoundException;
 import com.douzon.blooming.employee.repo.EmployeeRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class EmployeeServiceImpl implements EmployeeService{
+public class EmployeeServiceImpl implements EmployeeService {
 
-    private final EmployeeRepository employeeRepository;
+  private final AuthenticationManagerBuilder managerBuilder;
+  private final EmployeeRepository employeeRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final TokenProvider tokenProvider;
 
-    @Override
-    public boolean login(LoginDto dto) {
-        log.error("password={}", employeeRepository.login(dto));
-        log.error(String.valueOf(Objects.equals(employeeRepository.login(dto), dto.getPassword())));
-        return Objects.equals(employeeRepository.login(dto), dto.getPassword());
-    }
+  @Override
+  public boolean employeeNoCheck(Long employeeNo) {
+    return employeeRepository.existByEmployeeNo(employeeNo);
+  }
 
-    @Override
-    public void addEmployee(RequestEmployeeDto dto) {
-        log.error(String.valueOf(dto.getEmployeeNo()));
-        employeeRepository.insertEmployee(dto);
-    }
+  @Override
+  public boolean idCheck(String id) {
+    return employeeRepository.existById(id);
+  }
 
-    @Override
-    public String idCheck(String id) {
-        log.error(String.valueOf(id));
-        return employeeRepository.idCheck(id);
-    }
+  @Override
+  public ResponseEmployeeDto getEmployeeByNo(Long employeeNo) {
+    return employeeRepository.findEmployeeByNo(employeeNo)
+        .orElseThrow(EmployeeNotFoundException::new);
+  }
 
-    @Override
-    public boolean employeeNoCheck(Long employeeNo) {
-        return employeeRepository.employeeNoCheck(employeeNo) == null;
-    }
+  @Override
+  public ResponseListEmployeeDto getEmployeeList(EmployeeSearchDto dto, int page, int pageSize) {
+    int start = (page - 1) * pageSize;
+    List<ListEmployeeDto> employeeList = employeeRepository.findEmployeeListWithFilter(dto, start,
+        pageSize);
+    int searchEmployeeCount = employeeRepository.getCountEmployees(dto);
 
-    @Override
-    public ResponseEmployeeDto getEmployeeByNo(Long employeeNo) {
-        return employeeRepository.findEmployeeByNo(employeeNo)
-                .orElseThrow(EmployeeNotFoundException :: new);
-    }
+    boolean hasNextPage = start + page < searchEmployeeCount;
+    boolean hasPreviousPage = start > 0;
 
-    @Override
-    public ResponseListEmployeeDto getEmployeeList(EmployeeSearchDto dto, int page, int pageSize) {
-        int start = (page - 1) * pageSize;
-        List<ListEmployeeDto> employeeList = employeeRepository.findEmployeeListWithFilter(dto, start, pageSize);
-        int searchEmployeeCount = employeeRepository.getCountEmployees(dto);
+    return new ResponseListEmployeeDto(employeeList, page, hasNextPage, hasPreviousPage);
+  }
 
-        boolean hasNextPage = start + page < searchEmployeeCount;
-        boolean hasPreviousPage = start > 0;
+  @Override
+  public void updateEmployee(UpdateEmployeeDto updateEmployeeDto, Long employeeNo) {
+    employeeRepository.updateEmployeeByUpdateEmployeeDto(updateEmployeeDto, employeeNo);
+  }
 
-        return new ResponseListEmployeeDto(employeeList, page, hasNextPage, hasPreviousPage);
-    }
+  public void signup(InsertEmployeeDto employeeDto) {
+    employeeRepository.insertEmployee(employeeDto.encodingPassword(passwordEncoder));
+  }
 
+  public void removeEmployee(Long employeeNo) {
+    employeeRepository.deleteEmployee(employeeNo);
+  }
 
-    @Override
-    public void updateId(Long employeeNo, String id) {
-        employeeRepository.updateId(employeeNo, id);
-    }
+  public TokenDto login(LoginEmployeeDto loginEmployeeDto) {
+    UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+        loginEmployeeDto.getId(), loginEmployeeDto.getPassword());
+    Authentication authenticate = managerBuilder.getObject().authenticate(token);
 
-    @Override
-    public void updateName(Long employeeNo, String name) {
-        employeeRepository.updateName(employeeNo, name);
-    }
-
-    @Override
-    public void updatePassword(Long employeeNo, String password) {
-        employeeRepository.updatePassword(employeeNo, password);
-    }
-
-    @Override
-    public void updateImg(Long employeeNo, String img) {
-        employeeRepository.updateImg(employeeNo, img);
-    }
-
-    @Override
-    public void updateTel(Long employeeNo, String tel) {
-        employeeRepository.updateTel(employeeNo, tel);
-    }
-
-    @Override
-    public void updateEmail(Long employeeNo, String email) {
-        employeeRepository.updateEmail(employeeNo, email);
-    }
-
-    @Override
-    public void removeEmployee(Long employeeNo) {
-        employeeRepository.deleteEmployee(employeeNo);
-    }
+    return tokenProvider.generateToken(authenticate);
+  }
 }

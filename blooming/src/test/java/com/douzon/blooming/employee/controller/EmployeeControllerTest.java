@@ -10,7 +10,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
-import com.douzon.blooming.employee.dto.request.LoginDto;
 import com.douzon.blooming.employee.dto.request.RequestEmployeeDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,17 +53,17 @@ public class EmployeeControllerTest {
                 .build();
     }
 
-    @Test
-    void login() throws Exception {
-        LoginDto loginMember = new LoginDto("user2", "password2");
-        mockMvc.perform(get("/employees/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginMember)))
-                .andExpect(status().isOk())
-                .andDo(restDocs.document(
-
-                )).andReturn();
-    }
+//    @Test
+//    void login() throws Exception {
+//        LoginDto loginMember = new LoginDto("user2", "password2");
+//        mockMvc.perform(get("/employees/login")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(loginMember)))
+//                .andExpect(status().isOk())
+//                .andDo(restDocs.document(
+//
+//                )).andReturn();
+//    }
 
     @Test
     void idDuplicateCheck() throws Exception {
