@@ -1,7 +1,7 @@
 package com.douzon.blooming.auth.service;
 
 import com.douzon.blooming.auth.EmployeeDetails;
-import com.douzon.blooming.auth.dto.response.EmployeeDto;
+import com.douzon.blooming.employee.dto.response.EmployeeDto;
 import com.douzon.blooming.auth.exception.NotFoundEmployeeAuthException;
 import com.douzon.blooming.employee.repo.EmployeeRepository;
 import lombok.RequiredArgsConstructor;

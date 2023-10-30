@@ -1,4 +1,4 @@
-package com.douzon.blooming.auth.dto.response;
+package com.douzon.blooming.employee.dto.response;
 
 
 import com.douzon.blooming.auth.EmployeeRole;

@@ -1,7 +1,7 @@
 package com.douzon.blooming.employee.repo;
 
-import com.douzon.blooming.auth.dto.request.InsertEmployeeDto;
-import com.douzon.blooming.auth.dto.response.EmployeeDto;
+import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
+import com.douzon.blooming.employee.dto.response.EmployeeDto;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ListEmployeeDto;

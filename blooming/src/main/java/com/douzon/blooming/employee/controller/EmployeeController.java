@@ -1,7 +1,7 @@
 package com.douzon.blooming.employee.controller;
 
 import com.douzon.blooming.auth.EmployeeDetails;
-import com.douzon.blooming.auth.dto.request.LoginEmployeeDto;
+import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.auth.dto.response.TokenDto;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;

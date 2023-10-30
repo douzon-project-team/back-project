@@ -1,6 +1,6 @@
 package com.douzon.blooming.auth.controller;
 
-import com.douzon.blooming.auth.dto.request.InsertEmployeeDto;
+import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
 import com.douzon.blooming.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,18 +33,12 @@ public class EmployeeAuthController {
   }
 
   @GetMapping("/employees/no/check")
-  public ResponseEntity<Void> noCheck(@RequestBody Long employeeNo) {
-    return ResponseEntity
-        .status(
-            employeeService.employeeNoCheck(employeeNo) ? HttpStatus.OK : HttpStatus.UNAUTHORIZED)
-        .build();
+  public ResponseEntity<Boolean> noCheck(@RequestBody Long employeeNo) {
+    return ResponseEntity.ok(employeeService.employeeNoCheck(employeeNo));
   }
 
   @GetMapping("/employees/id/check")
-  public ResponseEntity<Void> idCheck(@RequestBody String id) {
-    return ResponseEntity
-        .status(
-            employeeService.idCheck(id) ? HttpStatus.OK : HttpStatus.UNAUTHORIZED)
-        .build();
+  public ResponseEntity<Boolean> idCheck(@RequestBody String id) {
+    return ResponseEntity.ok(employeeService.idCheck(id));
   }
 }
