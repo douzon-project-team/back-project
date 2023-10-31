@@ -8,11 +8,9 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class RequestInstructionDto {
-    private Long employeeNo;
+public class UpdateInstructionDto {
     private Long customerNo;
-    List<ProductInstructionDto> products;
+    private List<ProductInstructionDto> products;
     private String instructionDate;
     private String expirationDate;
-    private Integer progressStatus;
 }
