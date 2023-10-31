@@ -1,9 +1,9 @@
-package com.douzon.blooming.instruction;
+package com.douzon.blooming.instruction.controller;
 
 
-import com.douzon.blooming.instruction.dto.ProductListDto;
-import com.douzon.blooming.instruction.dto.request.SearchDto;
-import com.douzon.blooming.instruction.dto.request.TestDto;
+import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
+import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
+import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -27,8 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Disabled
@@ -54,13 +58,12 @@ public class InstructionControllerTest {
 
     @Test
     public void insertInstruction() throws Exception {
-        List<ProductListDto> productList = new ArrayList<>();
-        productList.add(new ProductListDto("VV0001", 15));
-        productList.add(new ProductListDto("VV0002", 30));
+        List<ProductInstructionDto> productList = new ArrayList<>();
+        productList.add(new ProductInstructionDto(1L, 15, null));
+        productList.add(new ProductInstructionDto(2L,  30, null));
 
-
-        TestDto dto = new TestDto(
-                "Sophia Garcia 15", "Lg", productList,  "2023-10-25", "2023-11-25", 1L
+        RequestInstructionDto dto = new RequestInstructionDto(
+                15L, 1L, productList, "2023-10-30", "2023-11-30", 1
         );
 
         mockMvc.perform(post("/instructions/insert")
@@ -79,22 +82,52 @@ public class InstructionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
-
-                )).andReturn();
+                        pathParameters(
+                                parameterWithName("instructionNo").description("지시 번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("productNo").type(JsonFieldType.NUMBER).description("상품 PK"),
+                                fieldWithPath("productCode").type(JsonFieldType.STRING).description("픔목의 코드"),
+                                fieldWithPath("designation").type(JsonFieldType.STRING).description("명칭"),
+                                fieldWithPath("standard").type(JsonFieldType.STRING).description("규격"),
+                                fieldWithPath("unit").type(JsonFieldType.NUMBER).description("단위")
+                        ))).andReturn();
     }
 
     @Test
     public void getInstructions() throws Exception {
 //        SearchDto dto = new SearchDto(1L, "jonson", "2023-11-24", "2023-11-24", 1, 8);
         mockMvc.perform(get("/instructions/list")
-                .contentType(MediaType.APPLICATION_JSON)
-                        .param("progressStatus", "1")
-                        .param("employeeName", "jonson")
-                        .param("startDate", "2023-10-24")
-                        .param("endDate", "2023-10-24"))
+                .contentType(MediaType.APPLICATION_JSON))
+//                        .param("progressStatus", "1")
+//                        .param("employeeName", "jonson")
+//                        .param("startDate", "2023-10-24")
+//                        .param("endDate", "2023-10-24"))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
 
                 )).andReturn();
+    }
+
+    @Test
+    public void updateInstruction() throws Exception {
+        List<ProductInstructionDto> products = new ArrayList<>();
+        products.add(new ProductInstructionDto(1L, 15, "updated"));
+        products.add(new ProductInstructionDto(3L, 10, "added"));
+        UpdateInstructionDto dto = new UpdateInstructionDto(
+            3L, products, "2023-10-22", "2023-11-21");
+
+        mockMvc.perform(put("/instructions/{instructionNo}", "WO2310000001")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+
+                )).andReturn();
+    }
+
+    @Test
+    public void deleteInstruction() throws Exception {
+
     }
 }
