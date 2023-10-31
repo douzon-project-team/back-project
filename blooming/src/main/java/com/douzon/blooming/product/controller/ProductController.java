@@ -1,5 +1,6 @@
 package com.douzon.blooming.product.controller;
 
+import com.douzon.blooming.product.dto.SearchProductDto;
 import com.douzon.blooming.product.dto.request.RequestProductDto;
 import com.douzon.blooming.product.dto.response.ListProductDto;
 import com.douzon.blooming.product.dto.response.ProductDto;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,16 +30,10 @@ public class ProductController {
     return ResponseEntity.ok(productService.findProduct(productCode));
   }
 
-  @GetMapping("/like/product-code/{productCode}")
-  public ResponseEntity<List<ListProductDto>> getProductsByProductCode(
-      @PathVariable String productCode) {
-    return ResponseEntity.ok(productService.findAllProductCode(productCode));
-  }
-
-  @GetMapping("/like/designation/{designation}")
-  public ResponseEntity<List<ListProductDto>> getProductsByDesignation(
-      @PathVariable String designation) {
-    return ResponseEntity.ok(productService.findAllDesignation(designation));
+  @GetMapping("/list")
+  public ResponseEntity<List<ListProductDto>> getProduct(
+      @ModelAttribute SearchProductDto searchProductDto) {
+    return ResponseEntity.ok(productService.findAllBySearchQuery(searchProductDto));
   }
 
   @PostMapping
