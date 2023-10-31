@@ -1,13 +1,12 @@
-package com.douzon.blooming.instruction.dto;
+package com.douzon.blooming.product_instruction.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
 @AllArgsConstructor
-@ToString
-public class ProductListDto {
+public class ResponseProductInstructionDto {
+    private Long productNo;
     private String productCode;
     private Integer amount;
 }

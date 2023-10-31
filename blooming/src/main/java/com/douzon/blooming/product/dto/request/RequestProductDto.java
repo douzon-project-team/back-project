@@ -13,6 +13,7 @@ public class RequestProductDto {
 
   @Setter
   private Long productNo;
+
   private String productCode;
   private String designation;
   private String standard;

@@ -1,15 +1,14 @@
 package com.douzon.blooming.instruction.service;
 
-import com.douzon.blooming.customer.repo.CustomerRepository;
-import com.douzon.blooming.employee.repo.EmployeeRepository;
-import com.douzon.blooming.instruction.dto.InsertDto;
+import com.douzon.blooming.instruction.dto.request.InsertInstructionDto;
 import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.SearchDto;
-import com.douzon.blooming.instruction.dto.response.ResponseInstructionDto;
-import com.douzon.blooming.instruction.dto.response.ResponseInstructionListDto;
+import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
+import com.douzon.blooming.instruction.dto.response.GetInstructionDto;
+import com.douzon.blooming.instruction.dto.response.GetInstructionListDto;
+import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
 import com.douzon.blooming.instruction.exception.InstructionNotFoundException;
 import com.douzon.blooming.instruction.repo.InstructionRepository;
-import com.douzon.blooming.product.repo.ProductRepository;
 import com.douzon.blooming.product_instruction.repo.ProductInstructionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,25 +23,24 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(isolation = Isolation.READ_COMMITTED)
-public class InstructionServiceImpl implements InstructionService {
-    private final InstructionRepository repository;
-    private final CustomerRepository customerRepository;
-    private final EmployeeRepository employeeRepository;
-    private final ProductRepository productRepository;
+public class InstructionServiceImpl implements InstructionService{
+    private final InstructionRepository instructionRepository;
     private final ProductInstructionRepository productInstructionRepository;
 
+
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void addInstruction(RequestInstructionDto dto) {
-        InsertDto insertDto = new InsertDto(employeeRepository.findEmployeeNoByName(dto.getEmployeeName()),
-                customerRepository.findCustomerNoByName(dto.getCustomerName()),
-                dto.getProducts(), dto.getInstructionDate(), dto.getExpirationDate(), dto.getProgressStatus());
-        repository.insertInstruction(insertDto);
-        String instructionNo = repository.getInstructionNo();
+        // 추후 토큰을 통해 가져옴
+        InsertInstructionDto insertDto = new InsertInstructionDto(dto.getEmployeeNo(), dto.getCustomerNo(),
+                dto.getInstructionDate(), dto.getExpirationDate(), dto.getProgressStatus());
+        instructionRepository.insertInstruction(insertDto);
+        String instructionNo = instructionRepository.getInstructionNo();
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("INSERT INTO product_instruction VALUES ");
         dto.getProducts().forEach(product -> {
             stringBuffer.append("(")
-                    .append(productRepository.getProductNoByCode(product.getProductCode()))
+                    .append(product.getProductNo())
                     .append(", ")
                     .append("'")
                     .append(instructionNo)
@@ -59,11 +57,12 @@ public class InstructionServiceImpl implements InstructionService {
     }
 
     @Override
-    public ResponseInstructionDto getInstruction(String instructionNo) {
-        Optional<ResponseInstructionDto> getInstruction = repository.findByInstructionNo(instructionNo);
+    public GetInstructionDto getInstruction(String instructionNo) {
+        Optional<GetInstructionDto> getInstruction = instructionRepository.findByInstructionNo(instructionNo);
+//        log.error(getInstruction.get().toString());
         if (getInstruction.isPresent()) {
-            ResponseInstructionDto dto = getInstruction.get();
-            dto.setProductList(repository.getProductList(instructionNo));
+            GetInstructionDto dto = getInstruction.get();
+            dto.setProducts(productInstructionRepository.getProductList(instructionNo));
             return dto;
         } else {
             throw new InstructionNotFoundException();
@@ -71,24 +70,37 @@ public class InstructionServiceImpl implements InstructionService {
     }
 
     @Override
-    public ResponseInstructionListDto getInstructionList(SearchDto searchDto) {
+    public GetInstructionListDto getInstructionList(SearchDto searchDto) {
         int start = (searchDto.getPage() - 1) * searchDto.getPageSize();
-        List<ResponseInstructionDto> instructionList = repository.findInstructionList(searchDto, start, searchDto.getPageSize());
-        int searchEmployeeCount = repository.getCountInstructions(searchDto);
+        List<ListInstructionDto> instructionList = instructionRepository.findInstructionList(searchDto, start, searchDto.getPageSize());
+        int searchInstructionCount = instructionRepository.getCountInstructions(searchDto);
 
-        boolean hasNextPage = start + searchDto.getPage() < searchEmployeeCount;
+        boolean hasNextPage = start + searchDto.getPage() < searchInstructionCount;
         boolean hasPreviousPage = start > 0;
 
-        return new ResponseInstructionListDto(instructionList, searchDto.getPage(), hasNextPage, hasPreviousPage);
+        return new GetInstructionListDto(instructionList, searchDto.getPage(), hasNextPage, hasPreviousPage);
     }
 
     @Override
-    public void updateInstruction(String instructionNo, RequestInstructionDto dto) {
-        repository.updateInstruction(instructionNo, dto);
+    public void updateInstruction(String instructionNo, UpdateInstructionDto dto) {
+        instructionRepository.updateInstruction(instructionNo, dto);
+        dto.getProducts().forEach(product -> {
+            switch (product.getStatus()){
+                case "added" :
+                    productInstructionRepository.insertProduct(instructionNo, product);
+                    break;
+                case "updated" :
+                    productInstructionRepository.updateProduct(instructionNo, product);
+                    break;
+                case "deleted" :
+                    productInstructionRepository.deleteProduct(instructionNo, product);
+                    break;
+            }
+        });
     }
 
     @Override
-    public RequestInstructionDto removeInstruction(String instructionNo) {
-        return null;
+    public void deleteInstruction(String instructionNo) {
+        instructionRepository.deleteInstruction(instructionNo);
     }
 }

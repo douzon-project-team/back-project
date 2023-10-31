@@ -52,6 +52,8 @@ CREATE TABLE `product_instruction`
     `amount`         INT         NOT NULL
 );
 
+drop table delivery;
+
 CREATE TABLE `delivery`
 (
     `delivery_no`     VARCHAR(12) PRIMARY KEY ,
@@ -65,6 +67,7 @@ CREATE TABLE `delivery_instruction`
 (
     `delivery_no`    VARCHAR(12) NOT NULL,
     `instruction_no` VARCHAR(12) NOT NULL,
+    `product_no`     BIGINT      NOT NULL,
     `amount`         INT         NOT NULL
 );
 
@@ -151,7 +154,9 @@ CREATE TABLE `delivery_log`
 #         REFERENCES `instruction` (
 #                                   `instruction_no`
 #             );
-# #
+#
+
+# Instruction 자동 채번 Trigger
 DELIMITER //
 CREATE TRIGGER instruction_no_trigger
     BEFORE INSERT ON instruction
@@ -162,7 +167,8 @@ BEGIN
 END;
 //
 DELIMITER ;
-#
+
+# Delivery 자동 채번 Trigger
 # DELIMITER //
 # CREATE TRIGGER delivery_no_trigger
 #     BEFORE INSERT ON delivery
