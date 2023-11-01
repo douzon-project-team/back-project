@@ -1,10 +1,8 @@
 package com.douzon.blooming.product.controller;
 
 import static com.douzon.blooming.restdocs.RestDocsConfig.field;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -56,6 +54,19 @@ class ProductControllerTest {
   }
 
   @Test
+  void addProduct() throws Exception {
+    RequestProductDto requestProductDto =
+            new RequestProductDto(null, "TT0001", "Test Product", "standard : X", 10);
+
+    mockMvc.perform(post("/products")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestProductDto)))
+            .andExpect(status().isNoContent())
+            .andDo(restDocs.document(
+            )).andReturn();
+  }
+
+  @Test
   void getProduct() throws Exception {
     mockMvc.perform(get("/products/{productCode}", "VV0001")
             .contentType(MediaType.APPLICATION_JSON))
@@ -67,7 +78,7 @@ class ProductControllerTest {
             responseFields(
                 fieldWithPath("productNo").type(JsonFieldType.NUMBER).description("상품 PK"),
                 fieldWithPath("productCode").type(JsonFieldType.STRING).description("픔목의 코드"),
-                fieldWithPath("designation").type(JsonFieldType.STRING).description("명칭"),
+                fieldWithPath("productName").type(JsonFieldType.STRING).description("명칭"),
                 fieldWithPath("standard").type(JsonFieldType.STRING).description("규격"),
                 fieldWithPath("unit").type(JsonFieldType.NUMBER).description("단위")
             )))
@@ -75,15 +86,31 @@ class ProductControllerTest {
   }
 
   @Test
-  void addProduct() throws Exception {
-    RequestProductDto requestProductDto =
-        new RequestProductDto(null, "TT0001", "Test Product", "standard : X", 10);
-
-    mockMvc.perform(post("/products")
+  void getProducts() throws Exception {
+    mockMvc.perform(get("/products/list")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(requestProductDto)))
-        .andExpect(status().isNoContent())
-        .andDo(restDocs.document(
-        )).andReturn();
+            .param("productCode", "VV")
+            .param("productName", "e")
+            .param("page", "0")
+            .param("size", "8"))
+            .andExpect(status().isOk())
+            .andDo(restDocs.document(
+
+            )).andReturn();
+  }
+
+  @Test
+  void updateProduct() throws Exception {
+    RequestProductDto dto = new RequestProductDto(null, null, "penpen", null, 15);
+    mockMvc.perform(put("/products/{productNo}", 3)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(dto)))
+            .andExpect(status().isNoContent())
+            .andDo(restDocs.document(
+                    pathParameters(
+                            parameterWithName("productCode").description("제품 코드")
+                    )
+            ))
+            .andReturn();
   }
 }
