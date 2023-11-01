@@ -28,8 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -60,10 +59,10 @@ public class InstructionControllerTest {
     public void insertInstruction() throws Exception {
         List<ProductInstructionDto> productList = new ArrayList<>();
         productList.add(new ProductInstructionDto(1L, 15, null));
-        productList.add(new ProductInstructionDto(2L,  30, null));
+        productList.add(new ProductInstructionDto(3L,  30, null));
 
         RequestInstructionDto dto = new RequestInstructionDto(
-                15L, 1L, productList, "2023-10-30", "2023-11-30", 1
+                12L, 4L, productList, "2023-10-30", "2023-11-30", 1
         );
 
         mockMvc.perform(post("/instructions/insert")
@@ -78,7 +77,7 @@ public class InstructionControllerTest {
 
     @Test
     public void getInstruction() throws Exception {
-        mockMvc.perform(get("/instructions/{instructionNo}", "WO2310000001")
+        mockMvc.perform(get("/instructions/{instructionNo}", "WO2310000005")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
@@ -86,11 +85,13 @@ public class InstructionControllerTest {
                                 parameterWithName("instructionNo").description("지시 번호")
                         ),
                         responseFields(
-                                fieldWithPath("productNo").type(JsonFieldType.NUMBER).description("상품 PK"),
-                                fieldWithPath("productCode").type(JsonFieldType.STRING).description("픔목의 코드"),
-                                fieldWithPath("designation").type(JsonFieldType.STRING).description("명칭"),
-                                fieldWithPath("standard").type(JsonFieldType.STRING).description("규격"),
-                                fieldWithPath("unit").type(JsonFieldType.NUMBER).description("단위")
+                                fieldWithPath("instructionNo").type(JsonFieldType.STRING).description("지시 PK"),
+                                fieldWithPath("employeeName").type(JsonFieldType.STRING).description("담당자"),
+                                fieldWithPath("customerName").type(JsonFieldType.STRING).description("거래처"),
+                                subsectionWithPath("products").description("지시 품목 List"),
+                                fieldWithPath("instructionDate").type(JsonFieldType.STRING).description("지시일"),
+                                fieldWithPath("expirationDate").type(JsonFieldType.STRING).description("완료일"),
+                                fieldWithPath("progressStatus").type(JsonFieldType.NUMBER).description("진행 상태")
                         ))).andReturn();
     }
 
@@ -112,12 +113,12 @@ public class InstructionControllerTest {
     @Test
     public void updateInstruction() throws Exception {
         List<ProductInstructionDto> products = new ArrayList<>();
-        products.add(new ProductInstructionDto(1L, 15, "updated"));
-        products.add(new ProductInstructionDto(3L, 10, "added"));
+        products.add(new ProductInstructionDto(1L, 20, "updated"));
+        products.add(new ProductInstructionDto(2L, 10, "added"));
         UpdateInstructionDto dto = new UpdateInstructionDto(
-            3L, products, "2023-10-22", "2023-11-21");
+            3L, products, "2023-11-22", "2023-12-22");
 
-        mockMvc.perform(put("/instructions/{instructionNo}", "WO2310000001")
+        mockMvc.perform(put("/instructions/{instructionNo}", "WO2310000005")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -128,6 +129,11 @@ public class InstructionControllerTest {
 
     @Test
     public void deleteInstruction() throws Exception {
+        mockMvc.perform(delete("/instructions/{instructionNo}", "WO2310000005")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
 
+                )).andReturn();
     }
 }
