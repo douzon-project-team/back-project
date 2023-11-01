@@ -16,18 +16,18 @@ CREATE TABLE `employee`
     `email`         VARCHAR(30) NOT NULL
 );
 
+drop table product;
+
 CREATE TABLE `product`
 (
     `product_no`    BIGINT             PRIMARY KEY AUTO_INCREMENT,
     `product_code`  VARCHAR(6)         NOT NULL UNIQUE,
-    `designation`   VARCHAR(45)        NOT NULL,
+    `product_name`  VARCHAR(45)        NOT NULL,
     `standard`      TEXT               NOT NULL,
     `unit`          INT                NOT NULL
 );
 
-INSERT INTO product (product_code,designation,standard,unit) VALUES ('VV0001','pencil','2.5cm * 10cm',10);
-
-CREATE TABLE `customer`
+    CREATE TABLE `customer`
 (
     `customer_no`      BIGINT      PRIMARY KEY AUTO_INCREMENT,
     `customer_code`    VARCHAR(5)  NOT NULL UNIQUE,
@@ -137,7 +137,8 @@ CREATE TABLE `delivery_log`
 #         )
 #         REFERENCES `instruction` (
 #                                   `instruction_no`
-#             );
+#             )
+#     ON DELETE CASCADE;
 #
 # ALTER TABLE `delivery_instruction`
 #     ADD CONSTRAINT `FK_delivery_TO_delivery_instruction_1` FOREIGN KEY (
@@ -154,6 +155,7 @@ CREATE TABLE `delivery_log`
 #         REFERENCES `instruction` (
 #                                   `instruction_no`
 #             );
+#     ON DELETE CASCADE;
 #
 
 # Instruction 자동 채번 Trigger
