@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.douzon.blooming.employee.repo.EmployeeRepository">
+
+  <select id="findEmployeeNoByName" resultType="java.lang.Long">
+    SELECT employee_no
+    FROM project.employee
+    WHERE name = #{employeeName}
+  </select>
+
+  <select id="findEmployeeByNo"
+    resultType="com.douzon.blooming.employee.dto.response.ResponseEmployeeDto">
+    SELECT employee_no, id, password, name, img, tel, email
+    FROM project.employee
+    WHERE employee_no = #{employeeId}
+  </select>
+
+  <select id="getCountEmployees" resultType="java.lang.Integer"
+    parameterType="com.douzon.blooming.employee.dto.request.EmployeeSearchDto">
+    SELECT COUNT(*) FROM project.employee
+    <where>
+      <if test='employeeNo != null'>
+        employee_no LIKE CONCAT('%', #{employeeNo}, '%')
+      </if>
+      <if test='name != null and name != ""'>
+        <choose>
+          <when test='employeeNo == null'>
+            name LIKE CONCAT('%', #{name}, '%')
+          </when>
+          <otherwise>
+            AND name LIKE CONCAT('%', #{name}, '%')
+          </otherwise>
+        </choose>
+      </if>
+      <if test='role != null and role != ""'>
+        <choose>
+          <when test='employeeNo == null and name == null'>
+            role = #{role}
+          </when>
+          <otherwise>
+            AND role = #{role}
+          </otherwise>
+        </choose>
+      </if>
+    </where>
+  </select>
+
+  <select id="findEmployeeListWithFilter"
+    resultType="com.douzon.blooming.employee.dto.response.ListEmployeeDto">
+    SELECT employee_no as employeeNo, name, tel, email, role
+    FROM project.employee
+    <where>
+      <if test='employeeSearchDto.employeeNo != null'>
+        employee_no LIKE CONCAT('%', #{employeeSearchDto.employeeNo}, '%')
+      </if>
+      <if test='employeeSearchDto.name != null and dto.name != ""'>
+        <choose>
+          <when test='employeeSearchDto.employeeNo == null'>
+            name LIKE CONCAT('%', #{employeeSearchDto.name}, '%')
+          </when>
+          <otherwise>
+            AND name LIKE CONCAT('%', #{employeeSearchDto.name}, '%')
+          </otherwise>
+        </choose>
+      </if>
+      <if test='employeeSearchDto.role != null and employeeSearchDto.role != ""'>
+        <choose>
+          <when test='employeeSearchDto.employeeNo == null and employeeSearchDto.name == null'>
+            role = #{employeeSearchDto.role}
+          </when>
+          <otherwise>
+            AND role = #{employeeSearchDto.role}
+          </otherwise>
+        </choose>
+      </if>
+    </where>
+    LIMIT #{start}, #{pageSize}
+  </select>
+
+  <update id="updateEmployeeByUpdateEmployeeDto">
+    UPDATE project.employee
+    SET ${target} = #{newValue}
+    WHERE employee_no = #{employeeNo}
+  </update>
+
+  <delete id="deleteEmployee">
+    DELETE
+    FROM project.employee
+    WHERE employee_no = #{employeeNo}
+  </delete>
+
+  <insert id="insertEmployee">
+    INSERT INTO project.employee (employee_no, id, password, name, role, tel, email)
+    VALUES (#{employeeNo}, #{id}, #{password}, #{name}, #{role}, #{tel}, #{email})
+  </insert>
+
+  <select id="findEmployeeById" resultType="com.douzon.blooming.employee.dto.response.EmployeeDto">
+    SELECT employee_no, id, password, role
+    FROM project.employee
+    WHERE id = #{id}
+  </select>
+
+  <select id="existById" resultType="boolean">
+    SELECT COUNT(*)
+    FROM project.employee
+    WHERE id = #{id}
+  </select>
+
+  <select id="existByEmployeeNo" resultType="boolean">
+    SELECT COUNT(*)
+    FROM project.employee
+    WHERE employee_no = #{employeeId}
+  </select>
+
+
+</mapper>
