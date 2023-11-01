@@ -1,7 +1,9 @@
 package com.douzon.blooming.employee.service;
 
 import com.douzon.blooming.auth.dto.response.TokenDto;
+import com.douzon.blooming.auth.exception.EmployeePermissionDefinedException;
 import com.douzon.blooming.auth.provider.TokenProvider;
+import com.douzon.blooming.employee.dto.request.AuthUpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
 import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
@@ -11,6 +13,7 @@ import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseListEmployeeDto;
 import com.douzon.blooming.employee.exception.EmployeeNotFoundException;
 import com.douzon.blooming.employee.repo.EmployeeRepository;
+import com.douzon.blooming.product.exception.NotFoundProductException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -59,7 +62,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 
   @Override
   public void updateEmployee(UpdateEmployeeDto updateEmployeeDto, Long employeeNo) {
+    ResponseEmployeeDto responseEmployeeDto = employeeRepository.findEmployeeByNo(employeeNo)
+        .orElseThrow(NotFoundProductException::new);
+    if (!responseEmployeeDto.getPassword().equals(updateEmployeeDto.getPassword())) {
+      throw new EmployeePermissionDefinedException();
+    }
     employeeRepository.updateEmployeeByUpdateEmployeeDto(updateEmployeeDto, employeeNo);
+  }
+
+  @Override
+  public void updateEmployee(AuthUpdateEmployeeDto authUpdateEmployeeDto, Long employeeNo) {
+    employeeRepository.updateEmployeeByAuthUpdateEmployeeDto(authUpdateEmployeeDto, employeeNo);
   }
 
   @Override
