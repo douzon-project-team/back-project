@@ -28,10 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Disabled
@@ -77,7 +77,7 @@ public class InstructionControllerTest {
 
     @Test
     public void getInstruction() throws Exception {
-        mockMvc.perform(get("/instructions/{instructionNo}", "WO2310000005")
+        mockMvc.perform(get("/instructions/{instructionNo}", "WO2311000004")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
@@ -88,7 +88,7 @@ public class InstructionControllerTest {
                                 fieldWithPath("instructionNo").type(JsonFieldType.STRING).description("지시 PK"),
                                 fieldWithPath("employeeName").type(JsonFieldType.STRING).description("담당자"),
                                 fieldWithPath("customerName").type(JsonFieldType.STRING).description("거래처"),
-                                subsectionWithPath("products").description("지시 품목 List"),
+                                subsectionWithPath("products").description("지시한 품목 List"),
                                 fieldWithPath("instructionDate").type(JsonFieldType.STRING).description("지시일"),
                                 fieldWithPath("expirationDate").type(JsonFieldType.STRING).description("완료일"),
                                 fieldWithPath("progressStatus").type(JsonFieldType.NUMBER).description("진행 상태")
@@ -99,15 +99,20 @@ public class InstructionControllerTest {
     public void getInstructions() throws Exception {
 //        SearchDto dto = new SearchDto(1L, "jonson", "2023-11-24", "2023-11-24", 1, 8);
         mockMvc.perform(get("/instructions/list")
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
 //                        .param("progressStatus", "1")
 //                        .param("employeeName", "jonson")
-//                        .param("startDate", "2023-10-24")
-//                        .param("endDate", "2023-10-24"))
+                        .param("startDate", "2023-10-21")
+                        .param("endDate", "2023-10-30"))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
-
-                )).andReturn();
+                    responseFields(
+                            subsectionWithPath("instructions").description("지시 List"),
+                            fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
+                            fieldWithPath("hasNextPage").type(JsonFieldType.BOOLEAN).description("다음 페이지 존재 여부"),
+                            fieldWithPath("hasPreviousPage").type(JsonFieldType.BOOLEAN).description("이전 페이지 존재 여부")
+                    )))
+                .andReturn();
     }
 
     @Test
@@ -118,22 +123,26 @@ public class InstructionControllerTest {
         UpdateInstructionDto dto = new UpdateInstructionDto(
             3L, products, "2023-11-22", "2023-12-22");
 
-        mockMvc.perform(put("/instructions/{instructionNo}", "WO2310000005")
+        mockMvc.perform(put("/instructions/{instructionNo}", "WO2311000004")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
-
+                        pathParameters(
+                                parameterWithName("instructionNo").description("지시 번호")
+                        )
                 )).andReturn();
     }
 
     @Test
     public void deleteInstruction() throws Exception {
-        mockMvc.perform(delete("/instructions/{instructionNo}", "WO2310000005")
+        mockMvc.perform(delete("/instructions/{instructionNo}", "WO2311000004")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
-
+                        pathParameters(
+                                parameterWithName("instructionNo").description("지시 번호")
+                        )
                 )).andReturn();
     }
 }
