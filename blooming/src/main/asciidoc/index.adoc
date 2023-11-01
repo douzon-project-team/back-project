@@ -54,3 +54,48 @@ operation::/product-controller-test/add-product[snippets='http-request,http-resp
 
 operation::/product-controller-test/get-product[snippets='http-request,path-parameters,http-response,response-fields']
 
+[[Customer]]
+== Customer API
+
+=== Customer 추가
+
+operation::customer-controller-test/insert-customer[snippets='http-request,http-response']
+
+=== Customer 조회
+
+operation::customer-controller-test/get-customer[snippets='http-request,path-parameters,http-response,response-fields']
+
+=== CustomerList 조회
+
+operation::customer-controller-test/get-customer-list[snippets='http-request,http-response,response-fields']
+
+=== Customer 수정
+
+operation::customer-controller-test/update-customer[snippets='http-request,path-parameters,http-response']
+
+=== Customer 삭제
+
+operation::customer-controller-test/delete-customer[snippets='http-request,path-parameters,http-response']
+
+[[Instruction]]
+== Instruction API
+
+=== Instruction 추가
+
+operation::instruction-controller-test/insert-instruction[snippets='http-request,http-response']
+
+=== Instruction 조회
+
+operation::instruction-controller-test/get-instruction[snippets='http-request,path-parameters,http-response,response-fields']
+
+=== InstructionList 조회
+
+operation::instruction-controller-test/get-instructions[snippets='http-request,http-response,response-fields']
+
+=== Instruction 수정
+
+operation::instruction-controller-test/update-instruction[snippets='http-request,path-parameters,http-response']
+
+=== Instruction 삭제
+
+operation::instruction-controller-test/delete-instruction[snippets='http-request,path-parameters,http-response']

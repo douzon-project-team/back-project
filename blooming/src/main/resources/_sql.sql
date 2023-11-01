@@ -10,10 +10,10 @@ CREATE TABLE `employee`
     `id`            VARCHAR(20) NOT NULL UNIQUE,
     `password`      VARCHAR(20) NOT NULL,
     `name`          VARCHAR(30) NOT NULL,
-    `img`           BLOB        NOT NULL,
+    `img`           TEXT        NULL,
     `role`          TINYINT(1)  NOT NULL DEFAULT 1,
-    `tel`           VARCHAR(13) NOT NULL,
-    `email`         VARCHAR(30) NOT NULL
+    `tel`           VARCHAR(13) NULL,
+    `email`         VARCHAR(30) NULL
 );
 
 drop table product;
@@ -22,7 +22,7 @@ CREATE TABLE `product`
 (
     `product_no`    BIGINT             PRIMARY KEY AUTO_INCREMENT,
     `product_code`  VARCHAR(6)         NOT NULL UNIQUE,
-    `product_name`  VARCHAR(45)        NOT NULL,
+    `product_name`  VARCHAR(10)        NOT NULL,
     `standard`      TEXT               NOT NULL,
     `unit`          INT                NOT NULL
 );
@@ -38,10 +38,10 @@ CREATE TABLE `product`
 CREATE TABLE `instruction`
 (
     `instruction_no`   VARCHAR(12) PRIMARY KEY ,
-    `instruction_date` DATE        NOT NULL DEFAULT NOW(),
     `customer_no`      BIGINT      NOT NULL,
     `employee_no`      BIGINT      NOT NULL,
     `progress_status`  TINYINT(1)  NOT NULL DEFAULT 0,
+    `instruction_date` DATE        NOT NULL DEFAULT NOW(),
     `expiration_date`  DATE        NOT NULL
 );
 
@@ -49,7 +49,8 @@ CREATE TABLE `product_instruction`
 (
     `product_no`     BIGINT      NOT NULL,
     `instruction_no` VARCHAR(12) NOT NULL,
-    `amount`         INT         NOT NULL
+    `amount`         INT         NOT NULL,
+    `remain_amount`  INT         NOT NULL
 );
 
 drop table delivery;
@@ -59,8 +60,7 @@ CREATE TABLE `delivery`
     `delivery_no`     VARCHAR(12) PRIMARY KEY ,
     `progress_status` TINYINT(1)  NOT NULL DEFAULT 0,
     `delivery_date`   DATE        NOT NULL,
-    `employee_no`     BIGINT      NOT NULL,
-    `customer_no`     BIGINT      NOT NULL
+    `employee_no`     BIGINT      NOT NULL
 );
 
 CREATE TABLE `delivery_instruction`
