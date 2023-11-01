@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.douzon.blooming.customer.repo.CustomerRepository">
+    <select id="customerCodeCheck" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT customer_code FROM project.customer WHERE customer_code = #{customerCode};
+    </select>
+
+    <insert id="insertCustomer" parameterType="com.douzon.blooming.customer.dto.request.RequestCustomerDto">
+        INSERT INTO project.customer(customer_code, customer_name, customer_tel) VALUES (#{customerCode}, #{customerName}, #{customerTel})
+    </insert>
+
+    <select id="getCustomer" parameterType="java.lang.String" resultType="com.douzon.blooming.customer.dto.response.ResponseCustomerDto">
+        SELECT * FROM project.customer WHERE customer_no = #{customerNo}
+    </select>
+
+    <select id="getCountCustomers" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM project.employee
+        <where>
+            <if test='customerName != null'>
+                name LIKE CONCAT('%', #{customerName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getCustomerList" resultType="com.douzon.blooming.customer.dto.response.ResponseCustomerDto">
+        SELECT COUNT(*) FROM project.employee
+        <where>
+            <if test='customerName != null'>
+                name LIKE CONCAT('%', #{customerName}, '%')
+            </if>
+        </where>
+        LIMIT #{start}, #{pageSize}
+    </select>
+
+    <update id="updateCustomer">
+        UPDATE project.customer SET customer_name = #{dto.customerName}, customer_tel = #{dto.customerTel} WHERE customer_no = #{customerNo}
+    </update>
+
+    <delete id="deleteCustomer">
+        DELETE FROM project.customer WHERE customer_no = #{customerCode}
+    </delete>
+</mapper>
+
+        <!--@Select("SELECT customer_code FROM project.customer WHERE customer_code = #{customerCoode}")-->
+<!--        String customerCodeCheck(String customerCode);-->
+
+<!--        @Insert("INSERT INTO project.customer(customer_code, customer_name, customer_tel) VALUES (#{customerCode}, #{customerName}, #{customerTel})")-->
+<!--        void insertCustomer(RequestCustomerDto dto);-->
+
+<!--        @Select("SELECT customer_no FROM project.customer WHERE customer_name = #{customerName}")-->
+<!--        Long findCustomerNoByName(String customerName);-->
+
+<!--        @Select("SELECT * FROM project.customer WHERE customer_no = #{customerNo}")-->
+<!--        ResponseCustomerDto getCustomer(Long customerNo);-->
+
+<!--        @Select("<script>" +-->
+<!--    "SELECT COUNT(*) FROM project.employee" +-->
+<!--    "<where>" +-->
+<!--        "<if test='customerName != null'>" +-->
+<!--            "name LIKE CONCAT('%', #{customerName}, '%')" +-->
+<!--            "</if>" +-->
+<!--        "</where>" +-->
+<!--    "</script>")-->
+<!--        Integer getCountCustomers(String customerName);-->
+
+<!--        @Select("<script>" +-->
+<!--"SELECT COUNT(*) FROM project.employee" +-->
+<!--"<where>" +-->
+<!--    "<if test='customerName != null'>" +-->
+<!--        "name LIKE CONCAT('%', #{customerName}, '%')" +-->
+<!--        "</if>" +-->
+
+<!--    "</where>" +-->
+<!--"LIMIT #{start}, #{pageSize}" +-->
+<!--"</script>")-->
+<!--        List<ResponseCustomerDto> getCustomerList(String customerName, int start, int pageSize);-->
+
+<!--@Update("UPDATE project.customer SET customer_name = #{dto.customerName}, customer_tel = #{dto.customerTel} WHERE customer_no = #{customerNo}")-->
+<!--void updateCustomer(@Param("dto")UpdateCustomerDto dto, Long customerNo);-->
+
+<!--@Delete("DELETE FROM project.customer WHERE customer_no = #{customerCode}")-->
+<!--void deleteCustomer(Long customerNo);-->

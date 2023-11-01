@@ -24,14 +24,14 @@ public class CustomerController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/customer-code-check")
+    @GetMapping("/customer/code/check")
     public ResponseEntity<Void> customerCodeDuplicateCheck(@RequestBody String customerCode){
         return service.customerCodeCheck(customerCode) == null ?
                 new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     @GetMapping("/list")
-    public ResponseEntity<ResponseListCustomerDto> getCustomerList(@RequestBody String customerName,
+    public ResponseEntity<ResponseListCustomerDto> getCustomerList(@RequestParam String customerName,
                                                                    @RequestParam(defaultValue = "1") Integer page,
                                                                    @RequestParam(defaultValue = "8") Integer pageSize){
         ResponseListCustomerDto customer = service.getCustomerList(customerName, page, pageSize);
@@ -46,7 +46,7 @@ public class CustomerController {
                 new ResponseEntity<>(customer, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{customerNo}/update")
+    @PutMapping("/{customerNo}")
     public ResponseEntity<Void> updateCustomer(@PathVariable Long customerNo,
                                                @RequestBody UpdateCustomerDto dto){
         if (service.getCustomer(customerNo) == null) {
@@ -56,7 +56,7 @@ public class CustomerController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{customerNo}/delete")
+    @DeleteMapping("/{customerNo}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long customerNo){
         if (service.getCustomer(customerNo) == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
