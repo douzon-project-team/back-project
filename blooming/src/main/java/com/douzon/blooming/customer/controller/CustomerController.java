@@ -31,7 +31,7 @@ public class CustomerController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<ResponseListCustomerDto> getCustomerList(@RequestParam String customerName,
+    public ResponseEntity<ResponseListCustomerDto> getCustomerList(@RequestParam(required = false) String customerName,
                                                                    @RequestParam(defaultValue = "1") Integer page,
                                                                    @RequestParam(defaultValue = "8") Integer pageSize){
         ResponseListCustomerDto customer = service.getCustomerList(customerName, page, pageSize);

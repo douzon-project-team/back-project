@@ -15,13 +15,13 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface ProductRepository {
 
-  @Insert(value = "INSERT INTO project.product (product_code, designation, standard, unit) VALUE (#{productCode},#{designation},#{standard},#{unit})")
+  @Insert(value = "INSERT INTO project.product (product_code, product_name, standard, unit) VALUE (#{productCode},#{productName},#{standard},#{unit})")
   void insertByRequestProductDto(RequestProductDto requestProductDto);
 
   @Delete("DELETE FROM project.product WHERE product_no = #{productNo}")
   void deleteByProductNo(long productNo);
 
-  @Update("UPDATE project.product SET product_code = #{productCode}, designation = #{designation} ,standard = #{standard}, unit = #{unit} WHERE product_no = #{productNo}")
+  @Update("UPDATE project.product SET product_name = #{productName} ,standard = #{standard}, unit = #{unit} WHERE product_no = #{productNo}")
   void updateByRequestProductDto(RequestProductDto requestProductDto);
 
   @Select("SELECT * FROM project.product WHERE product_code = #{productCode}")

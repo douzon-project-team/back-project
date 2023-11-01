@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SearchProductDto {
 
-  private static final Integer DEFAULT_SIZE = 10;
+  private static final Integer DEFAULT_SIZE = 8;
   private static final Integer DEFAULT_PAGE = 0;
 
   private String productCode;
-  private String designation;
+  private String productName;
   private Integer size = DEFAULT_SIZE;
   private Integer page = DEFAULT_PAGE;
 
@@ -26,8 +26,8 @@ public class SearchProductDto {
     if (productCode != null) {
       sb.append(" product_code LIKE %").append(productCode).append("% AND");
     }
-    if (designation != null) {
-      sb.append(" designation LIKE %").append(designation).append("%");
+    if (productName != null) {
+      sb.append(" product_name LIKE %").append(productName).append("%");
     } else {
       sb.delete(0, sb.length() - 4);
     }

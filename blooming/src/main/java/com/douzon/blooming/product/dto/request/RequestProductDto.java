@@ -15,7 +15,7 @@ public class RequestProductDto {
   private Long productNo;
 
   private String productCode;
-  private String designation;
+  private String productName;
   private String standard;
   private int unit;
 }
