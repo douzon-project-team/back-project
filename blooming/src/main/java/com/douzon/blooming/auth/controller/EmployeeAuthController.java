@@ -1,9 +1,11 @@
 package com.douzon.blooming.auth.controller;
 
+import com.douzon.blooming.auth.dto.request.IdCheckDto;
+import com.douzon.blooming.auth.dto.request.NoCheckDto;
+import com.douzon.blooming.auth.dto.response.ResponseCheckDto;
 import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
 import com.douzon.blooming.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/auth/employees")
 @RequiredArgsConstructor
 public class EmployeeAuthController {
 
@@ -26,19 +28,20 @@ public class EmployeeAuthController {
     return ResponseEntity.noContent().build();
   }
 
-  @DeleteMapping("/employees/{employeeNo}")
+  @DeleteMapping("/{employeeNo}")
   public ResponseEntity<Void> deleteEmployee(@PathVariable Long employeeNo) {
     employeeService.removeEmployee(employeeNo);
     return ResponseEntity.noContent().build();
   }
 
-  @GetMapping("/employees/no/check")
-  public ResponseEntity<Boolean> noCheck(@RequestBody Long employeeNo) {
-    return ResponseEntity.ok(employeeService.employeeNoCheck(employeeNo));
+  @GetMapping("/no/check")
+  public ResponseEntity<ResponseCheckDto> noCheck(@RequestBody NoCheckDto noCheckDto) {
+    return ResponseEntity.ok(
+        new ResponseCheckDto(!employeeService.employeeNoCheck(noCheckDto.getEmployeeNo())));
   }
 
-  @GetMapping("/employees/id/check")
-  public ResponseEntity<Boolean> idCheck(@RequestBody String id) {
-    return ResponseEntity.ok(employeeService.idCheck(id));
+  @GetMapping("/id/check")
+  public ResponseEntity<ResponseCheckDto> idCheck(@RequestBody IdCheckDto idCheckDto) {
+    return ResponseEntity.ok(new ResponseCheckDto(!employeeService.idCheck(idCheckDto.getId())));
   }
 }

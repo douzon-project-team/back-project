@@ -17,7 +17,7 @@ public interface EmployeeService {
 
   ResponseEmployeeDto getEmployeeByNo(Long employeeNo);
 
-  ResponseListEmployeeDto getEmployeeList(EmployeeSearchDto dto, int page, int size);
+  ResponseListEmployeeDto getEmployeeList(EmployeeSearchDto dto);
 
   void updateEmployee(UpdateEmployeeDto updateEmployeeDto, Long employeeNo);
 

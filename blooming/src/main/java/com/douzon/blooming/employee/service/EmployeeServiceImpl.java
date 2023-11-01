@@ -1,10 +1,10 @@
 package com.douzon.blooming.employee.service;
 
-import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
-import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.auth.dto.response.TokenDto;
 import com.douzon.blooming.auth.provider.TokenProvider;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
+import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
+import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ListEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
@@ -13,7 +13,6 @@ import com.douzon.blooming.employee.exception.EmployeeNotFoundException;
 import com.douzon.blooming.employee.repo.EmployeeRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class EmployeeServiceImpl implements EmployeeService {
 
   private final AuthenticationManagerBuilder managerBuilder;
@@ -47,16 +45,16 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public ResponseListEmployeeDto getEmployeeList(EmployeeSearchDto dto, int page, int pageSize) {
-    int start = (page - 1) * pageSize;
+  public ResponseListEmployeeDto getEmployeeList(EmployeeSearchDto dto) {
+    int start = (dto.getPage() - 1) * dto.getSize();
     List<ListEmployeeDto> employeeList = employeeRepository.findEmployeeListWithFilter(dto, start,
-        pageSize);
+        dto.getSize());
     int searchEmployeeCount = employeeRepository.getCountEmployees(dto);
 
-    boolean hasNextPage = start + page < searchEmployeeCount;
+    boolean hasNextPage = start + dto.getPage() < searchEmployeeCount;
     boolean hasPreviousPage = start > 0;
 
-    return new ResponseListEmployeeDto(employeeList, page, hasNextPage, hasPreviousPage);
+    return new ResponseListEmployeeDto(employeeList, dto.getPage(), hasNextPage, hasPreviousPage);
   }
 
   @Override
@@ -64,14 +62,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     employeeRepository.updateEmployeeByUpdateEmployeeDto(updateEmployeeDto, employeeNo);
   }
 
+  @Override
   public void signup(InsertEmployeeDto employeeDto) {
     employeeRepository.insertEmployee(employeeDto.encodingPassword(passwordEncoder));
   }
 
+  @Override
   public void removeEmployee(Long employeeNo) {
     employeeRepository.deleteEmployee(employeeNo);
   }
 
+  @Override
   public TokenDto login(LoginEmployeeDto loginEmployeeDto) {
     UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
         loginEmployeeDto.getId(), loginEmployeeDto.getPassword());

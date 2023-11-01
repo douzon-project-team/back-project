@@ -10,7 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EmployeeSearchDto {
 
+  private static final int DEFAULT_PAGE = 1;
+  private static final int DEFAULT_SIZE = 8;
+
   private Long employeeNo;
   private String name;
   private Long role;
+  private Integer page = DEFAULT_PAGE;
+  private Integer size = DEFAULT_SIZE;
 }
