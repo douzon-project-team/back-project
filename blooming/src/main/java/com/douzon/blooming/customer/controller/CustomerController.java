@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,7 +20,7 @@ public class CustomerController {
     private final CustomerService service;
 
     @PostMapping("/insert")
-    public ResponseEntity<Void> insertCustomer(@RequestBody RequestCustomerDto dto){
+    public ResponseEntity<Void> insertCustomer(@Valid @RequestBody RequestCustomerDto dto){
         service.addCustomer(dto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -48,7 +49,7 @@ public class CustomerController {
 
     @PutMapping("/{customerNo}")
     public ResponseEntity<Void> updateCustomer(@PathVariable Long customerNo,
-                                               @RequestBody UpdateCustomerDto dto){
+                                               @Valid @RequestBody UpdateCustomerDto dto){
         if (service.getCustomer(customerNo) == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
