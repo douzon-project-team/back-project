@@ -10,24 +10,25 @@
         INSERT INTO project.customer(customer_code, customer_name, customer_tel) VALUES (#{customerCode}, #{customerName}, #{customerTel})
     </insert>
 
-    <select id="getCustomer" parameterType="java.lang.String" resultType="com.douzon.blooming.customer.dto.response.ResponseCustomerDto">
+    <select id="getCustomer" parameterType="java.lang.Long" resultType="com.douzon.blooming.customer.dto.response.ResponseCustomerDto">
         SELECT * FROM project.customer WHERE customer_no = #{customerNo}
     </select>
 
     <select id="getCountCustomers" resultType="java.lang.Integer">
-        SELECT COUNT(*) FROM project.employee
+        SELECT COUNT(*) FROM project.customer
         <where>
             <if test='customerName != null'>
-                name LIKE CONCAT('%', #{customerName}, '%')
+                customer_name LIKE CONCAT('%', #{customerName}, '%')
             </if>
         </where>
     </select>
 
     <select id="getCustomerList" resultType="com.douzon.blooming.customer.dto.response.ResponseCustomerDto">
-        SELECT COUNT(*) FROM project.employee
+        SELECT customer_no, customer_code, customer_name, customer_tel
+        FROM project.customer
         <where>
             <if test='customerName != null'>
-                name LIKE CONCAT('%', #{customerName}, '%')
+                customer_name LIKE CONCAT('%', #{customerName}, '%')
             </if>
         </where>
         LIMIT #{start}, #{pageSize}
