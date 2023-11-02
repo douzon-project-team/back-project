@@ -1,5 +1,6 @@
 package com.douzon.blooming.instruction.controller;
 
+import com.douzon.blooming.instruction.dto.ProgressStatus;
 import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.SearchDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
@@ -27,7 +28,7 @@ public class InstructionController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<GetInstructionListDto> getInstructionList(@RequestParam(required = false) Long progressStatus,
+    public ResponseEntity<GetInstructionListDto> getInstructionList(@RequestParam(required = false) ProgressStatus progressStatus,
                                                                     @RequestParam(required = false) String employeeName,
                                                                     @RequestParam(required = false) String startDate,
                                                                     @RequestParam(required = false) String endDate,

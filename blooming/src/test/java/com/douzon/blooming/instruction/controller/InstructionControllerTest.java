@@ -1,6 +1,7 @@
 package com.douzon.blooming.instruction.controller;
 
 
+import com.douzon.blooming.instruction.dto.ProgressStatus;
 import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
 import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
@@ -58,11 +59,11 @@ public class InstructionControllerTest {
     @Test
     public void insertInstruction() throws Exception {
         List<ProductInstructionDto> productList = new ArrayList<>();
-        productList.add(new ProductInstructionDto(1L, 15, null));
-        productList.add(new ProductInstructionDto(3L,  30, null));
+        productList.add(new ProductInstructionDto(2L, 25, null));
+        productList.add(new ProductInstructionDto(3L,  10, null));
 
         RequestInstructionDto dto = new RequestInstructionDto(
-                12L, 4L, productList, "2023-10-30", "2023-11-30", 1
+                11L, 2L, productList, "2023-11-04", "2023-11-04", ProgressStatus.STANDBY
         );
 
         mockMvc.perform(post("/instructions/insert")
@@ -91,7 +92,7 @@ public class InstructionControllerTest {
                                 subsectionWithPath("products").description("지시한 품목 List"),
                                 fieldWithPath("instructionDate").type(JsonFieldType.STRING).description("지시일"),
                                 fieldWithPath("expirationDate").type(JsonFieldType.STRING).description("완료일"),
-                                fieldWithPath("progressStatus").type(JsonFieldType.NUMBER).description("진행 상태")
+                                fieldWithPath("progressStatus").type(JsonFieldType.STRING).description("진행 상태")
                         ))).andReturn();
     }
 

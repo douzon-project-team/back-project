@@ -1,5 +1,6 @@
 package com.douzon.blooming.instruction.dto.request;
 
+import com.douzon.blooming.instruction.dto.ProgressStatus;
 import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,5 +29,6 @@ public class RequestInstructionDto {
     private String expirationDate;
 
     @Max(2)
-    private Integer progressStatus;
+    private ProgressStatus progressStatus;
 }
+

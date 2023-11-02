@@ -1,5 +1,6 @@
 package com.douzon.blooming.instruction.dto.request;
 
+import com.douzon.blooming.instruction.dto.ProgressStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class SearchDto {
-    private Long progressStatus;
+    private ProgressStatus progressStatus;
     private String employeeName;
     private String startDate;
     private String endDate;
