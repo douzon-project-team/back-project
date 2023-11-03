@@ -27,6 +27,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -54,6 +55,7 @@ class ProductControllerTest {
   }
 
   @Test
+  @Transactional
   void addProduct() throws Exception {
     RequestProductDto requestProductDto =
             new RequestProductDto(null, "TT0001", "Test Product", "standard : X", 10);

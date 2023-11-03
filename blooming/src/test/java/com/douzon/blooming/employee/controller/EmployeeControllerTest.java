@@ -29,6 +29,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -91,6 +92,7 @@ public class EmployeeControllerTest {
     }
 
     @Test
+    @Transactional
     void insertEmployee() throws Exception {
         RequestEmployeeDto dto = new RequestEmployeeDto(20, "user20", "password20", "jonson20","img" , 0L, "010-123-3422", "asmrl@aslrm.com");
         mockMvc.perform(post("/employees/insert")
@@ -142,9 +144,10 @@ public class EmployeeControllerTest {
     }
 
     @Test
+    @Transactional
     void updateEmployee() throws Exception {
         String password = "1234";
-        mockMvc.perform(put("/employees/{employeeNo}/update-password", 1L)
+        mockMvc.perform(put("/employees/{employeeNo}/update-password", 2L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(password))
                 .andExpect(status().isOk())
@@ -156,8 +159,9 @@ public class EmployeeControllerTest {
     }
 
     @Test
+    @Transactional
     void deleteEmployee() throws Exception{
-        mockMvc.perform(delete("/employees/{employeeNo}/delete-employee", 20L)
+        mockMvc.perform(delete("/employees/{employeeNo}/delete-employee", 19L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
