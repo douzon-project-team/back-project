@@ -2,28 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.douzon.blooming.customer.repo.CustomerRepository">
-    <select id="customerCodeCheck" parameterType="java.lang.String" resultType="java.lang.String">
-        SELECT customer_code FROM project.customer WHERE customer_code = #{customerCode};
+    <select id="customerCodeCheck" parameterType="java.lang.String" resultType="java.lang.Boolean">
+        SELECT COUNT(*) FROM project.customer WHERE customer_code = #{customerCode};
     </select>
 
     <insert id="insertCustomer" parameterType="com.douzon.blooming.customer.dto.request.RequestCustomerDto">
         INSERT INTO project.customer(customer_code, customer_name, customer_tel) VALUES (#{customerCode}, #{customerName}, #{customerTel})
     </insert>
 
-    <select id="getCustomer" parameterType="java.lang.Long" resultType="com.douzon.blooming.customer.dto.response.ResponseCustomerDto">
+    <select id="findCustomer" parameterType="java.lang.Long" resultType="com.douzon.blooming.customer.dto.response.ResponseCustomerDto">
         SELECT * FROM project.customer WHERE customer_no = #{customerNo}
     </select>
 
     <select id="getCountCustomers" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM project.customer
-        <where>
-            <if test='customerName != null'>
-                customer_name LIKE CONCAT('%', #{customerName}, '%')
-            </if>
-        </where>
+        WHERE customer_name LIKE CONCAT('%', #{customerName}, '%')
     </select>
 
-    <select id="getCustomerList" resultType="com.douzon.blooming.customer.dto.response.ResponseCustomerDto">
+    <select id="findCustomers" resultType="com.douzon.blooming.customer.dto.response.ResponseCustomerDto">
         SELECT customer_no, customer_code, customer_name, customer_tel
         FROM project.customer
         <where>

@@ -6,21 +6,22 @@ import com.douzon.blooming.customer.dto.response.ResponseCustomerDto;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface CustomerRepository {
 
-    String customerCodeCheck(String customerCode);
+    boolean customerCodeCheck(String customerCode);
 
     void insertCustomer(RequestCustomerDto dto);
 
-    ResponseCustomerDto getCustomer(Long customerNo);
+    Optional<ResponseCustomerDto> findCustomer(Long customerNo);
 
     Integer getCountCustomers(String customerName);
 
-    List<ResponseCustomerDto> getCustomerList(String customerName, int start, int pageSize);
+    List<ResponseCustomerDto> findCustomers(String customerName, int start, int pageSize);
 
-    void updateCustomer(@Param("dto")UpdateCustomerDto dto, Long customerNo);
+    int updateCustomer(@Param("dto")UpdateCustomerDto dto, Long customerNo);
 
-    void deleteCustomer(Long customerNo);
+    int deleteCustomer(Long customerNo);
 }

@@ -1,5 +1,6 @@
 package com.douzon.blooming.customer.controller;
 
+import com.douzon.blooming.customer.dto.request.CustomerSearchDto;
 import com.douzon.blooming.customer.dto.request.RequestCustomerDto;
 import com.douzon.blooming.customer.dto.request.UpdateCustomerDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
@@ -19,6 +20,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -52,9 +54,10 @@ public class CustomerControllerTest {
     }
 
     @Test
+    @Transactional
     public void insertCustomer() throws Exception {
-        RequestCustomerDto dto = new RequestCustomerDto("C0004", "Kakao", "010-777-7777");
-        mockMvc.perform(post("/customers/insert")
+        RequestCustomerDto dto = new RequestCustomerDto("C0004", "Kakao", "010-7777-7777");
+        mockMvc.perform(post("/customers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())
@@ -66,7 +69,7 @@ public class CustomerControllerTest {
 
     @Test
     public void getCustomer() throws Exception {
-        mockMvc.perform(get("/customers/{customerNo}", 4L))
+        mockMvc.perform(get("/customers/{customerNo}", 3L))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
                         pathParameters(
@@ -82,10 +85,13 @@ public class CustomerControllerTest {
     }
 
     @Test
-    public void getCustomerList() throws Exception{
+    public void getCustomers() throws Exception{
         mockMvc.perform(get("/customers/list")
-                .contentType(MediaType.APPLICATION_JSON))
-//                        .param("customerName", "ka"))
+                .contentType(MediaType.APPLICATION_JSON)
+//                .param("customerName", "ka")
+//                .param("page", "1")
+//                .param("pageSize", "8")
+                )
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
                     responseFields(
@@ -98,9 +104,10 @@ public class CustomerControllerTest {
     }
 
     @Test
+    @Transactional
     public void updateCustomer() throws Exception{
-        UpdateCustomerDto dto = new UpdateCustomerDto("kakaoo", "010-776-6666");
-        mockMvc.perform(put("/customers/{customerNo}", 4L)
+        UpdateCustomerDto dto = new UpdateCustomerDto("kakao", "010-7736-6666");
+        mockMvc.perform(put("/customers/{customerNo}", 3L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -113,8 +120,9 @@ public class CustomerControllerTest {
     }
 
     @Test
+    @Transactional
     public void deleteCustomer() throws Exception {
-        mockMvc.perform(delete("/customers/{customerNo}", 4L)
+        mockMvc.perform(delete("/customers/{customerNo}", 3L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
