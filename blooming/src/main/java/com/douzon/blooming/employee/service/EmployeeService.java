@@ -8,6 +8,7 @@ import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseListEmployeeDto;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface EmployeeService {
 

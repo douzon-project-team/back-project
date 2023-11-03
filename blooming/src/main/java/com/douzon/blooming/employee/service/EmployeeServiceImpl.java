@@ -12,8 +12,10 @@ import com.douzon.blooming.employee.dto.response.ListEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseListEmployeeDto;
 import com.douzon.blooming.employee.exception.EmployeeNotFoundException;
+import com.douzon.blooming.employee.exception.PasswordDoesNotMatchException;
 import com.douzon.blooming.employee.repo.EmployeeRepository;
 import com.douzon.blooming.product.exception.NotFoundProductException;
+import io.jsonwebtoken.security.Password;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,23 +51,28 @@ public class EmployeeServiceImpl implements EmployeeService {
 
   @Override
   public ResponseListEmployeeDto getEmployeeList(EmployeeSearchDto dto) {
-    int start = (dto.getPage() - 1) * dto.getSize();
-    List<ListEmployeeDto> employeeList = employeeRepository.findEmployeeListWithFilter(dto, start,
-        dto.getSize());
-    int searchEmployeeCount = employeeRepository.getCountEmployees(dto);
+    if (dto.getPage() != 0) {
+      dto.setPage(dto.getPage() - 1);
+    }
 
-    boolean hasNextPage = start + dto.getPage() < searchEmployeeCount;
+    List<ListEmployeeDto> employeeList = employeeRepository.findEmployeeListWithFilter(dto);
+
+    int searchEmployeeCount = employeeRepository.getCountEmployees(dto);
+    int start = dto.getPage() * dto.getSize();
+
+    boolean hasNextPage = start + dto.getSize() < searchEmployeeCount;
     boolean hasPreviousPage = start > 0;
 
-    return new ResponseListEmployeeDto(employeeList, dto.getPage(), hasNextPage, hasPreviousPage);
+    return new ResponseListEmployeeDto(employeeList, dto.getPage() + 1, hasNextPage,
+        hasPreviousPage);
   }
 
   @Override
   public void updateEmployee(UpdateEmployeeDto updateEmployeeDto, Long employeeNo) {
     ResponseEmployeeDto responseEmployeeDto = employeeRepository.findEmployeeByNo(employeeNo)
         .orElseThrow(NotFoundProductException::new);
-    if (!responseEmployeeDto.getPassword().equals(updateEmployeeDto.getPassword())) {
-      throw new EmployeePermissionDefinedException();
+    if (!responseEmployeeDto.getPassword().equals(updateEmployeeDto.getOldPassword())) {
+      throw new PasswordDoesNotMatchException();
     }
     employeeRepository.updateEmployeeByUpdateEmployeeDto(updateEmployeeDto, employeeNo);
   }

@@ -1,6 +1,7 @@
 package com.douzon.blooming.employee.service;
 
 import com.douzon.blooming.employee.exception.ImageUploadException;
+import com.douzon.blooming.employee.exception.NotFoundImageException;
 import com.douzon.blooming.employee.repo.EmployeeRepository;
 import java.io.File;
 import java.io.IOException;
@@ -36,8 +37,12 @@ public class MemoryEmployeeImageService implements
   @Override
   public UrlResource getEmployeeImage(Long employeeNo) throws MalformedURLException {
     String imageUrl = employeeRepository.findEmployeeImageByEmployeeNo(employeeNo);
+    if (imageUrl == null) {
+      throw new NotFoundImageException();
+    }
+
     return new UrlResource(
-        "file :" + ABSOLUTE_PATH + File.separator + PATH + File.separator + imageUrl);
+        "file:" + ABSOLUTE_PATH + File.separator + PATH + File.separator + imageUrl);
   }
 
   @Override

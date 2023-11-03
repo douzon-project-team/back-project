@@ -11,7 +11,7 @@
 
   <select id="findEmployeeByNo"
     resultType="com.douzon.blooming.employee.dto.response.ResponseEmployeeDto">
-    SELECT employee_no, id, password, name, img, tel, email
+    SELECT employee_no, id, password, name, tel, email
     FROM project.employee
     WHERE employee_no = #{employeeId}
   </select>
@@ -19,68 +19,50 @@
   <select id="getCountEmployees" resultType="java.lang.Integer"
     parameterType="com.douzon.blooming.employee.dto.request.EmployeeSearchDto">
     SELECT COUNT(*) FROM project.employee
-    <where>
-      <if test='employeeNo != null'>
-        employee_no LIKE CONCAT('%', #{employeeNo}, '%')
-      </if>
-      <if test='name != null and name != ""'>
-        <choose>
-          <when test='employeeNo == null'>
-            name LIKE CONCAT('%', #{name}, '%')
-          </when>
-          <otherwise>
-            AND name LIKE CONCAT('%', #{name}, '%')
-          </otherwise>
-        </choose>
-      </if>
-      <if test='role != null and role != ""'>
-        <choose>
-          <when test='employeeNo == null and name == null'>
-            role = #{role}
-          </when>
-          <otherwise>
-            AND role = #{role}
-          </otherwise>
-        </choose>
-      </if>
-    </where>
+    WHERE employee_no LIKE CONCAT('%', #{employeeNo}, '%')
+    AND name LIKE CONCAT('%', #{name}, '%')
+    <if test='role != null'>
+      AND role = #{role}
+    </if>
   </select>
 
   <select id="findEmployeeListWithFilter"
     resultType="com.douzon.blooming.employee.dto.response.ListEmployeeDto">
     SELECT employee_no as employeeNo, name, tel, email, role
     FROM project.employee
-    <where>
-      <if test='employeeSearchDto.employeeNo != null'>
-        employee_no LIKE CONCAT('%', #{employeeSearchDto.employeeNo}, '%')
-      </if>
-      <if test='employeeSearchDto.name != null and dto.name != ""'>
-        <choose>
-          <when test='employeeSearchDto.employeeNo == null'>
-            name LIKE CONCAT('%', #{employeeSearchDto.name}, '%')
-          </when>
-          <otherwise>
-            AND name LIKE CONCAT('%', #{employeeSearchDto.name}, '%')
-          </otherwise>
-        </choose>
-      </if>
-      <if test='employeeSearchDto.role != null and employeeSearchDto.role != ""'>
-        <choose>
-          <when test='employeeSearchDto.employeeNo == null and employeeSearchDto.name == null'>
-            role = #{employeeSearchDto.role}
-          </when>
-          <otherwise>
-            AND role = #{employeeSearchDto.role}
-          </otherwise>
-        </choose>
-      </if>
-    </where>
-    LIMIT #{start}, #{pageSize}
+    WHERE
+    employee_no LIKE CONCAT('%', #{employeeSearchDto.employeeNo}, '%')
+    AND name LIKE CONCAT('%', #{employeeSearchDto.name}, '%')
+    <if test='employeeSearchDto.role != null'>
+      AND role = #{employeeSearchDto.role}
+    </if>
+    <choose>
+      <when test='employeeSearchDto.page == 0'>
+        LIMIT #{employeeSearchDto.size}
+      </when>
+      <otherwise>
+        LIMIT #{employeeSearchDto.size} * #{employeeSearchDto.page}, #{employeeSearchDto.size}
+      </otherwise>
+    </choose>
   </select>
 
   <update id="updateEmployeeByUpdateEmployeeDto">
     UPDATE project.employee
-    SET ${target} = #{newValue}
+    SET password = #{dto.password},
+        name     = #{dto.name},
+        tel      = #{dto.tel},
+        email    = #{dto.email}
+    WHERE employee_no = #{employeeNo}
+  </update>
+
+  <update id="updateEmployeeByAuthUpdateEmployeeDto">
+    UPDATE project.employee
+    SET id       = #{dto.id},
+        password = #{dto.password},
+        name     = #{dto.name},
+        role     = #{dto.role},
+        tel      = #{dto.tel},
+        email    = #{dto.email}
     WHERE employee_no = #{employeeNo}
   </update>
 
@@ -113,5 +95,15 @@
     WHERE employee_no = #{employeeId}
   </select>
 
+  <update id="updateEmployeeImage">
+    UPDATE project.employee
+    SET img = #{imageUrl}
+    WHERE employee_no = #{employeeNo};
+  </update>
 
+  <select id="findEmployeeImageByEmployeeNo" resultType="java.lang.String">
+    SELECT img
+    FROM project.employee
+    WHERE employee_no = #{employeeNo};
+  </select>
 </mapper>

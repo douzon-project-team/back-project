@@ -1,6 +1,7 @@
 package com.douzon.blooming.employee.interceptor;
 
 import com.douzon.blooming.auth.EmployeeDetails;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,10 @@ public class EmployeeCheckInterceptor implements HandlerInterceptor {
         String numberPart = matcher.group(1);
         Long employeeNo = Long.parseLong(numberPart);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getAuthorities().stream().anyMatch(grantedAuthority -> Objects.equals(
+            grantedAuthority.getAuthority(), "ADMIN"))) {
+          return true;
+        }
         EmployeeDetails employee = (EmployeeDetails) authentication.getPrincipal();
         return employee.getEmployeeNo().equals(employeeNo);
       }
