@@ -1,7 +1,6 @@
 package com.douzon.blooming.product.controller;
 
 import static com.douzon.blooming.restdocs.RestDocsConfig.field;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -38,10 +37,9 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @Import(RestDocsConfig.class)
 class ProductControllerTest {
 
+  private final ObjectMapper objectMapper = new ObjectMapper();
   @Autowired
   protected RestDocumentationResultHandler restDocs;
-
-  private final ObjectMapper objectMapper = new ObjectMapper();
   private MockMvc mockMvc;
 
   @BeforeEach
@@ -59,10 +57,11 @@ class ProductControllerTest {
   void getProduct() throws Exception {
     mockMvc.perform(get("/products/{productCode}", "VV0001")
             .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andDo(restDocs.document(
+        .andExpect(status().isOk())
+        .andDo(restDocs.document(
             pathParameters(
-                parameterWithName("productCode").description("제품 코드").attributes(field("constraints","길이 6 이하"))
+                parameterWithName("productCode").description("제품 코드")
+                    .attributes(field("constraints", "길이 6 이하"))
             ),
             responseFields(
                 fieldWithPath("productNo").type(JsonFieldType.NUMBER).description("상품 PK"),

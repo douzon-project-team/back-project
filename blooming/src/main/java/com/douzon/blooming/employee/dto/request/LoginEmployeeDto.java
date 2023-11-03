@@ -1,5 +1,6 @@
-package com.douzon.blooming.auth.dto.request;
+package com.douzon.blooming.employee.dto.request;
 
+import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoginEmployeeDto {
 
+  @NotBlank
   private String id;
+
+  @NotBlank
   private String password;
 }

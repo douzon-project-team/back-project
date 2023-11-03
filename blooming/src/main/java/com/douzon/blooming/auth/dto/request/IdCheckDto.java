@@ -1,17 +1,16 @@
-package com.douzon.blooming.auth.dto.response;
+package com.douzon.blooming.auth.dto.request;
 
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 @AllArgsConstructor
-public class TokenDto {
+public class IdCheckDto {
 
-  private String grantType;
-  private String accessToken;
+  @NotNull
+  private String id;
 }

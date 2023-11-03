@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.douzon.blooming.employee.repo.EmployeeRepository">
+
+  <select id="findEmployeeNoByName" resultType="java.lang.Long">
+    SELECT employee_no
+    FROM project.employee
+    WHERE name = #{employeeName}
+  </select>
+
+  <select id="findEmployeeByNo"
+    resultType="com.douzon.blooming.employee.dto.response.ResponseEmployeeDto">
+    SELECT employee_no, id, password, name, tel, email
+    FROM project.employee
+    WHERE employee_no = #{employeeId}
+  </select>
+
+  <select id="getCountEmployees" resultType="java.lang.Integer"
+    parameterType="com.douzon.blooming.employee.dto.request.EmployeeSearchDto">
+    SELECT COUNT(*) FROM project.employee
+    WHERE employee_no LIKE CONCAT('%', #{employeeNo}, '%')
+    AND name LIKE CONCAT('%', #{name}, '%')
+    <if test='role != null'>
+      AND role = #{role}
+    </if>
+  </select>
+
+  <select id="findEmployeeListWithFilter"
+    resultType="com.douzon.blooming.employee.dto.response.ListEmployeeDto">
+    SELECT employee_no as employeeNo, name, tel, email, role
+    FROM project.employee
+    WHERE
+    employee_no LIKE CONCAT('%', #{employeeSearchDto.employeeNo}, '%')
+    AND name LIKE CONCAT('%', #{employeeSearchDto.name}, '%')
+    <if test='employeeSearchDto.role != null'>
+      AND role = #{employeeSearchDto.role}
+    </if>
+    <choose>
+      <when test='employeeSearchDto.page == 0'>
+        LIMIT #{employeeSearchDto.size}
+      </when>
+      <otherwise>
+        LIMIT #{employeeSearchDto.size} * #{employeeSearchDto.page}, #{employeeSearchDto.size}
+      </otherwise>
+    </choose>
+  </select>
+
+  <update id="updateEmployeeByUpdateEmployeeDto">
+    UPDATE project.employee
+    SET password = #{dto.password},
+        name     = #{dto.name},
+        tel      = #{dto.tel},
+        email    = #{dto.email}
+    WHERE employee_no = #{employeeNo}
+  </update>
+
+  <update id="updateEmployeeByAuthUpdateEmployeeDto">
+    UPDATE project.employee
+    SET id       = #{dto.id},
+        password = #{dto.password},
+        name     = #{dto.name},
+        role     = #{dto.role},
+        tel      = #{dto.tel},
+        email    = #{dto.email}
+    WHERE employee_no = #{employeeNo}
+  </update>
+
+  <delete id="deleteEmployee">
+    DELETE
+    FROM project.employee
+    WHERE employee_no = #{employeeNo}
+  </delete>
+
+  <insert id="insertEmployee">
+    INSERT INTO project.employee (employee_no, id, password, name, role, tel, email)
+    VALUES (#{employeeNo}, #{id}, #{password}, #{name}, #{role}, #{tel}, #{email})
+  </insert>
+
+  <select id="findEmployeeById" resultType="com.douzon.blooming.employee.dto.response.EmployeeDto">
+    SELECT employee_no, id, password, role
+    FROM project.employee
+    WHERE id = #{id}
+  </select>
+
+  <select id="existById" resultType="boolean">
+    SELECT COUNT(*)
+    FROM project.employee
+    WHERE id = #{id}
+  </select>
+
+  <select id="existByEmployeeNo" resultType="boolean">
+    SELECT COUNT(*)
+    FROM project.employee
+    WHERE employee_no = #{employeeId}
+  </select>
+
+  <update id="updateEmployeeImage">
+    UPDATE project.employee
+    SET img = #{imageUrl}
+    WHERE employee_no = #{employeeNo};
+  </update>
+
+  <select id="findEmployeeImageByEmployeeNo" resultType="java.lang.String">
+    SELECT img
+    FROM project.employee
+    WHERE employee_no = #{employeeNo};
+  </select>
+</mapper>

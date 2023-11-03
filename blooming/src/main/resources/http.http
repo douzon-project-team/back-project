@@ -14,11 +14,19 @@ Content-Type: application/json;charset=UTF-8
 GET http://localhost:8080/products/1
 Content-Type: application/json
 
+
+###
+PUT http://localhost:8080/employees/1
+Content-Type: application/json
+
+{
+  "target": 1,
+  "newValue": "AAA"
+}
 ###
 
 POST http://localhost:8080/auth/register
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOIiwiZXhwIjoxNjk4MTQxMzAyfQ.F2FxzvltENhJfk4k3jZQCXNzccIGsWL4DNfaU6j5jqw
 
 {
   "id": "tester",
@@ -29,7 +37,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX
 
 ### 어드민 로그인
 
-POST http://localhost:8080/login
+POST http://localhost:8080/employees/login
 Content-Type: application/json
 
 {
@@ -39,7 +47,7 @@ Content-Type: application/json
 
 ### 맴버 로그인
 
-POST http://localhost:8080/login
+POST http://localhost:8080/employees/login
 Content-Type: application/json
 
 {
@@ -55,4 +63,14 @@ Content-Type: application/json
 {
   "id": "member",
   "password": "member"
+}
+
+### 임폴리 번호 중복 확인
+
+GET http://localhost:8080/auth/employees/no/check
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImVtcGxveWVlTm8iOjIwMDAwMSwiYXV0aCI6IlJPTEVfQURNSU4iLCJleHAiOjE2OTg4MzgwNTd9.S0kj0xeBEpNGxeQGZU_TEsu6MDWwOp2MDlgftfEcfBA
+
+{
+  "employeeNo" : 200001
 }
