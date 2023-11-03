@@ -7,48 +7,67 @@ douzone project 5 team
 :toclevels: 2
 :sectlinks:
 
+[[Auth]]
+
+== Auth API
+
+=== 회원 가입
+
+operation::employee-auth-controller-test/register[snippets='http-request,request-headers,request-fields,http-response']
+
+=== Employee 삭제
+
+operation::employee-auth-controller-test/delete-employee[snippets='http-request,request-headers,path-parameters,http-response']
+
+=== Employee 수정
+
+operation::employee-auth-controller-test/update-employee[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+
+=== Employee No 중복 체크
+
+operation::employee-auth-controller-test/no-check[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+=== Employee Id 중복 체크
+
+operation::employee-auth-controller-test/no-check[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
 [[Employee]]
+
 == Employee API
 
 === Employee 로그인
 
 operation::employee-controller-test/login[snippets='http-request,http-response']
 
-=== Id 중복 체크
-
-operation::employee-controller-test/id-duplicate-check[snippets='http-request,http-response']
-
-=== Employee_No 중복 체크
-
-operation::employee-controller-test/employee-no-duplicate-check[snippets='http-request,http-response']
-
-=== Employee 추가
-
-operation::/employee-controller-test/insert-employee[snippets='http-request,http-response']
-
 === Employee 조회
 
-operation::/employee-controller-test/find-employee-by-no[snippets='http-request,path-parameters,http-response,response-fields']
+operation::/employee-controller-test/get-employee-by-no[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === EmployeeList 조회
 
-operation::/employee-controller-test/find-employee-list[snippets='http-request,http-response,response-fields']
+operation::/employee-controller-test/find-employee-list[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === Employee 수정
 
-operation::employee-controller-test/update-employee[snippets='http-request,path-parameters,http-response']
+operation::employee-controller-test/update-employee[snippets='http-request,request-headers,path-parameters,http-response']
 
-=== Employee 삭제
+=== 이미지 조회
 
-operation::/employee-controller-test/delete-employee[snippets='http-request,path-parameters,http-response']
+operation::employee-controller-test/get-image[snippets='http-request,request-headers,path-parameters,http-response']
 
+=== 이미지 추가
+
+operation::employee-controller-test/add-image[snippets='http-request,request-headers,path-parameters,http-response']
+
+=== 이미지 삭제
+
+operation::employee-controller-test/delete-image[snippets='http-request,request-headers,path-parameters']
 [[Product]]
 == Product API
 
 === Product 추가
 
 operation::/product-controller-test/add-product[snippets='http-request,http-response']
-
 
 === Product 조회
 
