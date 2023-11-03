@@ -17,18 +17,18 @@ import lombok.Setter;
 public class AuthUpdateEmployeeDto {
 
   @NotNull
-  @Pattern(regexp = "^\\d{6}$")
+  @Pattern(regexp = "^\\d{6}$", message = "잘못된 사원 번호 형식입니다.")
   private Long employeeNo;
 
-  @Pattern(regexp = "^[a-zA-Z0-9]{4,}$")
-  @NotBlank(message = "아이디는 필수 값입니다.")
+  @Pattern(regexp = "^[a-zA-Z0-9]{4,}$", message = "잘못된 아이디 형식입니다.")
+  @NotBlank
   private String id;
 
   @Setter
-  @NotBlank(message = "비밀번호는 필수 값입니다.")
+  @NotBlank
   private String password;
 
-  @NotBlank(message = "이름은 필수 값입니다.")
+  @NotBlank
   private String name;
 
   private EmployeeRole role;
