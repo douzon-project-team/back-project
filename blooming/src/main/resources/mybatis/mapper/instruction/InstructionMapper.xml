@@ -8,10 +8,12 @@
     </insert>
 
     <select id="getInstructionNo" resultType="java.lang.String">
-        SELECT instruction_no FROM project.instruction ORDER BY SUBSTRING(instruction_no,4,4) DESC,SUBSTRING(instruction_no,7) DESC LIMIT 1
+        SELECT instruction_no
+        FROM project.instruction
+        ORDER BY SUBSTRING(instruction_no,4,4) DESC,SUBSTRING(instruction_no,7) DESC LIMIT 1
     </select>
 
-    <select id="findByInstructionNo" parameterType="java.lang.String" resultType="com.douzon.blooming.instruction.dto.response.GetInstructionDto">
+    <select id="findInstruction" parameterType="java.lang.String" resultType="com.douzon.blooming.instruction.dto.response.GetInstructionDto">
         SELECT  I.instruction_no as instruction_no, I.instruction_date as instruction_date,
                 C.customer_name as customer_name, E.name as employee_name,
                 I.progress_status as progress_status, I.expiration_date as expiration_date
@@ -20,7 +22,7 @@
         WHERE I.instruction_no = #{instructionNo}
     </select>
 
-    <select id="findInstructionList" parameterType="com.douzon.blooming.instruction.dto.request.SearchDto"
+    <select id="findInstructions" parameterType="com.douzon.blooming.instruction.dto.request.InstructionSearchDto"
             resultType="com.douzon.blooming.instruction.dto.response.ListInstructionDto">
         SELECT I.instruction_no AS instruction_no,
         E.name AS employee_name,
@@ -60,7 +62,7 @@
         LIMIT #{start}, #{pageSize}
     </select>
 
-    <select id="getCountInstructions" parameterType="com.douzon.blooming.instruction.dto.request.SearchDto"
+    <select id="getCountInstructions" parameterType="com.douzon.blooming.instruction.dto.request.InstructionSearchDto"
             resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM project.instruction I

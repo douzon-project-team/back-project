@@ -10,11 +10,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class SearchDto {
+public class InstructionSearchDto {
+    private static final Integer DEFAULT_PAGE = 1;
+    private static final Integer DEFAULT_PAGE_SIZE = 8;
+
     private ProgressStatus progressStatus;
     private String employeeName;
     private String startDate;
     private String endDate;
-    private Integer page = 1;
-    private Integer pageSize = 8;
+    private Integer page = DEFAULT_PAGE;
+    private Integer pageSize = DEFAULT_PAGE_SIZE;
 }
