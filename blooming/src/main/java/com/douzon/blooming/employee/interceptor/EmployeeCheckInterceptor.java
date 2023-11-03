@@ -16,15 +16,16 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @RequiredArgsConstructor
 public class EmployeeCheckInterceptor implements HandlerInterceptor {
 
-  private static final String EMPLOYEE_PREFIX = "employees/";
+  private static final String EMPLOYEE_PREFIX = "/employees/";
 
   @Override
   public boolean preHandle(HttpServletRequest request, @NonNull HttpServletResponse response,
       @NonNull Object handler) {
-
-    if (!request.getMethod().equalsIgnoreCase("GET")) {
-      Pattern pattern = Pattern.compile("employees/(\\d+)");
-      Matcher matcher = pattern.matcher(EMPLOYEE_PREFIX);
+    String path = request.getServletPath();
+    if (!request.getMethod().equalsIgnoreCase("GET") && path
+        .startsWith(EMPLOYEE_PREFIX)) {
+      Pattern pattern = Pattern.compile(EMPLOYEE_PREFIX + "(\\d+)");
+      Matcher matcher = pattern.matcher(path);
 
       if (matcher.find()) {
         String numberPart = matcher.group(1);

@@ -1,33 +1,23 @@
 package com.douzon.blooming.log.delivery.interceptor;
 
 import com.douzon.blooming.auth.EmployeeDetails;
+import com.douzon.blooming.log.AbstractLogInterceptor;
 import com.douzon.blooming.log.LogType;
 import com.douzon.blooming.log.delivery.dto.DeliveryLogDto;
 import com.douzon.blooming.log.delivery.service.DeliveryLogService;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
-@RequiredArgsConstructor
-public class DeliveryLogInterceptor implements HandlerInterceptor {
+public class DeliveryLogInterceptor extends AbstractLogInterceptor<DeliveryLogDto> {
 
-  private final DeliveryLogService deliveryLogService;
-
-  @Override
-  public void afterCompletion(HttpServletRequest request, @NonNull HttpServletResponse response,
-      @NonNull Object handler, Exception ex) {
-    if (!request.getMethod().equalsIgnoreCase("GET")) {
-      DeliveryLogDto deliveryLog = getDeliveryLog(request);
-      deliveryLogService.addDeliveryLog(deliveryLog);
-    }
+  public DeliveryLogInterceptor(DeliveryLogService deliveryLogService) {
+    super(deliveryLogService);
   }
 
-  private DeliveryLogDto getDeliveryLog(HttpServletRequest req) {
+  @Override
+  public DeliveryLogDto getLogDto(HttpServletRequest req) {
     EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
     return DeliveryLogDto.builder()
@@ -36,10 +26,5 @@ public class DeliveryLogInterceptor implements HandlerInterceptor {
         .modifierNo(employeeDetails.getEmployeeNo())
         .type(LogType.fromRequestMethod(req.getMethod()))
         .build();
-  }
-
-  private String getClientIp(HttpServletRequest req) {
-    String ip = req.getHeader("X-Forwarded-For");
-    return ip != null ? ip : req.getRemoteAddr();
   }
 }
