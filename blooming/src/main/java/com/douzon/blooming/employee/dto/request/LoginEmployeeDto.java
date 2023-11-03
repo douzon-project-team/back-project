@@ -11,8 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoginEmployeeDto {
 
-  @NotBlank(message = "아이디는 필수 값입니다.")
+  @NotBlank
   private String id;
-  @NotBlank(message = "비밀번호는 필수 값입니다.")
+
+  @NotBlank
   private String password;
 }
