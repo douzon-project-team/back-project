@@ -2,5 +2,87 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.douzon.blooming.delivery.repo.DeliveryRepository">
-    
+
+    <insert id="insertDelivery" parameterType="com.douzon.blooming.delivery.dto.request.InsertDeliveryDto">
+        INSERT INTO project.delivery(employee_no, delivery_date, progress_status)
+        VALUES (#{employeeNo}, #{dto.deliveryDate}, #{dto.progressStatus})
+    </insert>
+
+    <select id="getDeliveryNo" resultType="java.lang.String">
+        SELECT delivery_no
+        FROM project.delivery
+        ORDER BY SUBSTRING(delivery_no,2,4) DESC,SUBSTRING(delivery_no,7) DESC LIMIT 1
+    </select>
+
+    <select id="findDelivery" parameterType="java.lang.String" resultType="com.douzon.blooming.delivery.dto.response.GetDeliveryDto">
+
+    </select>
+
+    <select id="findDeliveries" parameterType="com.douzon.blooming.delivery.dto.request.DeliverySearchDto" resultType="com.douzon.blooming.delivery.dto.response.ListDeliveryDto">
+        SELECT D.delivery_no as delivery_no,
+               E.name as employee_name,
+               D.delivery_date as delivery_date,
+               D.progress_status as delivery_status
+        FROM project.delivery D LEFT JOIN project.employee E ON D.employee_no = E.employee_no
+        <where>
+            <if test = "dto.deliveryStatus != null">
+                D.progress_status = #{dto.progressStatus}
+            </if>
+            <if test = "dto.employeeName != null">
+                <choose>
+                    <when test="dto.deliveryNo == null">
+                        E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
+                    </when>
+                    <otherwise>
+                        AND E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
+                    </otherwise>
+                </choose>
+            </if>
+            <if test = "dto.startDate != null">
+                <choose>
+                    <when test="dto.deliveryNo == null and dto.employeeName == null">
+                        D.delivery_date BETWEEN #{dto.startDate} AND #{dto.endDate}
+                    </when>
+                    <otherwise>
+                        AND D.delivery_date BETWEEN #{dto.startDate} AND #{dto.endDate}
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        LIMIT #{start}, #{pageSize}
+    </select>
+
+    <select id="getCountDeliveries" parameterType="com.douzon.blooming.delivery.dto.request.DeliverySearchDto" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM project.delivery D LEFT JOIN project.employee E ON D.employee_no = E.employee_no
+        <where>
+            <if test = "dto.deliveryStatus != null">
+                D.progress_status = #{dto.progressStatus}
+            </if>
+            <if test = "dto.employeeName != null">
+                <choose>
+                    <when test="dto.deliveryNo == null">
+                        E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
+                    </when>
+                    <otherwise>
+                        AND E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
+                    </otherwise>
+                </choose>
+            </if>
+            <if test = "dto.startDate != null">
+                <choose>
+                    <when test="dto.deliveryNo == null and dto.employeeName == null">
+                        D.delivery_date BETWEEN #{dto.startDate} AND #{dto.endDate}
+                    </when>
+                    <otherwise>
+                        AND D.delivery_date BETWEEN #{dto.startDate} AND #{dto.endDate}
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteDelivery" parameterType="java.lang.String">
+        DELETE FROM project.delivery WHERE delivery_no = #{deliveryNo}
+    </delete>
 </mapper>
