@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProductListDto {
 
-  private String productNo;
+  private Long productNo;
   private String productCode;
   private String productName;
   private int unit;

@@ -3,8 +3,8 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.douzon.blooming.product.repo.ProductRepository">
   <insert id="insertByRequestProductDto">
-    INSERT INTO project.product (product_no, product_code, product_name, standard, unit)
-      VALUE (#{productNo}, #{productCode}, #{productName}, #{standard}, #{unit});
+    INSERT INTO project.product (product_code, product_name, standard, unit)
+      VALUE (#{productCode}, #{productName}, #{standard}, #{unit});
   </insert>
 
   <delete id="deleteByProductNo">
@@ -32,14 +32,14 @@
     resultType="com.douzon.blooming.product.dto.response.ProductListDto">
     SELECT *
     FROM project.product
-    WHERE product_code LIKE CONCAT('%', #{productCode}, '%')
-    AND product_name LIKE CONCAT('%', #{productName}, '%')
+    WHERE product_code LIKE CONCAT('%', #{productSearchDto.productCode}, '%')
+    AND product_name LIKE CONCAT('%', #{productSearchDto.productName}, '%')
     <choose>
-      <when test='employeeSearchDto.page == 0'>
-        LIMIT #{size}
+      <when test='productSearchDto.page == 0'>
+        LIMIT #{productSearchDto.pageSize}
       </when>
       <otherwise>
-        LIMIT #{size} * #{page}, #{size}
+        LIMIT #{start}, #{productSearchDto.pageSize}
       </otherwise>
     </choose>
   </select>

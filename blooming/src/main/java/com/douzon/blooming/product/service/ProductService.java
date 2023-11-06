@@ -1,13 +1,17 @@
 package com.douzon.blooming.product.service;
 
-import com.douzon.blooming.product.dto.ResponseProductListDto;
-import com.douzon.blooming.product.dto.request.SearchProductDto;
+import com.douzon.blooming.PageDto;
+import com.douzon.blooming.product.dto.request.InsertProductDto;
+import com.douzon.blooming.product.dto.request.ProductSearchDto;
 import com.douzon.blooming.product.dto.request.UpdateProductDto;
 import com.douzon.blooming.product.dto.response.ProductDto;
+import com.douzon.blooming.product.dto.response.ProductListDto;
+
+;
 
 public interface ProductService {
 
-  void addProduct(UpdateProductDto requestProductDto);
+  void addProduct(InsertProductDto insertProductDto);
 
   void removeProduct(long productNo);
 
@@ -15,5 +19,5 @@ public interface ProductService {
 
   ProductDto findProduct(long productNo);
 
-  ResponseProductListDto findProducts(SearchProductDto searchProductDto);
+  PageDto<ProductListDto> findProducts(ProductSearchDto productSearchDto);
 }

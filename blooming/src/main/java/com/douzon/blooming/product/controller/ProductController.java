@@ -1,9 +1,11 @@
 package com.douzon.blooming.product.controller;
 
-import com.douzon.blooming.product.dto.ResponseProductListDto;
-import com.douzon.blooming.product.dto.request.SearchProductDto;
+import com.douzon.blooming.PageDto;
+import com.douzon.blooming.product.dto.request.InsertProductDto;
+import com.douzon.blooming.product.dto.request.ProductSearchDto;
 import com.douzon.blooming.product.dto.request.UpdateProductDto;
 import com.douzon.blooming.product.dto.response.ProductDto;
+import com.douzon.blooming.product.dto.response.ProductListDto;
 import com.douzon.blooming.product.service.ProductService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,14 +33,14 @@ public class ProductController {
   }
 
   @GetMapping("/list")
-  public ResponseEntity<ResponseProductListDto> getProducts(
-      @ModelAttribute SearchProductDto searchProductDto) {
-    return ResponseEntity.ok(productService.findProducts(searchProductDto));
+  public ResponseEntity<PageDto<ProductListDto>> getProducts(
+      @ModelAttribute ProductSearchDto productSearchDto) {
+    return ResponseEntity.ok(productService.findProducts(productSearchDto));
   }
 
   @PostMapping
-  public ResponseEntity<Void> addProduct(@RequestBody @Valid UpdateProductDto requestProductDto) {
-    productService.addProduct(requestProductDto);
+  public ResponseEntity<Void> addProduct(@RequestBody @Valid InsertProductDto insertProductDto) {
+    productService.addProduct(insertProductDto);
     return ResponseEntity.noContent().build();
   }
 
@@ -50,7 +52,7 @@ public class ProductController {
 
   @PutMapping("/{productNo}")
   public ResponseEntity<Void> updateProduct(@PathVariable Long productNo,
-      @RequestBody UpdateProductDto requestProductDto) {
+      @RequestBody @Valid UpdateProductDto requestProductDto) {
     requestProductDto.setProductNo(productNo);
     productService.updateProduct(requestProductDto);
     return ResponseEntity.noContent().build();

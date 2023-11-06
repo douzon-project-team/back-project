@@ -1,4 +1,4 @@
-package com.douzon.blooming.employee.dto.response;
+package com.douzon.blooming;
 
 import java.util.List;
 import lombok.AccessLevel;
@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-public class ResponseEmployeeListDto {
+public class PageDto<T> {
 
-  private List<EmployeeListDto> employeeList;
+  private List<T> list;
   private Integer currentPage;
   private boolean hasNextPage;
   private boolean hasPreviousPage;

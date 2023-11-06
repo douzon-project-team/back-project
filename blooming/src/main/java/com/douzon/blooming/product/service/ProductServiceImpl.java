@@ -1,7 +1,8 @@
 package com.douzon.blooming.product.service;
 
-import com.douzon.blooming.product.dto.ResponseProductListDto;
-import com.douzon.blooming.product.dto.request.SearchProductDto;
+import com.douzon.blooming.PageDto;
+import com.douzon.blooming.product.dto.request.InsertProductDto;
+import com.douzon.blooming.product.dto.request.ProductSearchDto;
 import com.douzon.blooming.product.dto.request.UpdateProductDto;
 import com.douzon.blooming.product.dto.response.ProductDto;
 import com.douzon.blooming.product.dto.response.ProductListDto;
@@ -20,8 +21,8 @@ public class ProductServiceImpl implements ProductService {
   private final ProductRepository productRepository;
 
   @Override
-  public void addProduct(UpdateProductDto requestProductDto) {
-    productRepository.insertByRequestProductDto(requestProductDto);
+  public void addProduct(InsertProductDto insertProductDto) {
+    productRepository.insertByRequestProductDto(insertProductDto);
   }
 
   @Override
@@ -43,22 +44,18 @@ public class ProductServiceImpl implements ProductService {
 
   @Transactional(readOnly = true)
   @Override
-  public ResponseProductListDto findProducts(SearchProductDto dto) {
-    if (dto.getPage() != 0) {
-      dto.setPage(dto.getPage() - 1);
-    }
+  public PageDto<ProductListDto> findProducts(ProductSearchDto dto) {
+    int start = dto.getPage() * dto.getPage();
 
-    List<ProductListDto> productList = productRepository.findAllBySearchProductDto(dto);
+    List<ProductListDto> productList = productRepository.findAllBySearchProductDto(dto, start);
 
     int count = productRepository.getProductsCountBySearchProductDto(dto);
-    int start = dto.getPage() * dto.getSize();
 
-    return ResponseProductListDto.builder()
-        .productList(productList)
+    return PageDto.<ProductListDto>builder()
+        .list(productList)
         .currentPage(dto.getPage() + 1)
-        .hasNextPage(start + dto.getSize() < count)
+        .hasNextPage(start + dto.getPageSize() < count)
         .hasPreviousPage(start > 0)
         .build();
-
   }
 }
