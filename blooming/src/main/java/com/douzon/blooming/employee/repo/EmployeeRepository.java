@@ -22,7 +22,7 @@ public interface EmployeeRepository {
   int getEmployeesCountBySearchEmployeeDto(EmployeeSearchDto dto);
 
   List<EmployeeListDto> findAllByEmployeeSearchDto(
-      @Param("employeeSearchDto") EmployeeSearchDto employeeSearchDto);
+      @Param("employeeSearchDto") EmployeeSearchDto employeeSearchDto,@Param("start") int start);
 
   void updateEmployeeByUpdateEmployeeDto(@Param("dto") UpdateEmployeeDto updateEmployeeDto,
       @Param("employeeNo") Long employeeNo);

@@ -1,5 +1,6 @@
 package com.douzon.blooming.employee.service;
 
+import com.douzon.blooming.PageDto;
 import com.douzon.blooming.auth.dto.response.TokenDto;
 import com.douzon.blooming.auth.provider.TokenProvider;
 import com.douzon.blooming.employee.dto.request.AuthUpdateEmployeeDto;
@@ -9,7 +10,6 @@ import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.response.EmployeeListDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
-import com.douzon.blooming.employee.dto.response.ResponseEmployeeListDto;
 import com.douzon.blooming.employee.exception.EmployeeNotFoundException;
 import com.douzon.blooming.employee.exception.PasswordDoesNotMatchException;
 import com.douzon.blooming.employee.repo.EmployeeRepository;
@@ -48,20 +48,17 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public ResponseEmployeeListDto getEmployeeList(EmployeeSearchDto dto) {
-    if (dto.getPage() != 0) {
-      dto.setPage(dto.getPage() - 1);
-    }
+  public PageDto<EmployeeListDto> getEmployeeList(EmployeeSearchDto dto) {
+    int start = dto.getPage() * dto.getPageSize();
 
-    List<EmployeeListDto> employeeList = employeeRepository.findAllByEmployeeSearchDto(dto);
+    List<EmployeeListDto> employeeList = employeeRepository.findAllByEmployeeSearchDto(dto, start);
 
     int count = employeeRepository.getEmployeesCountBySearchEmployeeDto(dto);
-    int start = dto.getPage() * dto.getSize();
 
-    return ResponseEmployeeListDto.builder()
-        .employeeList(employeeList)
+    return PageDto.<EmployeeListDto>builder()
+        .list(employeeList)
         .currentPage(dto.getPage() + 1)
-        .hasNextPage(start + dto.getSize() < count)
+        .hasNextPage(start + dto.getPageSize() < count)
         .hasPreviousPage(start > 0)
         .build();
   }

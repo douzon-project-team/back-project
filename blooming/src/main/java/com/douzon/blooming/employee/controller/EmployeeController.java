@@ -1,11 +1,12 @@
 package com.douzon.blooming.employee.controller;
 
+import com.douzon.blooming.PageDto;
 import com.douzon.blooming.auth.dto.response.TokenDto;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
+import com.douzon.blooming.employee.dto.response.EmployeeListDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
-import com.douzon.blooming.employee.dto.response.ResponseEmployeeListDto;
 import com.douzon.blooming.employee.service.EmployeeImageService;
 import com.douzon.blooming.employee.service.EmployeeService;
 import java.net.MalformedURLException;
@@ -44,7 +45,7 @@ public class EmployeeController {
   }
 
   @GetMapping("/list")
-  public ResponseEntity<ResponseEmployeeListDto> findEmployeeList(
+  public ResponseEntity<PageDto<EmployeeListDto>> findEmployeeList(
       @ModelAttribute EmployeeSearchDto searchDto) {
     return ResponseEntity.ok(employeeService.getEmployeeList(searchDto));
   }
