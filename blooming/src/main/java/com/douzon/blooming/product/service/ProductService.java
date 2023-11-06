@@ -1,20 +1,23 @@
 package com.douzon.blooming.product.service;
 
-import com.douzon.blooming.product.dto.SearchProductDto;
-import com.douzon.blooming.product.dto.request.RequestProductDto;
-import com.douzon.blooming.product.dto.response.ListProductDto;
+import com.douzon.blooming.PageDto;
+import com.douzon.blooming.product.dto.request.InsertProductDto;
+import com.douzon.blooming.product.dto.request.ProductSearchDto;
+import com.douzon.blooming.product.dto.request.UpdateProductDto;
 import com.douzon.blooming.product.dto.response.ProductDto;
-import java.util.List;
+import com.douzon.blooming.product.dto.response.ProductListDto;
+
+;
 
 public interface ProductService {
 
-  void addProduct(RequestProductDto requestProductDto);
+  void addProduct(InsertProductDto insertProductDto);
 
   void removeProduct(long productNo);
 
-  void updateProduct(RequestProductDto requestProductDto);
+  void updateProduct(UpdateProductDto requestProductDto);
 
-  ProductDto findProduct(String productNo);
+  ProductDto findProduct(long productNo);
 
-  List<ListProductDto> findAllBySearchQuery(SearchProductDto searchProductDto);
+  PageDto<ProductListDto> findProducts(ProductSearchDto productSearchDto);
 }

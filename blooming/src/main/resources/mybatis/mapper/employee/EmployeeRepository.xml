@@ -16,9 +16,10 @@
     WHERE employee_no = #{employeeId}
   </select>
 
-  <select id="getCountEmployees" resultType="java.lang.Integer"
+  <select id="getEmployeesCountBySearchEmployeeDto" resultType="java.lang.Integer"
     parameterType="com.douzon.blooming.employee.dto.request.EmployeeSearchDto">
-    SELECT COUNT(*) FROM project.employee
+    SELECT COUNT(*)
+    FROM project.employee
     WHERE employee_no LIKE CONCAT('%', #{employeeNo}, '%')
     AND name LIKE CONCAT('%', #{name}, '%')
     <if test='role != null'>
@@ -26,22 +27,24 @@
     </if>
   </select>
 
-  <select id="findEmployeeListWithFilter"
-    resultType="com.douzon.blooming.employee.dto.response.ListEmployeeDto">
+  <select id="findAllByEmployeeSearchDto"
+    resultType="com.douzon.blooming.employee.dto.response.EmployeeListDto">
     SELECT employee_no as employeeNo, name, tel, email, role
     FROM project.employee
-    WHERE
-    employee_no LIKE CONCAT('%', #{employeeSearchDto.employeeNo}, '%')
-    AND name LIKE CONCAT('%', #{employeeSearchDto.name}, '%')
+    WHERE name LIKE CONCAT('%', #{employeeSearchDto.name}, '%')
+    <if test="employeeSearchDto.employeeNo != null">
+      AND employee_no LIKE CONCAT('%', #{employeeSearchDto.employeeNo}, '%')
+    </if>
     <if test='employeeSearchDto.role != null'>
       AND role = #{employeeSearchDto.role}
     </if>
     <choose>
       <when test='employeeSearchDto.page == 0'>
-        LIMIT #{employeeSearchDto.size}
+        LIMIT #{employeeSearchDto.pageSize}
       </when>
       <otherwise>
-        LIMIT #{employeeSearchDto.size} * #{employeeSearchDto.page}, #{employeeSearchDto.size}
+        LIMIT #{start},
+        #{employeeSearchDto.pageSize}
       </otherwise>
     </choose>
   </select>

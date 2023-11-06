@@ -24,7 +24,6 @@ import com.douzon.blooming.employee.service.EmployeeService;
 import com.douzon.blooming.restdocs.RestDocsConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,7 +130,7 @@ class EmployeeControllerTest {
             .param("employeeNo", String.valueOf(20))
             .param("name", "admin")
             .param("page", String.valueOf(1))
-            .param("size", String.valueOf(10))
+            .param("pageSize", String.valueOf(10))
             .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
         .andExpect(status().isOk())
         .andDo(restDocs.document(
@@ -140,20 +139,20 @@ class EmployeeControllerTest {
                 parameterWithName("employeeNo").description("사원 번호"),
                 parameterWithName("name").description("사원 이름"),
                 parameterWithName("page").description("현재 페이지 번호"),
-                parameterWithName("size").description("페이지 크기")
+                parameterWithName("pageSize").description("페이지 크기")
             ),
 
             requestHeaders(
                 headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
             ),
             responseFields(
-                fieldWithPath("employeeList").type(JsonFieldType.ARRAY).description("사원 목록"),
-                fieldWithPath("employeeList[].employeeNo").type(JsonFieldType.NUMBER)
+                fieldWithPath("list").type(JsonFieldType.ARRAY).description("사원 목록"),
+                fieldWithPath("list[].employeeNo").type(JsonFieldType.NUMBER)
                     .description("사원 번호"),
-                fieldWithPath("employeeList[].name").type(JsonFieldType.STRING).description("이름"),
-                fieldWithPath("employeeList[].role").type(JsonFieldType.STRING).description("권한"),
-                fieldWithPath("employeeList[].tel").type(JsonFieldType.STRING).description("전화번호"),
-                fieldWithPath("employeeList[].email").type(JsonFieldType.STRING).description("이메일"),
+                fieldWithPath("list[].name").type(JsonFieldType.STRING).description("이름"),
+                fieldWithPath("list[].role").type(JsonFieldType.STRING).description("권한"),
+                fieldWithPath("list[].tel").type(JsonFieldType.STRING).description("전화번호"),
+                fieldWithPath("list[].email").type(JsonFieldType.STRING).description("이메일"),
                 fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
                 fieldWithPath("hasNextPage").type(JsonFieldType.BOOLEAN)
                     .description("다음 페이지 존재 여부"),

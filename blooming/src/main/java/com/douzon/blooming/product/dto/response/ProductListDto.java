@@ -8,9 +8,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class ListProductDto {
+public class ProductListDto {
 
-  private String productNo;
+  private Long productNo;
   private String productCode;
+  private String productName;
   private int unit;
 }

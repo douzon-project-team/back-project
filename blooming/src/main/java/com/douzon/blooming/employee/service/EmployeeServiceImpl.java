@@ -1,21 +1,19 @@
 package com.douzon.blooming.employee.service;
 
+import com.douzon.blooming.PageDto;
 import com.douzon.blooming.auth.dto.response.TokenDto;
-import com.douzon.blooming.auth.exception.EmployeePermissionDefinedException;
 import com.douzon.blooming.auth.provider.TokenProvider;
 import com.douzon.blooming.employee.dto.request.AuthUpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
 import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
-import com.douzon.blooming.employee.dto.response.ListEmployeeDto;
+import com.douzon.blooming.employee.dto.response.EmployeeListDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
-import com.douzon.blooming.employee.dto.response.ResponseListEmployeeDto;
 import com.douzon.blooming.employee.exception.EmployeeNotFoundException;
 import com.douzon.blooming.employee.exception.PasswordDoesNotMatchException;
 import com.douzon.blooming.employee.repo.EmployeeRepository;
 import com.douzon.blooming.product.exception.NotFoundProductException;
-import io.jsonwebtoken.security.Password;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,21 +48,19 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public ResponseListEmployeeDto getEmployeeList(EmployeeSearchDto dto) {
-    if (dto.getPage() != 0) {
-      dto.setPage(dto.getPage() - 1);
-    }
+  public PageDto<EmployeeListDto> getEmployeeList(EmployeeSearchDto dto) {
+    int start = dto.getPage() * dto.getPageSize();
 
-    List<ListEmployeeDto> employeeList = employeeRepository.findEmployeeListWithFilter(dto);
+    List<EmployeeListDto> employeeList = employeeRepository.findAllByEmployeeSearchDto(dto, start);
 
-    int searchEmployeeCount = employeeRepository.getCountEmployees(dto);
-    int start = dto.getPage() * dto.getSize();
+    int count = employeeRepository.getEmployeesCountBySearchEmployeeDto(dto);
 
-    boolean hasNextPage = start + dto.getSize() < searchEmployeeCount;
-    boolean hasPreviousPage = start > 0;
-
-    return new ResponseListEmployeeDto(employeeList, dto.getPage() + 1, hasNextPage,
-        hasPreviousPage);
+    return PageDto.<EmployeeListDto>builder()
+        .list(employeeList)
+        .currentPage(dto.getPage() + 1)
+        .hasNextPage(start + dto.getPageSize() < count)
+        .hasPreviousPage(start > 0)
+        .build();
   }
 
   @Override
