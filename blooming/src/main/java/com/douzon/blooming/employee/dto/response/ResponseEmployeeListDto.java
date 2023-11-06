@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-public class ResponseListEmployeeDto {
+public class ResponseEmployeeListDto {
 
-  private List<ListEmployeeDto> employeeList;
+  private List<EmployeeListDto> employeeList;
   private Integer currentPage;
   private boolean hasNextPage;
   private boolean hasPreviousPage;

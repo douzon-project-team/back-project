@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.douzon.blooming.product.repo.ProductRepository">
+  <insert id="insertByRequestProductDto">
+    INSERT INTO project.product (product_no, product_code, product_name, standard, unit)
+      VALUE (#{productNo}, #{productCode}, #{productName}, #{standard}, #{unit});
+  </insert>
+
+  <delete id="deleteByProductNo">
+    DELETE
+    FROM project.product
+    WHERE product_no = #{productNo};
+  </delete>
+
+  <update id="updateByRequestProductDto">
+    UPDATE project.product
+    SET product_name = #{productName},
+        product_code = #{productCode},
+        standard     = #{standard},
+        unit         = #{unit}
+    WHERE product_no = #{productNo}
+  </update>
+
+  <select id="findByProductNo"
+    resultType="com.douzon.blooming.product.dto.response.ProductDto">
+    SELECT *
+    FROM project.product
+    WHERE product_no = #{productNo};
+  </select>
+  <select id="findAllBySearchProductDto"
+    resultType="com.douzon.blooming.product.dto.response.ProductListDto">
+    SELECT *
+    FROM project.product
+    WHERE product_code LIKE CONCAT('%', #{productCode}, '%')
+    AND product_name LIKE CONCAT('%', #{productName}, '%')
+    <choose>
+      <when test='employeeSearchDto.page == 0'>
+        LIMIT #{size}
+      </when>
+      <otherwise>
+        LIMIT #{size} * #{page}, #{size}
+      </otherwise>
+    </choose>
+  </select>
+
+  <select id="getProductsCountBySearchProductDto" resultType="java.lang.Integer">
+    SELECT COUNT(*)
+    FROM project.product
+    WHERE product_code LIKE CONCAT('%', #{productCode}, '%')
+      AND product_name LIKE CONCAT('%', #{productName}, '%')
+  </select>
+</mapper>

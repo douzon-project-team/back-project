@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class RequestProductDto {
+public class UpdateProductDto {
 
   @Setter
   private Long productNo;
@@ -20,7 +20,7 @@ public class RequestProductDto {
   @Pattern(regexp = "^[a-zA-Z]{2}\\d{4}$")
   private String productCode;
   @NotBlank(message = "명칭은 필수 값입니다.")
-  private String designation;
+  private String productName;
   @NotBlank(message = "규격은 필수 값입니다.")
   private String standard;
   @NotNull(message = "개수는 필수 값입니다.")

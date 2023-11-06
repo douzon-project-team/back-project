@@ -10,7 +10,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.douzon.blooming.product.dto.request.RequestProductDto;
+import com.douzon.blooming.product.dto.request.UpdateProductDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,8 +75,8 @@ class ProductControllerTest {
 
   @Test
   void addProduct() throws Exception {
-    RequestProductDto requestProductDto =
-        new RequestProductDto(null, "TT0001", "Test Product", "standard : X", 10);
+    UpdateProductDto requestProductDto =
+        new UpdateProductDto(null, "TT0001", "Test Product", "standard : X", 10);
 
     mockMvc.perform(post("/products")
             .contentType(MediaType.APPLICATION_JSON)
