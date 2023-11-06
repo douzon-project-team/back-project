@@ -5,7 +5,7 @@ import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.response.EmployeeDto;
-import com.douzon.blooming.employee.dto.response.ListEmployeeDto;
+import com.douzon.blooming.employee.dto.response.EmployeeListDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +19,9 @@ public interface EmployeeRepository {
 
   Optional<ResponseEmployeeDto> findEmployeeByNo(Long employeeNo);
 
-  Integer getCountEmployees(EmployeeSearchDto dto);
+  int getEmployeesCountBySearchEmployeeDto(EmployeeSearchDto dto);
 
-  List<ListEmployeeDto> findEmployeeListWithFilter(
+  List<EmployeeListDto> findAllByEmployeeSearchDto(
       @Param("employeeSearchDto") EmployeeSearchDto employeeSearchDto);
 
   void updateEmployeeByUpdateEmployeeDto(@Param("dto") UpdateEmployeeDto updateEmployeeDto,

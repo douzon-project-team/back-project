@@ -16,9 +16,10 @@
     WHERE employee_no = #{employeeId}
   </select>
 
-  <select id="getCountEmployees" resultType="java.lang.Integer"
+  <select id="getEmployeesCountBySearchEmployeeDto" resultType="java.lang.Integer"
     parameterType="com.douzon.blooming.employee.dto.request.EmployeeSearchDto">
-    SELECT COUNT(*) FROM project.employee
+    SELECT COUNT(*)
+    FROM project.employee
     WHERE employee_no LIKE CONCAT('%', #{employeeNo}, '%')
     AND name LIKE CONCAT('%', #{name}, '%')
     <if test='role != null'>
@@ -26,8 +27,8 @@
     </if>
   </select>
 
-  <select id="findEmployeeListWithFilter"
-    resultType="com.douzon.blooming.employee.dto.response.ListEmployeeDto">
+  <select id="findAllByEmployeeSearchDto"
+    resultType="com.douzon.blooming.employee.dto.response.EmployeeListDto">
     SELECT employee_no as employeeNo, name, tel, email, role
     FROM project.employee
     WHERE

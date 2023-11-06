@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class ListEmployeeDto {
+public class EmployeeListDto {
 
   private Long employeeNo;
   private String name;

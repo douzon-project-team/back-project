@@ -7,8 +7,7 @@ import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
 import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
-import com.douzon.blooming.employee.dto.response.ResponseListEmployeeDto;
-import org.springframework.web.multipart.MultipartFile;
+import com.douzon.blooming.employee.dto.response.ResponseEmployeeListDto;
 
 public interface EmployeeService {
 
@@ -19,7 +18,7 @@ public interface EmployeeService {
 
   ResponseEmployeeDto getEmployeeByNo(Long employeeNo);
 
-  ResponseListEmployeeDto getEmployeeList(EmployeeSearchDto dto);
+  ResponseEmployeeListDto getEmployeeList(EmployeeSearchDto dto);
 
   void updateEmployee(UpdateEmployeeDto updateEmployeeDto, Long employeeNo);
 

@@ -7,14 +7,12 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
-@RequiredArgsConstructor
 public class EmployeeCheckInterceptor implements HandlerInterceptor {
 
   private static final String EMPLOYEE_PREFIX = "/employees/";
@@ -32,8 +30,10 @@ public class EmployeeCheckInterceptor implements HandlerInterceptor {
         String numberPart = matcher.group(1);
         Long employeeNo = Long.parseLong(numberPart);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getAuthorities().stream().anyMatch(grantedAuthority -> Objects.equals(
-            grantedAuthority.getAuthority(), "ADMIN"))) {
+        if (authentication.getAuthorities()
+            .stream()
+            .anyMatch(grantedAuthority -> Objects.equals(
+                grantedAuthority.getAuthority(), "ADMIN"))) {
           return true;
         }
         EmployeeDetails employee = (EmployeeDetails) authentication.getPrincipal();
