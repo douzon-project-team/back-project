@@ -46,13 +46,24 @@ CREATE TABLE `product`
 (
     `product_no`   BIGINT PRIMARY KEY AUTO_INCREMENT,
     `product_code` VARCHAR(6)  NOT NULL UNIQUE,
-    `designation`  VARCHAR(45) NOT NULL,
+    `product_name` VARCHAR(45) NOT NULL,
     `standard`     TEXT        NOT NULL,
     `unit`         INT         NOT NULL
 );
 
-INSERT INTO product (product_code, designation, standard, unit)
-VALUES ('VV0001', 'pencil', '2.5cm * 10cm', 10);
+INSERT INTO product (product_code, product_name, standard, unit)
+VALUES ('AP0001', 'MacBook Air 13', '1000mm * 100mm', 10),
+       ('AP0002', 'MacBook Air 15', '1000mm * 100mm', 5),
+       ('AP0003', 'iPhone 15 Pro', '250mm * 110mm', 20),
+       ('AP0004', 'Apple Watch Series 9', '100mm * 60mm', 100),
+       ('AP0005', 'AirPods Pro MagSafe', '100mm * 100mm', 21),
+       ('AP0006', 'AirTag', '50mm * 50mm', 63),
+       ('AP0007', 'iPad Pro', '400mm * 250mm', 14),
+       ('AP0008', 'iPad Air', '400mm * 250mm', 40),
+       ('AP0009', 'iPad 10', '400mm * 250mm', 30),
+       ('AP0010', 'AirPods Pro 2', '100mm * 100mm', 12),
+       ('AP0011', 'AirPods 3', '100mm * 100mm', 20),
+       ('AP0012', 'AirPods 2', '100mm * 100mm', 100);
 
 CREATE TABLE `customer`
 (

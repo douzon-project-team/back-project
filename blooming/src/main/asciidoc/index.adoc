@@ -8,7 +8,6 @@ douzone project 5 team
 :sectlinks:
 
 [[Auth]]
-
 == Auth API
 
 === 회원 가입
@@ -29,10 +28,9 @@ operation::employee-auth-controller-test/no-check[snippets='http-request,request
 
 === Employee Id 중복 체크
 
-operation::employee-auth-controller-test/no-check[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+operation::employee-auth-controller-test/id-check[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
 [[Employee]]
-
 == Employee API
 
 === Employee 로그인
@@ -61,15 +59,27 @@ operation::employee-controller-test/add-image[snippets='http-request,request-hea
 
 === 이미지 삭제
 
-operation::employee-controller-test/delete-image[snippets='http-request,request-headers,path-parameters']
+operation::employee-controller-test/delete-image[snippets='http-request,request-headers,path-parameters,http-response']
+
 [[Product]]
 == Product API
 
 === Product 추가
 
-operation::/product-controller-test/add-product[snippets='http-request,http-response']
+operation::/product-controller-test/add-product[snippets='http-request,request-headers,request-fields,http-response']
 
 === Product 조회
 
-operation::/product-controller-test/get-product[snippets='http-request,path-parameters,http-response,response-fields']
+operation::/product-controller-test/get-product[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
+=== Product 리스트 조회
+
+operation::/product-controller-test/get-products[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+=== Product 수정
+
+operation::/product-controller-test/update-product[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+
+=== Product 삭제
+
+operation::/product-controller-test/remove-product[snippets='http-request,request-headers,path-parameters,http-response']
