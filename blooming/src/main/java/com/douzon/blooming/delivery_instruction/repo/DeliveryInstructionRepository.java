@@ -2,9 +2,8 @@ package com.douzon.blooming.delivery_instruction.repo;
 
 import com.douzon.blooming.delivery_instruction.dto.response.GetInstructionDetailDto;
 import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -34,4 +33,16 @@ public interface DeliveryInstructionRepository {
             "INNER JOIN project.product P ON DI.product_no = P.product_no " +
             "WHERE DI.delivery_no = #{deliveryNo} AND DI.instruction_no = #{instructionNo}")
     List<GetInstructionDetailDto> findDeliveryDetail(String deliveryNo, String instructionNo);
+
+    @Insert("INSERT INTO project.delivery_instruction " +
+            "VALUES ('#{deliveryNo}', '#{instructionNo}', #{dto.productNo}, #{dto.amount})")
+    void insertProduct(String deliveryNo, String instructionNo, @Param("dto") ProductInstructionDto product);
+
+    @Update("UPDATE project.delivery_instruction SET amount = #{amount} " +
+            "WHERE delivery_no = #{deliveryNo} AND instruction_no = #{instruction} AND product_no = #{dto.productNo}")
+    void updateProduct(String deliveryNo, String instructionNo, @Param("dto") ProductInstructionDto product);
+
+    @Delete("DELETE FROM project.delivery_instruction " +
+            "WHERE delivery_no = #{deliveryNo} AND instruction_no = #{instructionNo} AND product_no = #{dto.productNo}")
+    void deleteProduct(String deliveryNo, String instructionNo, @Param("dto") ProductInstructionDto product);
 }

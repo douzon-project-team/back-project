@@ -2,6 +2,7 @@ package com.douzon.blooming.delivery.controller;
 
 import com.douzon.blooming.delivery.dto.request.DeliverySearchDto;
 import com.douzon.blooming.delivery.dto.request.InsertDeliveryDto;
+import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveriesDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
 import com.douzon.blooming.delivery.service.DeliveryService;
@@ -41,8 +42,12 @@ public class DeliveryController {
         return ResponseEntity.ok().body(deliveryService.findDeliveryDetail(deliveryNo, instructionNo));
     }
 
-    @PutMapping("/{deliveryNo}}")
-
+    @PutMapping("/{deliveryNo}")
+    public ResponseEntity<Void> updateDelivery(@PathVariable String deliveryNo,
+                                               @RequestBody UpdateDeliveryDto dto){
+        deliveryService.updateDelivery(deliveryNo, dto);
+        return ResponseEntity.noContent().build();
+    }
 
     @DeleteMapping("/{deliveryNo}")
     public ResponseEntity<Void> removeDelivery(@PathVariable String deliveryNo){

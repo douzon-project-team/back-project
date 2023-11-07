@@ -24,4 +24,6 @@ public interface DeliveryRepository {
     int getCountDeliveries(@Param("dto") DeliverySearchDto searchDto);
 
     Optional<GetDeliveryDto> findDelivery(String deliveryNo);
+
+    int updateDelivery(String deliveryNo, String deliveryDate);
 }

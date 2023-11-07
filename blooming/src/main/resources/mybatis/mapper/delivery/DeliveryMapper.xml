@@ -82,6 +82,10 @@
         </where>
     </select>
 
+    <update id="updateDelivery" parameterType="java.lang.String">
+        UPDATE project.delivery SET delivery_date = #{deliveryDate} WHERE delivery_no = #{deliveryNo}
+    </update>
+
     <delete id="deleteDelivery" parameterType="java.lang.String">
         DELETE FROM project.delivery WHERE delivery_no = #{deliveryNo}
     </delete>

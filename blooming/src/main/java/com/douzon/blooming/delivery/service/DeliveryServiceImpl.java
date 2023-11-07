@@ -2,6 +2,7 @@ package com.douzon.blooming.delivery.service;
 
 import com.douzon.blooming.delivery.dto.request.DeliverySearchDto;
 import com.douzon.blooming.delivery.dto.request.InsertDeliveryDto;
+import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveriesDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ListDeliveryDto;
@@ -11,6 +12,7 @@ import com.douzon.blooming.delivery_instruction.repo.DeliveryInstructionReposito
 import com.douzon.blooming.instruction.dto.response.GetInstructionListDto;
 import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
 import com.douzon.blooming.product.dto.SearchProductDto;
+import com.douzon.blooming.product_instruction.exception.UnsupportedProductStatusException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -79,6 +81,30 @@ public class DeliveryServiceImpl implements DeliveryService{
         boolean hasPreviousPage = start > 0;
 
         return new GetDeliveriesDto(deliveries, searchDto.getPage(), hasNextPage, hasPreviousPage);
+    }
+
+    @Override
+    public void updateDelivery(String deliveryNo, UpdateDeliveryDto dto) {
+        if(deliveryRepository.updateDelivery(deliveryNo, dto.getDeliveryDate()) <= 0 ){
+            throw new RuntimeException();
+        }
+        dto.getInstructions().forEach(instruction ->{
+            instruction.getProducts().forEach(product -> {
+                switch (product.getStatus()) {
+                    case "added":
+                        deliveryInstructionRepository.insertProduct(deliveryNo, instruction.getInstructionNo(), product);
+                        break;
+                    case "updated":
+                        deliveryInstructionRepository.updateProduct(deliveryNo, instruction.getInstructionNo(), product);
+                        break;
+                    case "deleted":
+                        deliveryInstructionRepository.deleteProduct(deliveryNo, instruction.getInstructionNo(), product);
+                        break;
+                    default:
+                        throw new UnsupportedProductStatusException();
+                }
+            });
+        });
     }
 
     @Override
