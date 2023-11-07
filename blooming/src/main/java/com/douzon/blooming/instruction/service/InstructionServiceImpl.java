@@ -1,5 +1,6 @@
 package com.douzon.blooming.instruction.service;
 
+import com.douzon.blooming.auth.EmployeeDetails;
 import com.douzon.blooming.instruction.dto.request.InsertInstructionDto;
 import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.InstructionSearchDto;
@@ -12,6 +13,7 @@ import com.douzon.blooming.instruction.repo.InstructionRepository;
 import com.douzon.blooming.product_instruction.exception.UnsupportedProductStatusException;
 import com.douzon.blooming.product_instruction.repo.ProductInstructionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +31,10 @@ public class InstructionServiceImpl implements InstructionService {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public void addInstruction(RequestInstructionDto dto) {
-        // 추후 토큰을 통해 가져옴
-        InsertInstructionDto insertDto = new InsertInstructionDto(dto.getEmployeeNo(), dto.getCustomerNo(),
+        EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+
+        InsertInstructionDto insertDto = new InsertInstructionDto(employeeDetails.getEmployeeNo(), dto.getCustomerNo(),
                 dto.getInstructionDate(), dto.getExpirationDate(), dto.getProgressStatus());
         instructionRepository.insertInstruction(insertDto);
         String instructionNo = instructionRepository.getInstructionNo();
@@ -43,6 +47,8 @@ public class InstructionServiceImpl implements InstructionService {
                     .append("'")
                     .append(instructionNo)
                     .append("', ")
+                    .append(product.getAmount())
+                    .append("),")
                     .append(product.getAmount())
                     .append("),");
         });

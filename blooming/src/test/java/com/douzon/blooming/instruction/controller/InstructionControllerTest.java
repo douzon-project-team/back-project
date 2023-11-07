@@ -5,6 +5,8 @@ import com.douzon.blooming.auth.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.auth.dto.response.TokenDto;
 import com.douzon.blooming.auth.service.EmployeeAuthService;
 import com.douzon.blooming.instruction.dto.ProgressStatus;
+import com.douzon.blooming.instruction.dto.TestRequestDto;
+import com.douzon.blooming.instruction.dto.TestUpdateDto;
 import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
 import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -30,6 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,8 +67,9 @@ public class InstructionControllerTest {
                 .alwaysDo(restDocs)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .build();
-//        TokenDto login = employeeAuthService.login(new LoginEmployeeDto("admin", "admin"));
-//        accessToken = "Bearer " + login.getAccessToken();
+                TokenDto login = employeeAuthService.login(new LoginEmployeeDto("admin", "admin"));
+                accessToken = "Bearer " + login.getAccessToken();
+
     }
 
     @Test
@@ -73,13 +79,18 @@ public class InstructionControllerTest {
         productList.add(new ProductInstructionDto(2L, 25, null));
         productList.add(new ProductInstructionDto(3L, 10, null));
 
-        RequestInstructionDto dto = new RequestInstructionDto(
-                11L, 2L, productList, "2023-11-04", "2023-11-04", ProgressStatus.STANDBY
+//        RequestInstructionDto dto = new RequestInstructionDto(
+//                11L, 2L, productList, "2023-11-04", "2023-11-04", ProgressStatus.STANDBY
+//        );
+        TestRequestDto dto = new TestRequestDto(
+                2L, productList,"2023-10-05",
+                "2023-11-04", ProgressStatus.STANDBY
         );
 
         mockMvc.perform(post("/instructions")
-//                        .header("Auth", accessToken)
+                        .header("Auth", accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, accessToken)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
@@ -134,7 +145,7 @@ public class InstructionControllerTest {
         List<ProductInstructionDto> products = new ArrayList<>();
         products.add(new ProductInstructionDto(1L, 20, "updated"));
         products.add(new ProductInstructionDto(3L, 10, "added"));
-        UpdateInstructionDto dto = new UpdateInstructionDto(
+        TestUpdateDto dto = new TestUpdateDto(
                 3L, products, "2023-11-22", "2023-12-22");
 
         mockMvc.perform(put("/instructions/{instructionNo}", "WO2311000002")

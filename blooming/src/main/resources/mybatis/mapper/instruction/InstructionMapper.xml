@@ -10,7 +10,7 @@
     <select id="getInstructionNo" resultType="java.lang.String">
         SELECT instruction_no
         FROM project.instruction
-        ORDER BY SUBSTRING(instruction_no,4,4) DESC,SUBSTRING(instruction_no,7) DESC LIMIT 1
+        ORDER BY SUBSTRING(instruction_no,2,4) DESC,SUBSTRING(instruction_no,7) DESC LIMIT 1
     </select>
 
     <select id="findInstruction" parameterType="java.lang.String" resultType="com.douzon.blooming.instruction.dto.response.GetInstructionDto">

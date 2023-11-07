@@ -3,6 +3,9 @@ package com.douzon.blooming.instruction.dto.request;
 import com.douzon.blooming.instruction.dto.ProgressStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 
 @Getter
@@ -10,7 +13,9 @@ import lombok.Getter;
 public class InsertInstructionDto {
     private Long employeeNo;
     private Long customerNo;
-    private String instructionDate;
-    private String expirationDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate instructionDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate expirationDate;
     private ProgressStatus progressStatus;
 }
