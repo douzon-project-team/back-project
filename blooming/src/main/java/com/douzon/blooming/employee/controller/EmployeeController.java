@@ -1,6 +1,7 @@
 package com.douzon.blooming.employee.controller;
 
 import com.douzon.blooming.PageDto;
+import com.douzon.blooming.auth.EmployeeDetails;
 import com.douzon.blooming.auth.dto.response.TokenDto;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
@@ -14,6 +15,8 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,6 +40,13 @@ public class EmployeeController {
   @PostMapping("/login")
   public ResponseEntity<TokenDto> login(@RequestBody @Valid LoginEmployeeDto loginEmployeeDto) {
     return ResponseEntity.ok(employeeService.login(loginEmployeeDto));
+  }
+
+  @GetMapping("/me")
+  public ResponseEntity<ResponseEmployeeDto> getMe() {
+    EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
+    return ResponseEntity.ok(employeeService.getEmployeeByNo(employeeDetails.getEmployeeNo()));
   }
 
   @GetMapping("/{employeeNo}")
