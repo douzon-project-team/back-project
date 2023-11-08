@@ -15,7 +15,12 @@
     </select>
 
     <select id="findDelivery" parameterType="java.lang.String" resultType="com.douzon.blooming.delivery.dto.response.GetDeliveryDto">
-
+        SELECT D.delivery_no AS delivery_no,
+               E.name AS employee_name,
+               D.delivery_date AS delivery_date
+        FROM project.delivery D
+        LEFT JOIN project.employee E ON D.employee_no = E.employee_no
+        WHERE D.delivery_no = #{delivery_no}
     </select>
 
     <select id="findDeliveries" parameterType="com.douzon.blooming.delivery.dto.request.DeliverySearchDto" resultType="com.douzon.blooming.delivery.dto.response.ListDeliveryDto">

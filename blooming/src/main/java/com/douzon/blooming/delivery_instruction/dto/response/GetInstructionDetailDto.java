@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class GetInstructionDetailDto {
     private Long productNo;
+    private String productCode;
     private String productName;
     private Integer amount;
 }

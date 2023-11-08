@@ -6,6 +6,7 @@ import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveriesDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ListDeliveryDto;
+import com.douzon.blooming.delivery.exception.NotFoundDeliveryException;
 import com.douzon.blooming.delivery.repo.DeliveryRepository;
 import com.douzon.blooming.delivery_instruction.dto.response.GetInstructionDetailDto;
 import com.douzon.blooming.delivery_instruction.repo.DeliveryInstructionRepository;
@@ -58,7 +59,7 @@ public class DeliveryServiceImpl implements DeliveryService{
     @Override
     public GetDeliveryDto findDelivery(String deliveryNo) {
         GetDeliveryDto getDeliveryDto = deliveryRepository.findDelivery(deliveryNo)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(NotFoundDeliveryException::new);
         getDeliveryDto.setInstructions(deliveryInstructionRepository.findInstructionsByDeliverNo(deliveryNo));
         return getDeliveryDto;
     }
@@ -86,7 +87,7 @@ public class DeliveryServiceImpl implements DeliveryService{
     @Override
     public void updateDelivery(String deliveryNo, UpdateDeliveryDto dto) {
         if(deliveryRepository.updateDelivery(deliveryNo, dto.getDeliveryDate()) <= 0 ){
-            throw new RuntimeException();
+            throw new NotFoundDeliveryException();
         }
         dto.getInstructions().forEach(instruction ->{
             instruction.getProducts().forEach(product -> {
@@ -110,7 +111,7 @@ public class DeliveryServiceImpl implements DeliveryService{
     @Override
     public void removeDelivery(String deliveryNo) {
         if(deliveryRepository.deleteDelivery(deliveryNo) <= 0){
-            throw new IllegalStateException();
+            throw new NotFoundDeliveryException();
         }
     }
 

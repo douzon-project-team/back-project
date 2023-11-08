@@ -15,7 +15,6 @@ import java.util.List;
 public class GetDeliveryDto {
     private String deliveryNo;
     private String employeeName;
-    private String customerName;
     private LocalDate deliveryDate;
     @Setter
     List<ListInstructionDto> instructions;
