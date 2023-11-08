@@ -53,8 +53,6 @@ CREATE TABLE `product_instruction`
     `remain_amount`  INT         NOT NULL
 );
 
-drop table delivery;
-
 CREATE TABLE `delivery`
 (
     `delivery_no`     VARCHAR(12) PRIMARY KEY ,
@@ -171,13 +169,91 @@ END;
 DELIMITER ;
 
 # Delivery 자동 채번 Trigger
-# DELIMITER //
-# CREATE TRIGGER delivery_no_trigger
-#     BEFORE INSERT ON delivery
-#     FOR EACH ROW
-# BEGIN
-#     SET NEW.delivery_no = concat('MW',substring(DATE_FORMAT(NOW(), '%Y%m'), 3),
-#                                  lpad((SELECT IFNULL(MAX(SUBSTRING(delivery_no, 7, 6))+1, 1) FROM delivery), 6, '0'));
-# END;
-# //
-# DELIMITER ;
+DELIMITER //
+CREATE TRIGGER delivery_no_trigger
+    BEFORE INSERT ON delivery
+    FOR EACH ROW
+BEGIN
+    SET NEW.delivery_no = concat('MW',substring(DATE_FORMAT(NOW(), '%Y%m'), 3),
+                                 lpad((SELECT IFNULL(MAX(SUBSTRING(delivery_no, 7, 6))+1, 1) FROM delivery), 6, '0'));
+END;
+//
+DELIMITER ;
+
+# Delivery 등록시 instruction의 잔량, 진행 상태 변화 Trigger
+drop trigger insert_remain_amount;
+DELIMITER //
+CREATE TRIGGER insert_remain_amount
+    AFTER INSERT ON delivery_instruction
+    FOR EACH ROW
+BEGIN
+    DECLARE new_remain_amount INT;
+    SET new_remain_amount = (SELECT remain_amount - NEW.amount FROM product_instruction
+                             WHERE instruction_no = NEW.instruction_no AND product_no = NEW.product_no);
+
+    UPDATE product_instruction
+    SET remain_amount = new_remain_amount
+    WHERE instruction_no = NEW.instruction_no AND product_no = NEW.product_no;
+
+    UPDATE instruction
+    SET progress_status = 1
+    WHERE instruction_no = NEW.instruction_no;
+
+    IF (SELECT COUNT(*) FROM product_instruction
+        WHERE instruction_no = NEW.instruction_no
+        AND remain_amount > 0) = 0 THEN
+        UPDATE instruction
+        SET progress_status = 2
+        WHERE instruction_no = NEW.instruction_no;
+    end if;
+END;
+//
+DELIMITER ;
+
+# Delivery 수정시 inistruction의 잔량, 진행 상태 변화 Trigger
+# remain_amount = remain_amount + Old.amount - new.amount
+DELIMITER //
+CREATE TRIGGER update_remain_amount
+    AFTER UPDATE ON delivery_instruction
+    FOR EACH ROW
+BEGIN
+    UPDATE product_instruction
+    SET remain_amount = remain_amount + OLD.amount - NEW.amount
+    WHERE instruction_no = OLD.instruction_no AND product_no = OLD.product_no;
+
+    IF  (SELECT COUNT(*) FROM product_instruction
+         WHERE instruction_no = OLD.instruction_no
+           AND remain_amount = amount) = (SELECT COUNT(*) FROM product_instruction
+                                          WHERE instruction_no = OLD.instruction_no) THEN
+        UPDATE instruction
+        SET progress_status = 0
+        WHERE instruction_no = OLD.instruction_no;
+    END IF;
+END;
+DELIMITER ;
+
+# Delivery 삭제시 instruction의 잔량, 진행 상태 변화 Trigger
+drop trigger delete_restore_remain_amount;
+DELIMITER //
+CREATE TRIGGER delete_restore_remain_amount
+    AFTER DELETE ON delivery_instruction
+    FOR EACH ROW
+BEGIN
+    UPDATE product_instruction
+    SET remain_amount = remain_amount + OLD.amount
+    WHERE instruction_no = OLD.instruction_no AND product_no = OLD.product_no;
+
+    UPDATE instruction
+    SET progress_status = 1
+    WHERE instruction_no = OLD.instruction_no;
+
+    IF  (SELECT COUNT(*) FROM product_instruction
+        WHERE instruction_no = OLD.instruction_no
+        AND remain_amount = amount) = (SELECT COUNT(*) FROM product_instruction
+                                                       WHERE instruction_no = OLD.instruction_no) THEN
+        UPDATE instruction
+        SET progress_status = 0
+        WHERE instruction_no = OLD.instruction_no;
+    END IF;
+END;
+DELIMITER ;
