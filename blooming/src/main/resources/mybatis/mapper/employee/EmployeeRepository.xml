@@ -51,10 +51,11 @@
 
   <update id="updateEmployeeByUpdateEmployeeDto">
     UPDATE project.employee
-    SET password = #{dto.password},
-        name     = #{dto.name},
-        tel      = #{dto.tel},
+    SET tel      = #{dto.tel},
         email    = #{dto.email}
+        <if test="dto.oldPassword != ''">
+          , password = #{dto.password}
+        </if>
     WHERE employee_no = #{employeeNo}
   </update>
 

@@ -45,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
   @Transactional(readOnly = true)
   @Override
   public PageDto<ProductListDto> findProducts(ProductSearchDto dto) {
-    int start = dto.getPage() * dto.getPage();
+    int start = dto.getPage() * dto.getPageSize();
 
     List<ProductListDto> productList = productRepository.findAllBySearchProductDto(dto, start);
 
