@@ -10,6 +10,8 @@ import com.douzon.blooming.instruction.dto.response.GetInstructionListDto;
 import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
 import com.douzon.blooming.instruction.exception.NotFoundInstructionException;
 import com.douzon.blooming.instruction.repo.InstructionRepository;
+import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
+import com.douzon.blooming.product_instruction.dto.response.ResponseProductInstructionDto;
 import com.douzon.blooming.product_instruction.exception.UnsupportedProductStatusException;
 import com.douzon.blooming.product_instruction.repo.ProductInstructionRepository;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +70,11 @@ public class InstructionServiceImpl implements InstructionService {
     }
 
     @Override
+    public List<ResponseProductInstructionDto> findInstructionDetail(String instructionNo) {
+        return productInstructionRepository.getProductList(instructionNo);
+    }
+
+    @Override
     public GetInstructionListDto findInstructions(InstructionSearchDto searchDto) {
         int start = (searchDto.getPage() - 1) * searchDto.getPageSize();
         List<ListInstructionDto> instructionList = instructionRepository.findInstructions(searchDto, start, searchDto.getPageSize());
@@ -107,4 +114,6 @@ public class InstructionServiceImpl implements InstructionService {
             throw new NotFoundInstructionException();
         }
     }
+
+
 }

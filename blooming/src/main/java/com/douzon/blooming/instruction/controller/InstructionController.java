@@ -6,10 +6,14 @@ import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
 import com.douzon.blooming.instruction.dto.response.GetInstructionDto;
 import com.douzon.blooming.instruction.dto.response.GetInstructionListDto;
 import com.douzon.blooming.instruction.service.InstructionService;
+import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
+import com.douzon.blooming.product_instruction.dto.response.ResponseProductInstructionDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
