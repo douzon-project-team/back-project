@@ -110,7 +110,7 @@ public class DeliveryControllerTest {
 
     @Test
     void getDeliveryDetails() throws Exception {
-        mockMvc.perform(get("/deliveries/{deliveryNo}/{instructionNo}", "MW2311000001", "WO2310000001")
+        mockMvc.perform(get("/deliveries/{deliveryNo}/{instructionNo}", "MW2311000001", "WO2311000001")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(restDocs.document(
