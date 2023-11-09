@@ -98,7 +98,7 @@ operation::customer-controller-test/get-customer[snippets='http-request,path-par
 
 === CustomerList 조회
 
-operation::customer-controller-test/get-customer-list[snippets='http-request,http-response,response-fields']
+operation::customer-controller-test/get-customers[snippets='http-request,http-response,response-fields']
 
 === Customer 수정
 
