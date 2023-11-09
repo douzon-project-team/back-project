@@ -100,7 +100,7 @@ public class InstructionControllerTest {
 
     @Test
     public void getInstruction() throws Exception {
-        mockMvc.perform(get("/instructions/{instructionNo}", "WO2310000001")
+        mockMvc.perform(get("/instructions/{instructionNo}", "WO2311000001")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
@@ -147,7 +147,7 @@ public class InstructionControllerTest {
         TestUpdateDto dto = new TestUpdateDto(
                 3L, products, "2023-11-22", "2023-12-22");
 
-        mockMvc.perform(put("/instructions/{instructionNo}", "WO2310000002")
+        mockMvc.perform(put("/instructions/{instructionNo}", "WO2311000002")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isNoContent())
@@ -161,7 +161,7 @@ public class InstructionControllerTest {
     @Test
     @Transactional
     public void deleteInstruction() throws Exception {
-        mockMvc.perform(delete("/instructions/{instructionNo}", "WO2310000002")
+        mockMvc.perform(delete("/instructions/{instructionNo}", "WO2311000002")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
