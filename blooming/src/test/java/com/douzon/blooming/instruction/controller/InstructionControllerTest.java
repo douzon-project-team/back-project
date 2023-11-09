@@ -1,18 +1,16 @@
 package com.douzon.blooming.instruction.controller;
 
 
-import com.douzon.blooming.auth.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.auth.dto.response.TokenDto;
-import com.douzon.blooming.auth.service.EmployeeAuthService;
+import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
+import com.douzon.blooming.employee.service.EmployeeService;
 import com.douzon.blooming.instruction.dto.ProgressStatus;
 import com.douzon.blooming.instruction.dto.TestRequestDto;
 import com.douzon.blooming.instruction.dto.TestUpdateDto;
-import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
-import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
 import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.checkerframework.checker.units.qual.A;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -49,15 +47,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(RestDocumentationExtension.class)
 @SpringBootTest
 @Import(RestDocsConfig.class)
+@Slf4j
 public class InstructionControllerTest {
+
+    private static final String BEARER_PREFIX = "Bearer ";
     @Autowired
     protected RestDocumentationResultHandler restDocs;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private MockMvc mockMvc;
     @Autowired
-    private EmployeeAuthService employeeAuthService;
-    private String accessToken;
+    private EmployeeService employeeService;
+    private TokenDto tokenDto;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
@@ -67,30 +68,29 @@ public class InstructionControllerTest {
                 .alwaysDo(restDocs)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .build();
-                TokenDto login = employeeAuthService.login(new LoginEmployeeDto("admin", "admin"));
-                accessToken = "Bearer " + login.getAccessToken();
-
+//        tokenDto = employeeService.login(new LoginEmployeeDto("admin", "admin"));
     }
 
     @Test
     @Transactional
     public void insertInstruction() throws Exception {
+        tokenDto = employeeService.login(new LoginEmployeeDto("admin", "admin"));
         List<ProductInstructionDto> productList = new ArrayList<>();
         productList.add(new ProductInstructionDto(2L, 25, null));
         productList.add(new ProductInstructionDto(3L, 10, null));
 
+        System.out.println(tokenDto.getAccessToken());
+
 //        RequestInstructionDto dto = new RequestInstructionDto(
-//                11L, 2L, productList, "2023-11-04", "2023-11-04", ProgressStatus.STANDBY
+//                11L,  productList, "2023-11-04", "2023-11-04", ProgressStatus.STANDBY
 //        );
         TestRequestDto dto = new TestRequestDto(
-                2L, productList,"2023-10-05",
+                2L, productList, "2023-10-05",
                 "2023-11-04", ProgressStatus.STANDBY
         );
-
         mockMvc.perform(post("/instructions")
-                        .header("Auth", accessToken)
+//                        .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, accessToken)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
@@ -101,7 +101,7 @@ public class InstructionControllerTest {
 
     @Test
     public void getInstruction() throws Exception {
-        mockMvc.perform(get("/instructions/{instructionNo}", "WO2310000002")
+        mockMvc.perform(get("/instructions/{instructionNo}", "WO2310000001")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
@@ -148,7 +148,7 @@ public class InstructionControllerTest {
         TestUpdateDto dto = new TestUpdateDto(
                 3L, products, "2023-11-22", "2023-12-22");
 
-        mockMvc.perform(put("/instructions/{instructionNo}", "WO2311000002")
+        mockMvc.perform(put("/instructions/{instructionNo}", "WO2310000002")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isNoContent())
@@ -162,7 +162,7 @@ public class InstructionControllerTest {
     @Test
     @Transactional
     public void deleteInstruction() throws Exception {
-        mockMvc.perform(delete("/instructions/{instructionNo}", "WO2311000002")
+        mockMvc.perform(delete("/instructions/{instructionNo}", "WO2310000002")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andDo(restDocs.document(

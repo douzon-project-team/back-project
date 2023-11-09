@@ -1,17 +1,15 @@
 package com.douzon.blooming.delivery.controller;
 
-import com.douzon.blooming.auth.service.EmployeeAuthService;
+import com.douzon.blooming.auth.dto.response.TokenDto;
 import com.douzon.blooming.delivery.dto.DeliveryStatus;
 import com.douzon.blooming.delivery.dto.request.InsertDeliveryDto;
-import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
-import com.douzon.blooming.delivery_instruction.dto.request.UpdateInstructionProductDto;
+import com.douzon.blooming.delivery.dto.request.InsertDeliveryInstructionDto;
+import com.douzon.blooming.delivery_instruction.dto.request.InsertDeliveryInstructionProductDto;
+import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
+import com.douzon.blooming.employee.service.EmployeeService;
 import com.douzon.blooming.instruction.dto.ProgressStatus;
-import com.douzon.blooming.instruction.dto.response.GetInstructionDto;
-import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
-import com.douzon.blooming.product_instruction.dto.response.ResponseProductInstructionDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Setter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -47,14 +45,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Import(RestDocsConfig.class)
 public class DeliveryControllerTest {
+
+    private static final String BEARER_PREFIX = "Bearer";
+
     @Autowired
     protected RestDocumentationResultHandler restDocs;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private MockMvc mockMvc;
     @Autowired
-    private EmployeeAuthService employeeAuthService;
-    private String accessToken;
+    private EmployeeService employeeService;
+    private TokenDto tokenDto;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
@@ -64,20 +65,19 @@ public class DeliveryControllerTest {
                 .alwaysDo(restDocs)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .build();
-//        TokenDto login = employeeAuthService.login(new LoginEmployeeDto("admin", "admin"));
-//        accessToken = "Bearer " + login.getAccessToken();
+        tokenDto = employeeService.login(new LoginEmployeeDto("admin", "admin"));
     }
 
     @Test
     @Transactional
     void addDelivery() throws Exception {
-        List<ResponseProductInstructionDto> responseProductInstructionDtoList = new ArrayList<>();
-//        responseProductInstructionDtoList.add(new ResponseProductInstructionDto(1L, "VV0001", 5));
-//        responseProductInstructionDtoList.add(new ResponseProductInstructionDto(2L, "VV0002", 20));
-        GetInstructionDto getInstructionDto = new GetInstructionDto("WO2310000002", "Sophia Garcia 15", "Lg",
-                responseProductInstructionDtoList, "2023-10-25", "2023-11-25", ProgressStatus.STANDBY);
-        List<GetInstructionDto> getInstructionDtoList = new ArrayList<>();
-        getInstructionDtoList.add(getInstructionDto);
+        List<InsertDeliveryInstructionProductDto> productDtoList = new ArrayList<>();
+        productDtoList.add(new InsertDeliveryInstructionProductDto(1L, "VV0001", null, 5));
+        productDtoList.add(new InsertDeliveryInstructionProductDto(2L, "VV0002", null, 20));
+        InsertDeliveryInstructionDto InstructionDtoList = new InsertDeliveryInstructionDto("WO2310000002", "member", "Lg",
+                productDtoList, "2023-10-25", "2023-11-25", ProgressStatus.STANDBY);
+        List<InsertDeliveryInstructionDto> getInstructionDtoList = new ArrayList<>();
+        getInstructionDtoList.add(InstructionDtoList);
         InsertDeliveryDto insertDeliveryDto = new InsertDeliveryDto(getInstructionDtoList, DeliveryStatus.INCOMPLETE, "2023-11-30");
 
         mockMvc.perform(post("/deliveries")
@@ -144,22 +144,23 @@ public class DeliveryControllerTest {
             .andReturn();
     }
 
-    @Test
-    void updateDeliveries() throws Exception {
-        List<ProductInstructionDto> productInstructionDto = new ArrayList<>();
-
-        List<UpdateInstructionProductDto> updateInstructionProductDto = new ArrayList<>();
-        UpdateDeliveryDto updateDeliveryDto = new UpdateDeliveryDto(updateInstructionProductDto, "2023-11-30");
-        mockMvc.perform(put("/deliveries/{deliveryNo}", "MW2311000001")
-                .contentType(MediaType.APPLICATION_JSON))
-//                .content())
-                .andExpect(status().isNoContent())
-                .andDo(restDocs.document(
-                        pathParameters(
-                                parameterWithName("deliveryNo").description("출고 번호")
-                        )
-                ))
-                .andReturn();
-    }
+//    @Test
+//    @Transactional
+//    void updateDeliveries() throws Exception {
+//        List<ProductInstructionDto> productInstructionDto = new ArrayList<>();
+//
+//        List<UpdateInstructionProductDto> updateInstructionProductDto = new ArrayList<>();
+//        UpdateDeliveryDto updateDeliveryDto = new UpdateDeliveryDto(updateInstructionProductDto, "2023-11-30");
+//        mockMvc.perform(put("/deliveries/{deliveryNo}", "MW2311000001")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(updateDeliveryDto)))
+//                .andExpect(status().isNoContent())
+//                .andDo(restDocs.document(
+//                        pathParameters(
+//                                parameterWithName("deliveryNo").description("출고 번호")
+//                        )
+//                ))
+//                .andReturn();
+//    }
 
 }

@@ -60,7 +60,7 @@ public class CustomerControllerTest {
         mockMvc.perform(post("/customers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isCreated())
+                .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
 
                 ))
