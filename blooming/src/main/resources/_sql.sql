@@ -3,7 +3,7 @@ DROP DATABASE IF EXISTS project;
 CREATE DATABASE IF NOT EXISTS project;
 
 USE project;
-
+drop table employee;
 CREATE TABLE `employee`
 (
     `employee_no`   BIGINT      NOT NULL PRIMARY KEY,
@@ -73,6 +73,10 @@ CREATE TABLE `customer`
     `customer_tel`     VARCHAR(13) NOT NULL
 );
 
+INSERT INTO customer VALUES (1, 'C0001', 'samsung', '010-1234-1234'),
+                            (2, 'C0002', 'Lg', '010-3214-3214'),
+                            (3, 'C0003', 'Douzone', '010-4444-4444');
+
 CREATE TABLE `instruction`
 (
     `instruction_no`   VARCHAR(12) PRIMARY KEY ,
@@ -83,6 +87,9 @@ CREATE TABLE `instruction`
     `expiration_date`  DATE        NOT NULL
 );
 
+INSERT INTO instruction(instruction_date, customer_no, employee_no, expiration_date) VALUES ('2023-10-22', 3, 200003, '2023-11-21'),
+                                                                                            ('2023-10-25', 2, 200005, '2023-11-25');
+
 CREATE TABLE `product_instruction`
 (
     `product_no`     BIGINT      NOT NULL,
@@ -90,6 +97,11 @@ CREATE TABLE `product_instruction`
     `amount`         INT         NOT NULL,
     `remain_amount`  INT         NOT NULL
 );
+
+INSERT INTO product_instruction VALUES (1, 'WO2311000001', 15, 5),
+                                       (2, 'WO2311000001', 20, 5),
+                                       (1, 'WO2311000002', 15, 10),
+                                       (1, 'WO2311000002', 30, 20);
 
 CREATE TABLE `delivery`
 (
@@ -99,6 +111,8 @@ CREATE TABLE `delivery`
     `employee_no`     BIGINT      NOT NULL
 );
 
+INSERT INTO delivery(delivery_date, employee_no) VALUES ('2023-11-29', 200004);
+
 CREATE TABLE `delivery_instruction`
 (
     `delivery_no`    VARCHAR(12) NOT NULL,
@@ -106,6 +120,11 @@ CREATE TABLE `delivery_instruction`
     `product_no`     BIGINT      NOT NULL,
     `amount`         INT         NOT NULL
 );
+
+INSERT INTO delivery_instruction VALUES ('MW2311000001', 'WO2311000001', 1, 10),
+                                        ('MW2311000001', 'WO2311000001', 2, 15),
+                                        ('MW2311000001', 'WO2311000002', 1, 5),
+                                        ('MW2311000001', 'WO2311000002', 2, 10);
 
 CREATE TABLE `employee_log`
 (
