@@ -4,18 +4,14 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class RequestProductDto {
+public class ProductListDto {
 
-  @Setter
   private Long productNo;
-
   private String productCode;
   private String productName;
-  private String standard;
   private int unit;
 }

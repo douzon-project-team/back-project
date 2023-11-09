@@ -1,5 +1,6 @@
 package com.douzon.blooming;
 
+import com.douzon.blooming.employee.interceptor.EmployeeCheckInterceptor;
 import com.douzon.blooming.log.delivery.interceptor.DeliveryLogInterceptor;
 import com.douzon.blooming.log.employee.interceptor.EmployeeLogInterceptor;
 import com.douzon.blooming.log.instruction.interceptor.InstructionLogInterceptor;
@@ -18,15 +19,20 @@ public class WebConfig implements WebMvcConfigurer {
   private final InstructionLogInterceptor instructionLogInterceptor;
   private final EmployeeLogInterceptor employeeLogInterceptor;
 
+  private final EmployeeCheckInterceptor employeeCheckInterceptor;
+
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(productLogInterceptor)
-        .addPathPatterns("/products/**");
-    registry.addInterceptor(deliveryLogInterceptor)
-        .addPathPatterns("/delivery/**");
-    registry.addInterceptor(instructionLogInterceptor)
-        .addPathPatterns("/instruction/**");
-    registry.addInterceptor(employeeLogInterceptor)
-        .addPathPatterns("/employee/**");
+//    registry.addInterceptor(productLogInterceptor)
+//        .addPathPatterns("/products/**");
+//    registry.addInterceptor(deliveryLogInterceptor)
+//        .addPathPatterns("/delivery/**");
+//    registry.addInterceptor(instructionLogInterceptor)
+//        .addPathPatterns("/instruction/**");
+//    registry.addInterceptor(employeeLogInterceptor)
+//        .addPathPatterns("/employees/**");
+
+//    registry.addInterceptor(employeeCheckInterceptor)
+//        .addPathPatterns("/employees/**");
   }
 }

@@ -1,33 +1,23 @@
 package com.douzon.blooming.log.instruction.interceptor;
 
 import com.douzon.blooming.auth.EmployeeDetails;
+import com.douzon.blooming.log.AbstractLogInterceptor;
 import com.douzon.blooming.log.LogType;
 import com.douzon.blooming.log.instruction.dto.InstructionLogDto;
 import com.douzon.blooming.log.instruction.service.InstructionLogService;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
-@RequiredArgsConstructor
-public class InstructionLogInterceptor implements HandlerInterceptor {
+public class InstructionLogInterceptor extends AbstractLogInterceptor<InstructionLogDto> {
 
-  private final InstructionLogService instructionLogService;
-
-  @Override
-  public void afterCompletion(HttpServletRequest request, @NonNull HttpServletResponse response,
-      @NonNull Object handler, Exception ex) {
-    if (!request.getMethod().equalsIgnoreCase("GET")) {
-      InstructionLogDto instructionLog = getInstructionLog(request);
-      instructionLogService.addInstructionLog(instructionLog);
-    }
+  public InstructionLogInterceptor(InstructionLogService instructionLogService) {
+    super(instructionLogService);
   }
 
-  private InstructionLogDto getInstructionLog(HttpServletRequest req) {
+  @Override
+  public InstructionLogDto getLogDto(HttpServletRequest req) {
     EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
     return InstructionLogDto.builder()
@@ -36,10 +26,5 @@ public class InstructionLogInterceptor implements HandlerInterceptor {
         .modifierNo(employeeDetails.getEmployeeNo())
         .type(LogType.fromRequestMethod(req.getMethod()))
         .build();
-  }
-
-  private String getClientIp(HttpServletRequest req) {
-    String ip = req.getHeader("X-Forwarded-For");
-    return ip != null ? ip : req.getRemoteAddr();
   }
 }

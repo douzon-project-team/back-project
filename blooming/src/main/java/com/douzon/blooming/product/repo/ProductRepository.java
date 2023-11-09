@@ -1,33 +1,28 @@
 package com.douzon.blooming.product.repo;
 
-import com.douzon.blooming.product.dto.SearchProductDto;
-import com.douzon.blooming.product.dto.request.RequestProductDto;
-import com.douzon.blooming.product.dto.response.ListProductDto;
+import com.douzon.blooming.product.dto.request.InsertProductDto;
+import com.douzon.blooming.product.dto.request.ProductSearchDto;
+import com.douzon.blooming.product.dto.request.UpdateProductDto;
 import com.douzon.blooming.product.dto.response.ProductDto;
+import com.douzon.blooming.product.dto.response.ProductListDto;
 import java.util.List;
 import java.util.Optional;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface ProductRepository {
 
-  @Insert(value = "INSERT INTO project.product (product_code, product_name, standard, unit) VALUE (#{productCode},#{productName},#{standard},#{unit})")
-  void insertByRequestProductDto(RequestProductDto requestProductDto);
+  void insertByRequestProductDto(InsertProductDto insertProductDto);
 
-  @Delete("DELETE FROM project.product WHERE product_no = #{productNo}")
   void deleteByProductNo(long productNo);
 
-  @Update("UPDATE project.product SET product_name = #{productName} ,standard = #{standard}, unit = #{unit} WHERE product_no = #{productNo}")
-  void updateByRequestProductDto(RequestProductDto requestProductDto);
+  void updateByRequestProductDto(UpdateProductDto requestProductDto);
 
-  @Select("SELECT * FROM project.product WHERE product_code = #{productCode}")
-  Optional<ProductDto> findByProductCode(String productCode);
+  Optional<ProductDto> findByProductNo(long productNo);
 
-  @Select("SELECT * FROM project.product WHERE ${query}")
-  List<ListProductDto> findAllBySearchProductDto(String query);
+  List<ProductListDto> findAllBySearchProductDto(
+      @Param("productSearchDto") ProductSearchDto productSearchDto, @Param("start") int start);
 
+  int getProductsCountBySearchProductDto(ProductSearchDto productSearchDto);
 }

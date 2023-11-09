@@ -1,29 +1,33 @@
 package com.douzon.blooming.employee.service;
 
+import com.douzon.blooming.PageDto;
+import com.douzon.blooming.auth.dto.response.TokenDto;
+import com.douzon.blooming.employee.dto.request.AuthUpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
-import com.douzon.blooming.employee.dto.request.LoginDto;
-import com.douzon.blooming.employee.dto.request.RequestEmployeeDto;
+import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
+import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
+import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
+import com.douzon.blooming.employee.dto.response.EmployeeListDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
-import com.douzon.blooming.employee.dto.response.ResponseListEmployeeDto;
 
 public interface EmployeeService {
-    boolean login(LoginDto dto);
 
-    void addEmployee(RequestEmployeeDto dto);
 
-    String idCheck(String id);
-    boolean employeeNoCheck(Long employeeNo);
+  boolean employeeNoCheck(Long employeeNo);
 
-    ResponseEmployeeDto getEmployeeByNo(Long employeeNo);
+  boolean idCheck(String id);
 
-    ResponseListEmployeeDto getEmployeeList(EmployeeSearchDto dto, int page, int size);
+  ResponseEmployeeDto getEmployeeByNo(Long employeeNo);
 
-    void updateId(Long employeeNo, String id);
-    void updateName(Long employeeNo, String name);
-    void updatePassword(Long employeeNo, String password);
-    void updateImg(Long employeeNo, String img);
-    void updateTel(Long employeeNo, String tel);
-    void updateEmail(Long employeeNo, String email);
+  PageDto<EmployeeListDto> getEmployeeList(EmployeeSearchDto dto);
 
-    void removeEmployee(Long employeeNo);
+  void updateEmployee(UpdateEmployeeDto updateEmployeeDto, Long employeeNo);
+
+  void updateEmployee(AuthUpdateEmployeeDto authUpdateEmployeeDto, Long employeeNo);
+
+  void signup(InsertEmployeeDto employeeDto);
+
+  void removeEmployee(Long employeeNo);
+
+  TokenDto login(LoginEmployeeDto loginEmployeeDto);
 }

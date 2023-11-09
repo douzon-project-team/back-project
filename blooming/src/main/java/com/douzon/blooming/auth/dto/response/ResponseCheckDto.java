@@ -1,4 +1,4 @@
-package com.douzon.blooming.auth.dto.request;
+package com.douzon.blooming.auth.dto.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class LoginEmployeeDto {
+public class ResponseCheckDto {
 
-  private String id;
-  private String password;
+  private boolean availability;
 }

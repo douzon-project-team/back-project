@@ -16,7 +16,31 @@ CREATE TABLE `employee`
     `email`         VARCHAR(30) NULL
 );
 
-drop table product;
+INSERT INTO `employee` (employee_no, id, password, name, img, role, tel, email)
+VALUES (200001, 'admin', 'admin', 'admin', '4bce5389-8191-46f8-ad91-a5ee197ee837.png', 0,
+        '01011112222', 'admin@admin.com'),
+       (200002, 'admin1', 'admin1', 'admin', '4bce5389-8191-46f8-ad91-a5ee197ee837.png', 0,
+        '01011112222', 'admin@admin.com'),
+       (200003, 'admin2', 'admin', 'admin', '4bce5389-8191-46f8-ad91-a5ee197ee837.png', 0,
+        '01011112222', 'admin@admin.com'),
+       (200004, 'admin3', 'admin', 'admin', '4bce5389-8191-46f8-ad91-a5ee197ee837.png', 0,
+        '01011112222', 'admin@admin.com'),
+       (200005, 'admin4', 'admin', 'admin', '4bce5389-8191-46f8-ad91-a5ee197ee837.png', 0,
+        '01011112222', 'admin@admin.com'),
+       (200006, 'admin5', 'admin', 'admin', '4bce5389-8191-46f8-ad91-a5ee197ee837.png', 0,
+        '01011112222', 'admin@admin.com'),
+       (200007, 'admin6', 'admin', 'admin', '4bce5389-8191-46f8-ad91-a5ee197ee837.png', 0,
+        '01011112222', 'admin@admin.com'),
+       (200008, 'admin7', 'admin', 'admin', '4bce5389-8191-46f8-ad91-a5ee197ee837.png', 0,
+        '01011112222', 'admin@admin.com'),
+       (200009, 'admin8', 'admin', 'admin', '4bce5389-8191-46f8-ad91-a5ee197ee837.png', 0,
+        '01011112222', 'admin@admin.com'),
+       (200010, 'admin9', 'admin', 'admin', '4bce5389-8191-46f8-ad91-a5ee197ee837.png', 0,
+        '01011112222', 'admin@admin.com'),
+       (200011, 'admin10', 'admin', 'admin', '4bce5389-8191-46f8-ad91-a5ee197ee837.png', 0,
+        '01011112222', 'admin@admin.com'),
+       (200012, 'member', 'member', 'member', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
+        '01022223333', 'member@member.com');
 
 CREATE TABLE `product`
 (
@@ -27,7 +51,21 @@ CREATE TABLE `product`
     `unit`          INT                NOT NULL
 );
 
-    CREATE TABLE `customer`
+INSERT INTO product (product_code, product_name, standard, unit)
+VALUES ('AP0001', 'MacBook Air 13', '1000mm * 100mm', 10),
+       ('AP0002', 'MacBook Air 15', '1000mm * 100mm', 5),
+       ('AP0003', 'iPhone 15 Pro', '250mm * 110mm', 20),
+       ('AP0004', 'Apple Watch Series 9', '100mm * 60mm', 100),
+       ('AP0005', 'AirPods Pro MagSafe', '100mm * 100mm', 21),
+       ('AP0006', 'AirTag', '50mm * 50mm', 63),
+       ('AP0007', 'iPad Pro', '400mm * 250mm', 14),
+       ('AP0008', 'iPad Air', '400mm * 250mm', 40),
+       ('AP0009', 'iPad 10', '400mm * 250mm', 30),
+       ('AP0010', 'AirPods Pro 2', '100mm * 100mm', 12),
+       ('AP0011', 'AirPods 3', '100mm * 100mm', 20),
+       ('AP0012', 'AirPods 2', '100mm * 100mm', 100);
+
+CREATE TABLE `customer`
 (
     `customer_no`      BIGINT      PRIMARY KEY AUTO_INCREMENT,
     `customer_code`    VARCHAR(5)  NOT NULL UNIQUE,
@@ -38,10 +76,10 @@ CREATE TABLE `product`
 CREATE TABLE `instruction`
 (
     `instruction_no`   VARCHAR(12) PRIMARY KEY ,
+    `instruction_date` DATE        NOT NULL DEFAULT NOW(),
     `customer_no`      BIGINT      NOT NULL,
     `employee_no`      BIGINT      NOT NULL,
     `progress_status`  TINYINT(1)  NOT NULL DEFAULT 0,
-    `instruction_date` DATE        NOT NULL DEFAULT NOW(),
     `expiration_date`  DATE        NOT NULL
 );
 
