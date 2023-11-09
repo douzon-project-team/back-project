@@ -10,18 +10,16 @@ import com.douzon.blooming.delivery.exception.NotFoundDeliveryException;
 import com.douzon.blooming.delivery.repo.DeliveryRepository;
 import com.douzon.blooming.delivery_instruction.dto.response.GetInstructionDetailDto;
 import com.douzon.blooming.delivery_instruction.repo.DeliveryInstructionRepository;
-import com.douzon.blooming.instruction.dto.response.GetInstructionListDto;
-import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
-import com.douzon.blooming.product.dto.SearchProductDto;
 import com.douzon.blooming.product_instruction.exception.UnsupportedProductStatusException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DeliveryServiceImpl implements DeliveryService{
 
     private final DeliveryRepository deliveryRepository;
@@ -32,7 +30,7 @@ public class DeliveryServiceImpl implements DeliveryService{
 //        EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
 //                .getAuthentication().getPrincipal();
 //        deliveryRepository.insertDelivery(employeeDetails.getEmployeeNo(), dto);
-        deliveryRepository.insertDelivery(15L, dto);
+        deliveryRepository.insertDelivery(200012L, dto);
         String deliveryNo = deliveryRepository.getDeliveryNo();
         StringBuilder stringBuffer = new StringBuilder();
         stringBuffer.append("INSERT INTO project.delivery_instruction VALUES ");
@@ -49,10 +47,12 @@ public class DeliveryServiceImpl implements DeliveryService{
                         .append("),");
             });
         });
+
         stringBuffer.setLength(stringBuffer.length()-1);
         stringBuffer.append(";");
 
         String insertQuery = stringBuffer.toString();
+        log.error("insertQuery = {}", insertQuery);
         deliveryInstructionRepository.insert(insertQuery);
     }
 

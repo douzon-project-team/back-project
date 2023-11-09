@@ -14,11 +14,15 @@
     </select>
 
     <select id="findInstruction" parameterType="java.lang.String" resultType="com.douzon.blooming.instruction.dto.response.GetInstructionDto">
-        SELECT  I.instruction_no as instruction_no, I.instruction_date as instruction_date,
-                C.customer_name as customer_name, E.name as employee_name,
-                I.progress_status as progress_status, I.expiration_date as expiration_date
-        FROM project.instruction I INNER JOIN project.customer C ON I.customer_no = C.customer_no
-                                   INNER JOIN project.employee E ON I.employee_no = E.employee_no
+        SELECT I.instruction_no AS instruction_no,
+        I.instruction_date AS instruction_date,
+        C.customer_name AS customer_name,
+        E.name AS employee_name,
+        I.progress_status AS progress_status,
+        I.expiration_date AS expiration_date
+        FROM project.instruction I
+        INNER JOIN project.customer C ON I.customer_no = C.customer_no
+        INNER JOIN project.employee E ON I.employee_no = E.employee_no
         WHERE I.instruction_no = #{instructionNo}
     </select>
 

@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,10 +34,10 @@ public class InstructionServiceImpl implements InstructionService {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public void addInstruction(RequestInstructionDto dto) {
-        EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+//        EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
+//                .getAuthentication().getPrincipal();
 
-        InsertInstructionDto insertDto = new InsertInstructionDto(employeeDetails.getEmployeeNo(), dto.getCustomerNo(),
+        InsertInstructionDto insertDto = new InsertInstructionDto(2000006L, dto.getCustomerNo(),
                 dto.getInstructionDate(), dto.getExpirationDate(), dto.getProgressStatus());
         instructionRepository.insertInstruction(insertDto);
         String instructionNo = instructionRepository.getInstructionNo();
@@ -50,7 +51,7 @@ public class InstructionServiceImpl implements InstructionService {
                     .append(instructionNo)
                     .append("', ")
                     .append(product.getAmount())
-                    .append("),")
+                    .append(",")
                     .append(product.getAmount())
                     .append("),");
         });
@@ -64,7 +65,7 @@ public class InstructionServiceImpl implements InstructionService {
     @Override
     public GetInstructionDto findInstruction(String instructionNo) {
         GetInstructionDto dto = instructionRepository.findInstruction(instructionNo)
-                .orElseThrow(NotFoundInstructionException::new);
+            .orElseThrow(NotFoundInstructionException::new);
         dto.setProducts(productInstructionRepository.getProductList(instructionNo));
         return dto;
     }

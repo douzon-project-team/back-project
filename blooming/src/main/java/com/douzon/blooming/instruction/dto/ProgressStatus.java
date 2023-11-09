@@ -1,8 +1,5 @@
 package com.douzon.blooming.instruction.dto;
 
-import com.douzon.blooming.auth.EmployeeRole;
-import com.douzon.blooming.instruction.StatusTypeHandler;
-import org.apache.ibatis.type.MappedTypes;
 
 import java.util.Arrays;
 

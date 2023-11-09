@@ -50,6 +50,8 @@ public class SecurityConfig {
 //        .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
         .anyRequest().permitAll()
         .and()
+//            .anyRequest().permitAll()
+//            .and()
         .apply(new JwtSecurityConfig(tokenProvider));
 
     return http.build();

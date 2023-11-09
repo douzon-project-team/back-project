@@ -1,5 +1,6 @@
 package com.douzon.blooming.instruction.controller;
 
+import com.douzon.blooming.auth.EmployeeDetails;
 import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.InstructionSearchDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
@@ -11,9 +12,11 @@ import com.douzon.blooming.product_instruction.dto.response.ResponseProductInstr
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @RestController
@@ -24,6 +27,11 @@ public class InstructionController {
 
     @PostMapping
     public ResponseEntity<Void> addInstruction(@RequestBody RequestInstructionDto dto) {
+//        Object principal = SecurityContextHolder.getContext()
+//                .getAuthentication().getPrincipal();
+//        if(Objects.nonNull(principal)){
+//            System.out.println();
+//        }
         service.addInstruction(dto);
         return ResponseEntity.noContent().build();
     }

@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InsertDeliveryDto {
-    private List<GetInstructionDto> instructions;
+    private List<InsertDeliveryInstructionDto> instructions;
     private DeliveryStatus progressStatus;
     private String deliveryDate;
 }

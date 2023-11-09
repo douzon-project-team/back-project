@@ -1,4 +1,4 @@
-package com.douzon.blooming.product.dto.request;
+package com.douzon.blooming.product.dto.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

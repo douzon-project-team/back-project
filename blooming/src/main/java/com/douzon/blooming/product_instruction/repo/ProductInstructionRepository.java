@@ -17,13 +17,13 @@ public interface ProductInstructionRepository {
     @Select("SELECT PI.product_no AS product_no, " +
             "P.product_code AS product_code, " +
             "P.product_name AS product_name, " +
-            "PI.amount AS amount " +
+            "PI.amount AS amount, " +
             "PI.remain_amount AS remain_amount " +
             "FROM product_instruction PI INNER JOIN product P ON PI.product_no = P.product_no " +
             "WHERE PI.instruction_no = #{instructionNo}")
     List<ResponseProductInstructionDto> getProductList(String instructionNo);
 
-    @Insert("INSERT INTO product_instruction VALUES (#{product.productNo},#{instructionNo}, #{product.amount})")
+    @Insert("INSERT INTO product_instruction VALUES (#{product.productNo},#{instructionNo}, #{product.amount}, #{product.amount})")
     void insertProduct(String instructionNo, @Param("product") ProductInstructionDto updateProduct);
 
     @Update("UPDATE product_instruction SET amount = #{product.amount} " +

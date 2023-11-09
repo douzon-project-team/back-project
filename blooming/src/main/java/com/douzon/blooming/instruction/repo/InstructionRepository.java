@@ -18,7 +18,7 @@ public interface InstructionRepository {
 
     String getInstructionNo();
 
-    Optional<GetInstructionDto> findInstruction(String instructionNo);
+    Optional<GetInstructionDto> findInstruction(@Param("instructionNo")String instructionNo);
 
     List<ListInstructionDto> findInstructions(@Param("dto") InstructionSearchDto searchDto, Integer start, Integer pageSize);
 
