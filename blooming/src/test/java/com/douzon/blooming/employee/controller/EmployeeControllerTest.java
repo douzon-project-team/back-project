@@ -165,7 +165,7 @@ class EmployeeControllerTest {
   @Test
   @Transactional
   void updateEmployee() throws Exception {
-    UpdateEmployeeDto updateEmployeeDto = new UpdateEmployeeDto("admin", "newAdmin", "admin",
+    UpdateEmployeeDto updateEmployeeDto = new UpdateEmployeeDto("admin", "newAdmin",
         "01045965429", "admin@admin.com");
     mockMvc.perform(put("/employees/{employeeNo}", 200001)
             .contentType(MediaType.APPLICATION_JSON)
@@ -179,7 +179,6 @@ class EmployeeControllerTest {
             requestFields(
                 fieldWithPath("oldPassword").type(JsonFieldType.STRING).description("기존 비밀번호"),
                 fieldWithPath("password").type(JsonFieldType.STRING).description("새로운 비밀번호"),
-                fieldWithPath("name").type(JsonFieldType.STRING).description("이름"),
                 fieldWithPath("tel").type(JsonFieldType.STRING).description("전화번호"),
                 fieldWithPath("email").type(JsonFieldType.STRING).description("이메일")
             ),
