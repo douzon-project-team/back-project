@@ -40,7 +40,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Disabled
+//@Disabled
 @ExtendWith(RestDocumentationExtension.class)
 @SpringBootTest
 @Import(RestDocsConfig.class)

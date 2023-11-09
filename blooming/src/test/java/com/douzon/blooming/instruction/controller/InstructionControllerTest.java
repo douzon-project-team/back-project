@@ -43,7 +43,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Disabled
+//@Disabled
 @ExtendWith(RestDocumentationExtension.class)
 @SpringBootTest
 @Import(RestDocsConfig.class)
@@ -68,13 +68,12 @@ public class InstructionControllerTest {
                 .alwaysDo(restDocs)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .build();
-//        tokenDto = employeeService.login(new LoginEmployeeDto("admin", "admin"));
+        tokenDto = employeeService.login(new LoginEmployeeDto("admin", "admin"));
     }
 
     @Test
     @Transactional
     public void insertInstruction() throws Exception {
-        tokenDto = employeeService.login(new LoginEmployeeDto("admin", "admin"));
         List<ProductInstructionDto> productList = new ArrayList<>();
         productList.add(new ProductInstructionDto(2L, 25, null));
         productList.add(new ProductInstructionDto(3L, 10, null));
