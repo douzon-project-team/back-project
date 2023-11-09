@@ -8,19 +8,25 @@
     </insert>
 
     <select id="getInstructionNo" resultType="java.lang.String">
-        SELECT instruction_no FROM project.instruction ORDER BY SUBSTRING(instruction_no,4,4) DESC,SUBSTRING(instruction_no,7) DESC LIMIT 1
+        SELECT instruction_no
+        FROM project.instruction
+        ORDER BY SUBSTRING(instruction_no,2,4) DESC,SUBSTRING(instruction_no,7) DESC LIMIT 1
     </select>
 
-    <select id="findByInstructionNo" parameterType="java.lang.String" resultType="com.douzon.blooming.instruction.dto.response.GetInstructionDto">
-        SELECT  I.instruction_no as instruction_no, I.instruction_date as instruction_date,
-                C.customer_name as customer_name, E.name as employee_name,
-                I.progress_status as progress_status, I.expiration_date as expiration_date
-        FROM project.instruction I INNER JOIN project.customer C ON I.customer_no = C.customer_no
-                                   INNER JOIN project.employee E ON I.employee_no = E.employee_no
+    <select id="findInstruction" parameterType="java.lang.String" resultType="com.douzon.blooming.instruction.dto.response.GetInstructionDto">
+        SELECT I.instruction_no AS instruction_no,
+        I.instruction_date AS instruction_date,
+        C.customer_name AS customer_name,
+        E.name AS employee_name,
+        I.progress_status AS progress_status,
+        I.expiration_date AS expiration_date
+        FROM project.instruction I
+        INNER JOIN project.customer C ON I.customer_no = C.customer_no
+        INNER JOIN project.employee E ON I.employee_no = E.employee_no
         WHERE I.instruction_no = #{instructionNo}
     </select>
 
-    <select id="findInstructionList" parameterType="com.douzon.blooming.instruction.dto.request.SearchDto"
+    <select id="findInstructions" parameterType="com.douzon.blooming.instruction.dto.request.InstructionSearchDto"
             resultType="com.douzon.blooming.instruction.dto.response.ListInstructionDto">
         SELECT I.instruction_no AS instruction_no,
         E.name AS employee_name,
@@ -60,7 +66,7 @@
         LIMIT #{start}, #{pageSize}
     </select>
 
-    <select id="getCountInstructions" parameterType="com.douzon.blooming.instruction.dto.request.SearchDto"
+    <select id="getCountInstructions" parameterType="com.douzon.blooming.instruction.dto.request.InstructionSearchDto"
             resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM project.instruction I
@@ -103,95 +109,3 @@
         DELETE FROM project.instruction WHERE instruction_no = #{instructionNo}
     </delete>
 </mapper>
-
-                <!--        @Insert("INSERT INTO project.instruction(instruction_date, customer_no, employee_no, progress_status, expiration_date) " +-->
-<!--        "VALUES (#{dto.instructionDate}, #{dto.customerNo}, #{dto.employeeNo}, #{dto.progressStatus}, #{dto.expirationDate})")-->
-<!--        void insertInstruction(@Param("dto") InsertInstructionDto insertDto);-->
-
-<!--        @Select("SELECT instruction_no FROM project.instruction ORDER BY SUBSTRING(instruction_no,4,4) DESC,SUBSTRING(instruction_no,7) DESC LIMIT 1")-->
-<!--        String getInstructionNo();-->
-
-<!--        @Select("SELECT I.instruction_no as instruction_no, I.instruction_date as instruction_date, C.customer_name as customer_name, E.name as employee_name, " +-->
-<!--        "I.progress_status as progress_status, I.expiration_date as expiration_date " +-->
-<!--        "FROM project.instruction I INNER JOIN project.customer C ON I.customer_no = C.customer_no " +-->
-<!--        "INNER JOIN project.employee E ON I.employee_no = E.employee_no " +-->
-<!--        "WHERE I.instruction_no = #{instructionNo}")-->
-<!--        Optional<GetInstructionDto> findByInstructionNo(String instructionNo);-->
-
-<!--@Select("<script>" +-->
-<!--"SELECT I.instruction_no as instruction_no, " +-->
-<!--"I.instruction_date as instruction_date, " +-->
-<!--"C.customer_no as customer_no, " +-->
-<!--"C.customer_name as customer_name, " +-->
-<!--"E.name as employee_name, " +-->
-<!--"I.progress_status as progress_status, " +-->
-<!--"I.expiration_date as expiration_date " +-->
-<!--"FROM project.instruction I INNER JOIN project.customer C ON I.customer_no = C.customer_no " +-->
-<!--"INNER JOIN project.employee E ON I.employee_no = E.employee_no " +-->
-<!--"<where>" +-->
-<!--"<if test='dto.progressStatus != null'>" +-->
-<!--"I.progress_status = #{dto.progressStatus} " +-->
-<!--"</if>" +-->
-<!--"<if test='dto.employeeName != null'>" +-->
-<!--"<choose>" +-->
-<!--"<when test='dto.progressStatus == null'>" +-->
-<!--"E.name LIKE CONCAT('%', #{dto.employeeName}, '%') " +-->
-<!--"</when>"+-->
-<!--"<otherwise>"+-->
-<!--"And E.name LIKE CONCAT('%', #{dto.employeeName}, '%') " +-->
-<!--"</otherwise>"+-->
-<!--"</choose>"+-->
-<!--"</if>" +-->
-<!--"<if test='dto.startDate != null'>" +-->
-<!--"<choose>" +-->
-<!--"<when test='dto.employeeNo == null and dto.progressStatus == null'>" +-->
-<!--"I.instruction_date BETWEEN #{dto.startDate} AND #{dto.endDate} " +-->
-<!--"</when>"+-->
-<!--"<otherwise>"+-->
-<!--" AND I.instruction_date BETWEEN #{dto.startDate} AND #{dto.endDate} " +-->
-<!--"</otherwise>"+-->
-<!--"</choose>"+-->
-<!--"</if>" +-->
-<!--"</where>" +-->
-<!--"LIMIT #{start}, #{pageSize} ")-->
-<!--    List<ListInstructionDto> findInstructionList(@Param("dto") SearchDto searchDto, Integer start, Integer pageSize);-->
-
-<!--        //    @Select("<script>" +-->
-<!--            //            "SELECT COUNT(*)" +-->
-<!--            //            "FROM project.instruction I INNER JOIN project.customer C ON I.customer_no = C.customer_no " +-->
-<!--            //            "INNER JOIN project.employee E ON I.employee_no = E.employee_no " +-->
-<!--            //            "<where> " +-->
-<!--                //                "<if test='dto.progressStatus != null'>" +-->
-<!--                    //                    "I.progress_status = #{dto.progressStatus} " +-->
-<!--                    //                "</if>" +-->
-<!--                //                "<if test='dto.employeeName != null'>" +-->
-<!--                    //                    "<choose>" +-->
-<!--                        //                    "<when test='dto.progressStatus == null'>" +-->
-<!--                            //                        "E.name LIKE CONCAT('%', #{dto.employeeName}, '%') " +-->
-<!--                            //                    "</when>"+-->
-<!--                        //                    "<otherwise>"+-->
-<!--                            //                        "And E.name LIKE CONCAT('%', #{dto.employeeName}, '%') " +-->
-<!--                            //                    "</otherwise>"+-->
-<!--                        //                    "</choose>"+-->
-<!--                    //                "</if>" +-->
-<!--                //                "<if test='dto.startDate != null'>" +-->
-<!--                    //                    "<choose>" +-->
-<!--                        //                    "<when test='dto.employeeNo == null and dto.progressStatus == null'>" +-->
-<!--                            //                        "I.instruction_date BETWEEN #{dto.startDate} AND #{dto.endDate} " +-->
-<!--                            //                    "</when>"+-->
-<!--                        //                    "<otherwise>"+-->
-<!--                            //                        "AND I.instruction_date BETWEEN #{dto.startDate} AND #{dto.endDate} " +-->
-<!--                            //                    "</otherwise>"+-->
-<!--                        //                    "</choose>"+-->
-<!--                    //                "</if>" +-->
-<!--                //            "</where> " +-->
-<!--            //            "</script>")-->
-<!--        Integer getCountInstructions(SearchDto searchDto);-->
-
-<!--        @Update("UPDATE project.instruction SET customer_no = #{dto.customerNo}, " +-->
-<!--        "instruction_date = #{dto.instructionDate}, expiration_date = #{dto.expirationDate} " +-->
-<!--        " WHERE instruction_no = #{instructionNo} ")-->
-<!--        void updateInstruction(String instructionNo, @Param("dto") UpdateInstructionDto dto);-->
-
-<!--        @Delete("DELETE FROM project.instruction WHERE instruction_no = #{instructionNo}")-->
-<!--        void deleteInstruction(String instructionNo);-->

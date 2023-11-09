@@ -2,7 +2,7 @@ package com.douzon.blooming.instruction.repo;
 
 
 import com.douzon.blooming.instruction.dto.request.InsertInstructionDto;
-import com.douzon.blooming.instruction.dto.request.SearchDto;
+import com.douzon.blooming.instruction.dto.request.InstructionSearchDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
 import com.douzon.blooming.instruction.dto.response.GetInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
@@ -18,13 +18,13 @@ public interface InstructionRepository {
 
     String getInstructionNo();
 
-    Optional<GetInstructionDto> findByInstructionNo(String instructionNo);
+    Optional<GetInstructionDto> findInstruction(@Param("instructionNo")String instructionNo);
 
-    List<ListInstructionDto> findInstructionList(@Param("dto") SearchDto searchDto, Integer start, Integer pageSize);
+    List<ListInstructionDto> findInstructions(@Param("dto") InstructionSearchDto searchDto, Integer start, Integer pageSize);
 
-    Integer getCountInstructions(@Param("dto") SearchDto searchDto);
+    Integer getCountInstructions(@Param("dto") InstructionSearchDto searchDto);
 
-    void updateInstruction(@Param("instructionNo") String instructionNo, @Param("dto") UpdateInstructionDto dto);
+    int updateInstruction(@Param("instructionNo") String instructionNo, @Param("dto") UpdateInstructionDto dto);
 
-    void deleteInstruction(String instructionNo);
+    int deleteInstruction(String instructionNo);
 }

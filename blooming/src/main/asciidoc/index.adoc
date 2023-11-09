@@ -41,6 +41,7 @@ operation::employee-controller-test/login[snippets='http-request,http-response']
 
 operation::/employee-controller-test/get-employee-by-no[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
+
 === EmployeeList 조회
 
 operation::/employee-controller-test/find-employee-list[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
@@ -83,3 +84,65 @@ operation::/product-controller-test/update-product[snippets='http-request,reques
 === Product 삭제
 
 operation::/product-controller-test/remove-product[snippets='http-request,request-headers,path-parameters,http-response']
+
+[[Customer]]
+== Customer API
+
+=== Customer 추가
+
+operation::customer-controller-test/insert-customer[snippets='http-request,http-response']
+
+=== Customer 조회
+
+operation::customer-controller-test/get-customer[snippets='http-request,path-parameters,http-response,response-fields']
+
+=== CustomerList 조회
+
+operation::customer-controller-test/get-customer-list[snippets='http-request,http-response,response-fields']
+
+=== Customer 수정
+
+operation::customer-controller-test/update-customer[snippets='http-request,path-parameters,http-response']
+
+=== Customer 삭제
+
+operation::customer-controller-test/delete-customer[snippets='http-request,path-parameters,http-response']
+
+[[Instruction]]
+== Instruction API
+
+=== Instruction 추가
+
+operation::instruction-controller-test/insert-instruction[snippets='http-request,http-response']
+
+=== Instruction 조회
+
+operation::instruction-controller-test/get-instruction[snippets='http-request,path-parameters,http-response,response-fields']
+
+.ProgressStatus
+[cols=2*,options=header]
+|===
+|Progress_Status
+|진행 상태
+
+|Standby
+|대기
+
+|Progress
+|진행
+
+|Complete
+|완료
+|===
+
+=== InstructionList 조회
+
+operation::instruction-controller-test/get-instructions[snippets='http-request,http-response,response-fields']
+
+=== Instruction 수정
+
+operation::instruction-controller-test/update-instruction[snippets='http-request,path-parameters,http-response']
+
+=== Instruction 삭제
+
+operation::instruction-controller-test/delete-instruction[snippets='http-request,path-parameters,http-response']

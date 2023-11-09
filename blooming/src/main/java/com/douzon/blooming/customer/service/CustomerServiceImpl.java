@@ -1,9 +1,11 @@
 package com.douzon.blooming.customer.service;
 
+import com.douzon.blooming.customer.dto.request.CustomerSearchDto;
 import com.douzon.blooming.customer.dto.request.RequestCustomerDto;
 import com.douzon.blooming.customer.dto.request.UpdateCustomerDto;
 import com.douzon.blooming.customer.dto.response.ResponseCustomerDto;
 import com.douzon.blooming.customer.dto.response.ResponseListCustomerDto;
+import com.douzon.blooming.customer.exception.NotFoundCustomerException;
 import com.douzon.blooming.customer.repo.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,7 @@ public class CustomerServiceImpl implements CustomerService{
     private final CustomerRepository repository;
 
     @Override
-    public String customerCodeCheck(String customerCode) {
+    public boolean customerCodeCheck(String customerCode) {
         return repository.customerCodeCheck(customerCode);
     }
 
@@ -26,29 +28,37 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public ResponseCustomerDto getCustomer(Long customerNo) {
-        return repository.getCustomer(customerNo);
+    public ResponseCustomerDto findCustomer(Long customerNo) {
+        return repository.findCustomer(customerNo)
+                .orElseThrow(NotFoundCustomerException::new);
     }
 
     @Override
-    public ResponseListCustomerDto getCustomerList(String customerName, int page, int pageSize) {
-        int start = (page - 1) * pageSize;
-        List<ResponseCustomerDto> customerList = repository.getCustomerList(customerName, start, pageSize);
-        int searchCustomerCount = repository.getCountCustomers(customerName);
+    public ResponseListCustomerDto findCustomers(CustomerSearchDto dto) {
+        int start = (dto.getPage() - 1) * dto.getPageSize();
+        List<ResponseCustomerDto> customerList = repository.findCustomers(dto.getCustomerName(), start, dto.getPageSize());
+        if(customerList.isEmpty()){
+            throw new NotFoundCustomerException();
+        }
+        int searchCustomerCount = repository.getCountCustomers(dto.getCustomerName());
 
-        boolean hasNextPage = start + page < searchCustomerCount;
+        boolean hasNextPage = (start + dto.getPageSize()) < searchCustomerCount;
         boolean hasPreviousPage = start > 0;
 
-        return new ResponseListCustomerDto(customerList, page, hasNextPage, hasPreviousPage);
+        return new ResponseListCustomerDto(customerList, dto.getPage(), hasNextPage, hasPreviousPage);
     }
 
     @Override
     public void updateCustomer(UpdateCustomerDto dto, Long customerNo) {
-        repository.updateCustomer(dto, customerNo);
+        if(repository.updateCustomer(dto, customerNo) <= 0){
+            throw new NotFoundCustomerException();
+        }
     }
 
     @Override
     public void removeCustomer(Long customerNo) {
-        repository.deleteCustomer(customerNo);
+        if(repository.deleteCustomer(customerNo) <= 0){
+            throw new NotFoundCustomerException();
+        }
     }
 }

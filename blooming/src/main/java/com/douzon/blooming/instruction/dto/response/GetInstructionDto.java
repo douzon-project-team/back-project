@@ -1,5 +1,6 @@
 package com.douzon.blooming.instruction.dto.response;
 
+import com.douzon.blooming.instruction.dto.ProgressStatus;
 import com.douzon.blooming.product_instruction.dto.response.ResponseProductInstructionDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -17,5 +18,5 @@ public class GetInstructionDto {
     private List<ResponseProductInstructionDto> products;
     private String instructionDate;
     private String expirationDate;
-    private Integer progressStatus;
+    private ProgressStatus progressStatus;
 }

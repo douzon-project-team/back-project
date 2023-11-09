@@ -8,5 +8,7 @@ import lombok.Getter;
 public class ResponseProductInstructionDto {
     private Long productNo;
     private String productCode;
+    private String productName;
     private Integer amount;
+    private Integer remainAmount;
 }

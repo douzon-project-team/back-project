@@ -1,5 +1,6 @@
 package com.douzon.blooming.customer.controller;
 
+import com.douzon.blooming.customer.dto.request.CustomerSearchDto;
 import com.douzon.blooming.customer.dto.request.RequestCustomerDto;
 import com.douzon.blooming.customer.dto.request.UpdateCustomerDto;
 import com.douzon.blooming.customer.dto.response.ResponseCustomerDto;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,50 +20,39 @@ import java.util.List;
 public class CustomerController {
     private final CustomerService service;
 
-    @PostMapping("/insert")
-    public ResponseEntity<Void> insertCustomer(@RequestBody RequestCustomerDto dto){
+    @PostMapping
+    public ResponseEntity<Void> addCustomer(@Valid @RequestBody RequestCustomerDto dto){
         service.addCustomer(dto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/customer-code-check")
-    public ResponseEntity<Void> customerCodeDuplicateCheck(@RequestBody String customerCode){
-        return service.customerCodeCheck(customerCode) == null ?
-                new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.CONFLICT);
+    @GetMapping("/customer/code/check")
+    public ResponseEntity<?> duplicateCheckCustomerCode(@RequestBody String customerCode){
+        return ResponseEntity.ok().body(service.customerCodeCheck(customerCode));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<ResponseListCustomerDto> getCustomerList(@RequestBody String customerName,
-                                                                   @RequestParam(defaultValue = "1") Integer page,
-                                                                   @RequestParam(defaultValue = "8") Integer pageSize){
-        ResponseListCustomerDto customer = service.getCustomerList(customerName, page, pageSize);
-        List<ResponseCustomerDto> customerList = customer.getCustomerList();
-        return customerList == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : new ResponseEntity<>(customer, HttpStatus.OK);
+    public ResponseEntity<ResponseListCustomerDto> getCustomers(@ModelAttribute CustomerSearchDto dto){
+        ResponseListCustomerDto customer = service.findCustomers(dto);
+        return ResponseEntity.ok().body(customer);
     }
 
     @GetMapping("/{customerNo}")
     public ResponseEntity<ResponseCustomerDto> getCustomer(@PathVariable Long customerNo){
-        ResponseCustomerDto customer = service.getCustomer(customerNo);
-        return customer != null ?
-                new ResponseEntity<>(customer, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ResponseCustomerDto customer = service.findCustomer(customerNo);
+        return ResponseEntity.ok().body(customer);
     }
 
-    @PutMapping("/{customerNo}/update")
+    @PutMapping("/{customerNo}")
     public ResponseEntity<Void> updateCustomer(@PathVariable Long customerNo,
-                                               @RequestBody UpdateCustomerDto dto){
-        if (service.getCustomer(customerNo) == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+                                               @Valid @RequestBody UpdateCustomerDto dto){
         service.updateCustomer(dto, customerNo);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{customerNo}/delete")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Long customerNo){
-        if (service.getCustomer(customerNo) == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @DeleteMapping("/{customerNo}")
+    public ResponseEntity<Void> removeCustomer(@PathVariable Long customerNo){
         service.removeCustomer(customerNo);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }
