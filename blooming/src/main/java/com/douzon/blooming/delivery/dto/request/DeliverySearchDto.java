@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor
@@ -13,10 +16,12 @@ public class DeliverySearchDto {
     public static final Integer DEFAULT_PAGE = 1;
     public static final Integer DEFAULT_PAGE_SIZE = 8;
 
-    private DeliveryStatus deliveryStatus;
+    private DeliveryStatus progressStatus;
     private String employeeName;
-    private String startDate;
-    private String endDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate endDate;
     @Setter
     private Integer page = DEFAULT_PAGE;
     @Setter
