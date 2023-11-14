@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class InsertDeliveryInstructionProductDto {
+public class DeleteDeliveryInstructionProductDto {
+    private String instructionNo;
     private Long productNo;
-    private Integer amount;
 }
