@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -50,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(RestDocsConfig.class)
 public class DeliveryControllerTest {
 
-    private static final String BEARER_PREFIX = "Bearer";
+    private static final String BEARER_PREFIX = "Bearer ";
 
     @Autowired
     protected RestDocumentationResultHandler restDocs;
@@ -77,21 +78,23 @@ public class DeliveryControllerTest {
     void addDelivery() throws Exception {
         RequestDeliveryTestDto dto = new RequestDeliveryTestDto("2023-12-25");
         mockMvc.perform(post("/deliveries")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andDo(restDocs.document(
-                        responseFields(
-                                fieldWithPath("deliveryNo").type(JsonFieldType.STRING).description("출고 PK")
-                        )
-                ))
-                .andReturn();
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
+            .content(objectMapper.writeValueAsString(dto)))
+            .andExpect(status().isOk())
+            .andDo(restDocs.document(
+                    responseFields(
+                            fieldWithPath("deliveryNo").type(JsonFieldType.STRING).description("출고 PK")
+                    )
+            ))
+            .andReturn();
     }
 
     @Test
     void getDelivery() throws Exception{
         mockMvc.perform(get("/deliveries/{deliveryNo}", "MW2311000001")
-            .contentType(MediaType.APPLICATION_JSON))
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
             .andExpect(status().isOk())
             .andDo(restDocs.document(
                 pathParameters(
@@ -119,6 +122,7 @@ public class DeliveryControllerTest {
     void getDeliveries() throws Exception {
         mockMvc.perform(get("/deliveries/list")
             .contentType(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
             .param("deliveryStatus", String.valueOf(DeliveryStatus.INCOMPLETE))
 //            .param("", String.valueOf(DeliveryStatus.INCOMPLETE))
             .param("startDate", "2023-10-10")
@@ -146,6 +150,7 @@ public class DeliveryControllerTest {
         RequestDeliveryTestDto updateDeliveryDto = new RequestDeliveryTestDto("2023-11-30");
         mockMvc.perform(put("/deliveries/{deliveryNo}", "MW2311000001")
             .contentType(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
             .content(objectMapper.writeValueAsString(updateDeliveryDto)))
             .andExpect(status().isNoContent())
             .andDo(restDocs.document(
@@ -160,7 +165,8 @@ public class DeliveryControllerTest {
     @Transactional
     void deleteDelivery() throws Exception {
         mockMvc.perform(delete("/deliveries/{deliveryNo}", "MW2311000001")
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
                 .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
                     pathParameters(

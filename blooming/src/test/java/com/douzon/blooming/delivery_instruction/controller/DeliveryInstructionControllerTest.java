@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -74,15 +75,16 @@ public class DeliveryInstructionControllerTest {
                 new InsertDeliveryInstructionDto("WO2311000002", productDtoList);
 
         mockMvc.perform(post("/delivery-instructions/{deliveryNo}", "MW2311000002")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(insertDeliveryInstructionDto)))
-                .andExpect(status().isNoContent())
-                .andDo(restDocs.document(
-                    pathParameters(
-                            parameterWithName("deliveryNo").description("출고 번호").attributes(field("constraints", "NOT NULL"))
-                    )
-                ))
-                .andReturn();
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
+            .content(objectMapper.writeValueAsString(insertDeliveryInstructionDto)))
+            .andExpect(status().isNoContent())
+            .andDo(restDocs.document(
+                pathParameters(
+                        parameterWithName("deliveryNo").description("출고 번호").attributes(field("constraints", "NOT NULL"))
+                )
+            ))
+            .andReturn();
     }
 
     @Test
@@ -96,15 +98,16 @@ public class DeliveryInstructionControllerTest {
         UpdateDeliveryInstructionProductDto dto = new UpdateDeliveryInstructionProductDto("WO2311000002", productDtoList);
 
         mockMvc.perform(put("/delivery-instructions/{deliveryNo}", "MW2311000002")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isNoContent())
-                .andDo(restDocs.document(
-                    pathParameters(
-                            parameterWithName("deliveryNo").description("출고 번호").attributes(field("constraints", "NOT NULL"))
-                    )
-                ))
-                .andReturn();
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
+            .content(objectMapper.writeValueAsString(dto)))
+            .andExpect(status().isNoContent())
+            .andDo(restDocs.document(
+                pathParameters(
+                        parameterWithName("deliveryNo").description("출고 번호").attributes(field("constraints", "NOT NULL"))
+                )
+            ))
+            .andReturn();
     }
 
     @Test
@@ -112,14 +115,15 @@ public class DeliveryInstructionControllerTest {
     void deleteDeliveryInstructionTest() throws Exception {
         DeleteDeliveryInstructionProductDto dto = new DeleteDeliveryInstructionProductDto("WO2311000002", 2L);
         mockMvc.perform(delete("/delivery-instructions/{deliveryNo}", "MW2311000002")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isNoContent())
-                .andDo(restDocs.document(
-                    pathParameters(
-                            parameterWithName("deliveryNo").description("출고 번호").attributes(field("constraints", "NOT NULL"))
-                    )
-                ))
-                .andReturn();
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
+            .content(objectMapper.writeValueAsString(dto)))
+            .andExpect(status().isNoContent())
+            .andDo(restDocs.document(
+                pathParameters(
+                        parameterWithName("deliveryNo").description("출고 번호").attributes(field("constraints", "NOT NULL"))
+                )
+            ))
+            .andReturn();
     }
 }
