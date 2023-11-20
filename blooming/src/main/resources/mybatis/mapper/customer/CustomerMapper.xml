@@ -3,39 +3,50 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.douzon.blooming.customer.repo.CustomerRepository">
     <select id="customerCodeCheck" parameterType="java.lang.String" resultType="java.lang.Boolean">
-        SELECT COUNT(*) FROM project.customer WHERE customer_code = #{customerCode};
+        SELECT COUNT(*)
+        FROM project.customer
+        WHERE customer_code = #{customerCode};
     </select>
 
     <insert id="insertCustomer" parameterType="com.douzon.blooming.customer.dto.request.RequestCustomerDto">
-        INSERT INTO project.customer(customer_code, customer_name, customer_tel) VALUES (#{customerCode}, #{customerName}, #{customerTel})
+        INSERT INTO project.customer(customer_code, customer_name, customer_tel, ceo, sector)
+        VALUES (#{customerCode}, #{customerName}, #{customerTel}, #{ceo}, #{sector})
     </insert>
 
     <select id="findCustomer" parameterType="java.lang.Long" resultType="com.douzon.blooming.customer.dto.response.ResponseCustomerDto">
-        SELECT * FROM project.customer WHERE customer_no = #{customerNo}
+        SELECT *
+        FROM project.customer
+        WHERE customer_no = #{customerNo}
     </select>
 
     <select id="getCountCustomers" resultType="java.lang.Integer">
-        SELECT COUNT(*) FROM project.customer
-        WHERE customer_name LIKE CONCAT('%', #{customerName}, '%')
+        SELECT COUNT(*)
+        FROM project.customer
+        WHERE customer_code LIKE CONCAT('%', #{dto.customerCode}, '%')
+        AND customer_name LIKE CONCAT('%', #{dto.customerName}, '%')
+        AND customer_name LIKE CONCAT('%', #{dto.customerName}, '%')
+        AND sector LIKE CONCAT('%', #{dto.sector}, '%')
     </select>
 
-    <select id="findCustomers" resultType="com.douzon.blooming.customer.dto.response.ResponseCustomerDto">
-        SELECT customer_no, customer_code, customer_name, customer_tel
+    <select id="findCustomers" parameterType="com.douzon.blooming.customer.dto.request.CustomerSearchDto" resultType="com.douzon.blooming.customer.dto.response.ResponseCustomerDto">
+        SELECT customer_no, customer_code, customer_name, customer_tel, ceo, sector
         FROM project.customer
-        <where>
-            <if test='customerName != null'>
-                customer_name LIKE CONCAT('%', #{customerName}, '%')
-            </if>
-        </where>
+        WHERE customer_code LIKE CONCAT('%', #{dto.customerCode}, '%')
+        AND customer_name LIKE CONCAT('%', #{dto.customerName}, '%')
+        AND customer_name LIKE CONCAT('%', #{dto.customerName}, '%')
+        AND sector LIKE CONCAT('%', #{dto.sector}, '%')
         LIMIT #{start}, #{pageSize}
     </select>
 
     <update id="updateCustomer">
-        UPDATE project.customer SET customer_name = #{dto.customerName}, customer_tel = #{dto.customerTel} WHERE customer_no = #{customerNo}
+        UPDATE project.customer
+        SET customer_name = #{dto.customerName}, customer_tel = #{dto.customerTel}, ceo = #{dto.ceo}
+        WHERE customer_no = #{customerNo}
     </update>
 
     <delete id="deleteCustomer">
-        DELETE FROM project.customer WHERE customer_no = #{customerCode}
+        DELETE FROM project.customer
+        WHERE customer_no = #{customerCode}
     </delete>
 </mapper>
 

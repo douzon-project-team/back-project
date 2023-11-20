@@ -1,10 +1,11 @@
 package com.douzon.blooming.customer.service;
 
+import com.douzon.blooming.PageDto;
 import com.douzon.blooming.customer.dto.request.CustomerSearchDto;
 import com.douzon.blooming.customer.dto.request.RequestCustomerDto;
 import com.douzon.blooming.customer.dto.request.UpdateCustomerDto;
 import com.douzon.blooming.customer.dto.response.ResponseCustomerDto;
-import com.douzon.blooming.customer.dto.response.ResponseListCustomerDto;
+import com.douzon.blooming.customer.dto.response.ResponseDuplicateResultDto;
 import com.douzon.blooming.customer.exception.NotFoundCustomerException;
 import com.douzon.blooming.customer.repo.CustomerRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,9 @@ public class CustomerServiceImpl implements CustomerService{
     private final CustomerRepository repository;
 
     @Override
-    public boolean customerCodeCheck(String customerCode) {
-        return repository.customerCodeCheck(customerCode);
+    public ResponseDuplicateResultDto customerCodeCheck(String customerCode) {
+        ResponseDuplicateResultDto dto = new ResponseDuplicateResultDto(!repository.customerCodeCheck(customerCode));
+        return dto;
     }
 
     @Override
@@ -34,18 +36,15 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public ResponseListCustomerDto findCustomers(CustomerSearchDto dto) {
-        int start = (dto.getPage() - 1) * dto.getPageSize();
-        List<ResponseCustomerDto> customerList = repository.findCustomers(dto.getCustomerName(), start, dto.getPageSize());
-        if(customerList.isEmpty()){
-            throw new NotFoundCustomerException();
-        }
+    public PageDto<ResponseCustomerDto> findCustomers(CustomerSearchDto dto) {
+        int start = dto.getPage() * dto.getPageSize();
+        List<ResponseCustomerDto> customerList = repository.findCustomers(dto, start, dto.getPageSize());
         int searchCustomerCount = repository.getCountCustomers(dto.getCustomerName());
 
         boolean hasNextPage = (start + dto.getPageSize()) < searchCustomerCount;
         boolean hasPreviousPage = start > 0;
 
-        return new ResponseListCustomerDto(customerList, dto.getPage(), hasNextPage, hasPreviousPage);
+        return new PageDto<>(customerList, dto.getPage(), hasNextPage, hasPreviousPage);
     }
 
     @Override

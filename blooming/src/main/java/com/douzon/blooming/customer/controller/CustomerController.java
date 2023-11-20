@@ -1,22 +1,23 @@
 package com.douzon.blooming.customer.controller;
 
+import com.douzon.blooming.PageDto;
 import com.douzon.blooming.customer.dto.request.CustomerSearchDto;
+import com.douzon.blooming.customer.dto.request.DuplicateRequestDto;
 import com.douzon.blooming.customer.dto.request.RequestCustomerDto;
 import com.douzon.blooming.customer.dto.request.UpdateCustomerDto;
 import com.douzon.blooming.customer.dto.response.ResponseCustomerDto;
-import com.douzon.blooming.customer.dto.response.ResponseListCustomerDto;
 import com.douzon.blooming.customer.service.CustomerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/customers")
+@Slf4j
 public class CustomerController {
     private final CustomerService service;
 
@@ -26,14 +27,15 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/customer/code/check")
-    public ResponseEntity<?> duplicateCheckCustomerCode(@RequestBody String customerCode){
-        return ResponseEntity.ok().body(service.customerCodeCheck(customerCode));
+    @PostMapping("/customer/code/check")
+    public ResponseEntity<?> duplicateCheckCustomerCode(@RequestBody DuplicateRequestDto dto){
+        log.error(dto.getCustomerCode());
+        return ResponseEntity.ok().body(service.customerCodeCheck(dto.getCustomerCode()));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<ResponseListCustomerDto> getCustomers(@ModelAttribute CustomerSearchDto dto){
-        ResponseListCustomerDto customer = service.findCustomers(dto);
+    public ResponseEntity<PageDto<ResponseCustomerDto>> getCustomers(@ModelAttribute CustomerSearchDto dto){
+        PageDto<ResponseCustomerDto> customer = service.findCustomers(dto);
         return ResponseEntity.ok().body(customer);
     }
 
@@ -45,7 +47,8 @@ public class CustomerController {
 
     @PutMapping("/{customerNo}")
     public ResponseEntity<Void> updateCustomer(@PathVariable Long customerNo,
-                                               @Valid @RequestBody UpdateCustomerDto dto){
+                                                @RequestBody @Valid UpdateCustomerDto dto){
+        log.error(dto.toString());
         service.updateCustomer(dto, customerNo);
         return ResponseEntity.ok().build();
     }
