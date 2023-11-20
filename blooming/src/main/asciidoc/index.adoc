@@ -146,3 +146,41 @@ operation::instruction-controller-test/update-instruction[snippets='http-request
 === Instruction 삭제
 
 operation::instruction-controller-test/delete-instruction[snippets='http-request,path-parameters,http-response']
+
+[[Delivery]]
+== Delivery API
+
+=== Delivery 추가
+
+operation::delivery-controller-test/add-delivery[snippets='http-request,http-response']
+
+=== Delivery 조회
+
+operation::delivery-controller-test/get-delivery[snippets='http-request,path-parameters,http-response,response-fields']
+
+=== DeliveryList 조회
+
+operation::delivery-controller-test/get-deliveries[snippets='http-request,http-response,response-fields']
+
+=== Delivery 수정
+
+operation::delivery-controller-test/update-delivery[snippets='http-request,path-parameters,http-response']
+
+=== Delivery 삭제
+
+operation::delivery-controller-test/delete-delivery[snippets='http-request,path-parameters,http-response']
+
+[[Delivery-Instruction]]
+== Delivery-Instruction API
+
+=== Delivery-Instruction 추가
+
+operation::delivery-instruction-controller-test/add-delivery-instruction-test[snippets='http-request,path-parameters,http-response']
+
+=== Delivery-Instruction 수정
+
+operation::delivery-instruction-controller-test/update-delivery-instruction-test[snippets='http-request,path-parameters,http-response']
+
+=== Delivery-Instruction 삭제
+
+operation::delivery-instruction-controller-test/delete-delivery-instruction-test[snippets='http-request,path-parameters,http-response']

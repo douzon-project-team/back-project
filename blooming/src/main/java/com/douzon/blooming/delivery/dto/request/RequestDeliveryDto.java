@@ -7,11 +7,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateDeliveryDto {
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+public class RequestDeliveryDto {
+    @DateTimeFormat(fallbackPatterns = "yyyy-MM-dd")
     private LocalDate deliveryDate;
 }

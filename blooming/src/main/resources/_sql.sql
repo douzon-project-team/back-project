@@ -282,7 +282,7 @@ INSERT INTO delivery(delivery_date, employee_no) VALUES ('2023-11-29', 200004);
 INSERT INTO product_instruction VALUES (1, 'WO2311000001', 15, 5),
                                        (2, 'WO2311000001', 20, 5),
                                        (1, 'WO2311000002', 15, 10),
-                                       (1, 'WO2311000002', 30, 20);
+                                       (2, 'WO2311000002', 30, 20);
 
 INSERT INTO delivery_instruction VALUES ('MW2311000001', 'WO2311000001', 1, 10),
                                         ('MW2311000001', 'WO2311000001', 2, 15),

@@ -1,4 +1,4 @@
-package com.douzon.blooming.instruction.dto;
+package com.douzon.blooming.delivery_instruction.dto.request;
 
 import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
 import lombok.AllArgsConstructor;
@@ -8,9 +8,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class TestUpdateDto {
+public class UpdateDeliveryInstructionProductDto {
     private String instructionNo;
-    private Long customerNo;
-    private String instructionDate;
-    private String expirationDate;
+    private List<ProductInstructionDto> products;
 }

@@ -10,10 +10,11 @@ import lombok.ToString;
 import java.util.List;
 
 @Getter
-@ToString
-public class ResponseListCustomerDto extends PageDto<ResponseCustomerDto> {
-
-    public ResponseListCustomerDto(List<ResponseCustomerDto> list, Integer currentPage, boolean hasNextPage, boolean hasPreviousPage) {
-        super(list, currentPage, hasNextPage, hasPreviousPage);
-    }
+@NoArgsConstructor
+@AllArgsConstructor
+public class ResponseListCustomerDto {
+    private List<ResponseCustomerDto> list;
+    private Integer currentPage;
+    private boolean hasNextPage;
+    private boolean hasPreviousPage;
 }

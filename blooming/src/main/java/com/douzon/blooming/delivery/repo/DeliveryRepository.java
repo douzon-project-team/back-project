@@ -1,10 +1,11 @@
 package com.douzon.blooming.delivery.repo;
 
 import com.douzon.blooming.delivery.dto.request.DeliverySearchDto;
-import com.douzon.blooming.delivery.dto.request.InsertDeliveryDto;
-import com.douzon.blooming.delivery.dto.response.GetDeliveriesDto;
+import com.douzon.blooming.delivery.dto.request.RequestDeliveryDto;
+import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ListDeliveryDto;
+import com.douzon.blooming.delivery.dto.response.ListDeliveryWithoutCountDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 @Mapper
 public interface DeliveryRepository {
-    void insertDelivery(Long employeeNo, @Param("dto") InsertDeliveryDto dto);
+    void insertDelivery(Long employeeNo, @Param("dto") RequestDeliveryDto dto);
 
     String getDeliveryNo();
 
@@ -25,5 +26,5 @@ public interface DeliveryRepository {
 
     Optional<GetDeliveryDto> findDelivery(String deliveryNo);
 
-    int updateDelivery(String deliveryNo, String deliveryDate);
+    int updateDelivery(String deliveryNo, @Param("dto") UpdateDeliveryDto dto);
 }

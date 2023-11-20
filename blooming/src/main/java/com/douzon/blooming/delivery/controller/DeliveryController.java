@@ -1,10 +1,13 @@
 package com.douzon.blooming.delivery.controller;
 
+import com.douzon.blooming.PageDto;
 import com.douzon.blooming.delivery.dto.request.DeliverySearchDto;
-import com.douzon.blooming.delivery.dto.request.InsertDeliveryDto;
+import com.douzon.blooming.delivery.dto.request.RequestDeliveryDto;
 import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveriesDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
+import com.douzon.blooming.delivery.dto.response.ListDeliveryDto;
+import com.douzon.blooming.delivery.dto.response.ResponseDeliveryDto;
 import com.douzon.blooming.delivery.service.DeliveryService;
 import com.douzon.blooming.delivery_instruction.dto.response.GetInstructionDetailDto;
 import lombok.RequiredArgsConstructor;
@@ -20,25 +23,18 @@ public class DeliveryController {
     private final DeliveryService deliveryService;
 
     @PostMapping
-    public ResponseEntity<Void> addDelivery(@RequestBody InsertDeliveryDto dto){
-        deliveryService.addDelivery(dto);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ResponseDeliveryDto> addDelivery(@RequestBody RequestDeliveryDto dto){
+        return ResponseEntity.ok().body(deliveryService.addDelivery(dto));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<GetDeliveriesDto> getDeliveries(@ModelAttribute DeliverySearchDto dto){
-        return ResponseEntity.ok().body(deliveryService.findDeliveries(dto));    }
-
+    public ResponseEntity<PageDto<ListDeliveryDto>> getDeliveries(@ModelAttribute DeliverySearchDto dto){
+        return ResponseEntity.ok().body(deliveryService.findDeliveries(dto));
+    }
 
     @GetMapping("/{deliveryNo}")
     public ResponseEntity<GetDeliveryDto> getDelivery(@PathVariable String deliveryNo){
         return ResponseEntity.ok().body(deliveryService.findDelivery(deliveryNo));
-    }
-
-    @GetMapping("/{deliveryNo}/{instructionNo}")
-    public ResponseEntity<List<GetInstructionDetailDto>> getDeliveryDetail(@PathVariable String deliveryNo,
-                                                                           @PathVariable String instructionNo){
-        return ResponseEntity.ok().body(deliveryService.findDeliveryDetail(deliveryNo, instructionNo));
     }
 
     @PutMapping("/{deliveryNo}")
