@@ -62,7 +62,7 @@ public class DeliveryInstructionControllerTest {
                 .alwaysDo(restDocs)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .build();
-        tokenDto = employeeService.login(new LoginEmployeeDto("admin", "admin"));
+        tokenDto = employeeService.login(new LoginEmployeeDto("admin", "1234"));
     }
 
     @Test
@@ -114,7 +114,7 @@ public class DeliveryInstructionControllerTest {
     @Transactional
     void deleteDeliveryInstructionTest() throws Exception {
         DeleteDeliveryInstructionProductDto dto = new DeleteDeliveryInstructionProductDto("WO2311000002", 2L);
-        mockMvc.perform(delete("/delivery-instructions/{deliveryNo}", "MW2311000002")
+        mockMvc.perform(delete("/delivery-instructions/{deliveryNo}", "MW2311000001")
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
             .content(objectMapper.writeValueAsString(dto)))

@@ -70,7 +70,7 @@ public class DeliveryControllerTest {
                 .alwaysDo(restDocs)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .build();
-        tokenDto = employeeService.login(new LoginEmployeeDto("admin", "admin"));
+        tokenDto = employeeService.login(new LoginEmployeeDto("admin", "1234"));
     }
 
     @Test

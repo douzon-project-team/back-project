@@ -71,7 +71,7 @@ class ProductControllerTest {
         .addFilters(new CharacterEncodingFilter("UTF-8", true))
         .build();
 
-    LoginEmployeeDto loginEmployeeDto = new LoginEmployeeDto("admin", "admin");
+    LoginEmployeeDto loginEmployeeDto = new LoginEmployeeDto("admin", "1234");
     tokenDto = employeeService.login(loginEmployeeDto);
   }
 
