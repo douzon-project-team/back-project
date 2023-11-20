@@ -9,6 +9,7 @@ import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ListDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ResponseDeliveryDto;
 import com.douzon.blooming.delivery.service.DeliveryService;
+import com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstructionDto;
 import com.douzon.blooming.delivery_instruction.dto.response.GetInstructionDetailDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class DeliveryController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<PageDto<ListDeliveryDto>> getDeliveries(@ModelAttribute DeliverySearchDto dto){
+    public ResponseEntity<PageDto<DeliveryListInstructionDto>> getDeliveries(@ModelAttribute DeliverySearchDto dto){
         return ResponseEntity.ok().body(deliveryService.findDeliveries(dto));
     }
 

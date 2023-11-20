@@ -6,6 +6,7 @@ import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ListDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ListDeliveryWithoutCountDto;
+import com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstructionDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,7 +21,7 @@ public interface DeliveryRepository {
 
     int deleteDelivery(String deliveryNo);
 
-    List<ListDeliveryDto> findDeliveries(@Param("dto") DeliverySearchDto dto, Integer start, Integer pageSize);
+    List<DeliveryListInstructionDto> findDeliveries(@Param("dto") DeliverySearchDto dto, Integer start, Integer pageSize);
 
     int getCountDeliveries(@Param("dto") DeliverySearchDto searchDto);
 

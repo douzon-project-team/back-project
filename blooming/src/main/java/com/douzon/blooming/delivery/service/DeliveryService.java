@@ -9,6 +9,7 @@ import com.douzon.blooming.delivery.dto.response.GetDeliveriesDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ListDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ResponseDeliveryDto;
+import com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstructionDto;
 import com.douzon.blooming.delivery_instruction.dto.response.GetInstructionDetailDto;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface DeliveryService {
 
     GetDeliveryDto findDelivery(String deliveryNo);
 
-    PageDto<ListDeliveryDto> findDeliveries(DeliverySearchDto dto);
+    PageDto<DeliveryListInstructionDto> findDeliveries(DeliverySearchDto dto);
 
     void updateDelivery(String deliveryNo, UpdateDeliveryDto dto);
 

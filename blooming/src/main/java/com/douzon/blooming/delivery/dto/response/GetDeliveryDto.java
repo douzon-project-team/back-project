@@ -1,5 +1,6 @@
 package com.douzon.blooming.delivery.dto.response;
 
+import com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,5 +18,5 @@ public class GetDeliveryDto {
     private String employeeName;
     private LocalDate deliveryDate;
     @Setter
-    List<ListInstructionDto> instructions;
+    List<DeliveryListInstructionDto> instructions;
 }

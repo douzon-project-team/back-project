@@ -1,6 +1,7 @@
 package com.douzon.blooming.delivery_instruction.repo;
 
 import com.douzon.blooming.delivery_instruction.dto.request.DeleteDeliveryInstructionProductDto;
+import com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
 import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
 import org.apache.ibatis.annotations.*;
@@ -28,7 +29,7 @@ public interface DeliveryInstructionRepository {
             "INNER JOIN project.customer C ON I.customer_no = C.customer_no " +
             "INNER JOIN project.product P ON DI.product_no = P.product_no " +
             "WHERE DI.delivery_no = #{deliveryNo} ")
-    List<ListInstructionDto> findInstructionsByDeliverNo(String deliveryNo);
+    List<DeliveryListInstructionDto> findInstructionsByDeliverNo(String deliveryNo);
 
     @Select("SELECT COUNT(DISTINCT(instruction_no)) " +
             "FROM project.delivery_instruction " +
