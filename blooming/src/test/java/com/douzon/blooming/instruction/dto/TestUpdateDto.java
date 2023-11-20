@@ -9,8 +9,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class TestUpdateDto {
+    private String instructionNo;
     private Long customerNo;
-    private List<ProductInstructionDto> products;
     private String instructionDate;
     private String expirationDate;
 }

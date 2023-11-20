@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseListCustomerDto {
-    private List<ResponseCustomerDto> customerList;
+    private List<ResponseCustomerDto> list;
     private Integer currentPage;
     private boolean hasNextPage;
     private boolean hasPreviousPage;

@@ -1,35 +1,31 @@
 package com.douzon.blooming.product_instruction.repo;
 
-import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
+import com.douzon.blooming.product_instruction.dto.request.AddProductInstructionDto;
+import com.douzon.blooming.product_instruction.dto.request.DeleteProductInstructionDto;
+import com.douzon.blooming.product_instruction.dto.request.UpdateProductInstructionDto;
 import com.douzon.blooming.product_instruction.dto.response.ResponseProductInstructionDto;
-import org.apache.ibatis.annotations.*;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 
 @Mapper
 public interface ProductInstructionRepository {
 
-    @Insert("${insertQuery}")
-    void insert(String insertQuery);
+  @Insert("INSERT INTO project.product_instruction (product_no, instruction_no, amount, remain_amount) VALUE (#{productNo},#{instructionNo},#{amount}, #{amount})")
+  void insertProductInstruction(AddProductInstructionDto dto);
 
+  @Update(
+      "UPDATE project.product_instruction SET amount = #{amount}, remain_amount = #{amount} - amount + #{amount} "
+          + "WHERE product_no = #{productNo} AND instruction_no = #{instructionNo} AND amount = remain_amount")
+  long updateProductInstructionByDto(UpdateProductInstructionDto dto);
 
-    @Select("SELECT PI.product_no AS product_no, " +
-            "P.product_code AS product_code, " +
-            "P.product_name AS product_name, " +
-            "PI.amount AS amount, " +
-            "PI.remain_amount AS remain_amount " +
-            "FROM product_instruction PI INNER JOIN product P ON PI.product_no = P.product_no " +
-            "WHERE PI.instruction_no = #{instructionNo}")
-    List<ResponseProductInstructionDto> getProductList(String instructionNo);
+  @Delete("DELETE FROM project.product_instruction WHERE product_no = #{productNo} AND instruction_no = #{instructionNo}")
+  long deleteProductInstructionByDto(DeleteProductInstructionDto dto);
 
-    @Insert("INSERT INTO product_instruction VALUES (#{product.productNo},#{instructionNo}, #{product.amount}, #{product.amount})")
-    void insertProduct(String instructionNo, @Param("product") ProductInstructionDto updateProduct);
-
-    @Update("UPDATE product_instruction SET amount = #{product.amount} " +
-            "WHERE instruction_no = #{instructionNo} AND product_no = #{product.productNo}")
-    void updateProduct(String instructionNo, @Param("product") ProductInstructionDto updateProduct);
-
-    @Delete("DELETE FROM product_instruction WHERE product_no = #{product.productNo} AND instruction_no = #{instructionNo}")
-    void deleteProduct(String instructionNo, @Param("product") ProductInstructionDto updateProduct);
+  @Select("SELECT p.product_no as productNo, p.product_code as productCode, p.product_name as productName, pi.amount as amount, pi.remain_amount as remainAmount FROM project.product_instruction pi INNER JOIN project.product p ON p.product_no = pi.product_no WHERE instruction_no = #{instructionNo}")
+  List<ResponseProductInstructionDto> findProductInstructionByInstructionNo(String instructionNo);
 }
