@@ -1,17 +1,21 @@
 package com.douzon.blooming.customer.dto.request;
 
-import lombok.AllArgsConstructor;
+import com.douzon.blooming.SearchDto;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class CustomerSearchDto {
-    private static final Integer DEFAULT_PAGE = 1;
-    private static final Integer DEFAULT_PAGE_SIZE = 8;
+@ToString
+public class CustomerSearchDto extends SearchDto {
 
-    private String customerName = "";
-    private Integer page = DEFAULT_PAGE;
-    private Integer pageSize = DEFAULT_PAGE_SIZE;
+    private final String customerCode;
+    private final String customerName;
+    private final String sector;
+
+    public CustomerSearchDto(Integer pageSize, Integer page, String customerCode, String customerName, String sector) {
+        super(10, page);
+        this.customerCode = customerCode == null ? DEFAULT_STRING : customerCode;
+        this.customerName = customerName == null ? DEFAULT_STRING : customerName;
+        this.sector = sector == null ? DEFAULT_STRING : sector;
+    }
 }
