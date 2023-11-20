@@ -13,9 +13,11 @@ import lombok.NoArgsConstructor;
 public class ListInstructionDto {
     private String instructionNo;
     private String employeeName;
-    private Long customerNo;
     private String customerName;
     private String instructionDate;
     private String expirationDate;
-    private ProgressStatus progressStatus;
+    private Integer productNo;
+    private String productCode;
+    private String productName;
+    private Integer amount;
 }
