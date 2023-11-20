@@ -1,14 +1,15 @@
 package com.douzon.blooming.instruction.service;
 
+import com.douzon.blooming.PageDto;
 import com.douzon.blooming.instruction.dto.request.InstructionSearchDto;
 import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
+import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ResponseInstructionDto;
-import com.douzon.blooming.instruction.dto.response.ResponseInstructionListDto;
 
 public interface InstructionService {
 
-  ResponseInstructionListDto findInstructions(InstructionSearchDto searchDto);
+  PageDto<ListInstructionDto> findInstructions(InstructionSearchDto searchDto);
 
   ResponseInstructionDto findInstruction(String instructionNo);
 

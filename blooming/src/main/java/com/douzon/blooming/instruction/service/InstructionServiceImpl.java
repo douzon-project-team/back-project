@@ -1,11 +1,11 @@
 package com.douzon.blooming.instruction.service;
 
+import com.douzon.blooming.PageDto;
 import com.douzon.blooming.instruction.dto.request.InstructionSearchDto;
 import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ResponseInstructionDto;
-import com.douzon.blooming.instruction.dto.response.ResponseInstructionListDto;
 import com.douzon.blooming.instruction.exception.NotFoundInstructionException;
 import com.douzon.blooming.instruction.repo.InstructionRepository;
 import com.douzon.blooming.product_instruction.dto.response.ResponseProductInstructionDto;
@@ -41,17 +41,18 @@ public class InstructionServiceImpl implements InstructionService {
   }
 
   @Override
-  public ResponseInstructionListDto findInstructions(InstructionSearchDto searchDto) {
+  public PageDto<ListInstructionDto> findInstructions(InstructionSearchDto searchDto) {
     int start = (searchDto.getPage()) * searchDto.getPageSize();
     List<ListInstructionDto> instructionList = instructionRepository.findInstructions(searchDto,
         start, searchDto.getPageSize());
-    int searchInstructionCount = instructionRepository.getCountInstructions(searchDto);
+    int count = instructionRepository.getCountInstructions(searchDto);
 
-    boolean hasNextPage = (start + searchDto.getPageSize()) < searchInstructionCount;
-    boolean hasPreviousPage = start > 0;
-
-    return new ResponseInstructionListDto(instructionList, searchDto.getPage(), hasNextPage,
-        hasPreviousPage);
+    return PageDto.<ListInstructionDto>builder()
+        .list(instructionList)
+        .currentPage(searchDto.getPage() + 1)
+        .hasNextPage(start + searchDto.getPageSize() < count)
+        .hasPreviousPage(start > 0)
+        .build();
   }
 
   @Override
