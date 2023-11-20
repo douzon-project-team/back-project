@@ -130,12 +130,12 @@ public class DeliveryControllerTest {
             .andExpect(status().isOk())
             .andDo(restDocs.document(
                 responseFields(
-                        subsectionWithPath("deliveries").description("출고 List"),
-                        subsectionWithPath("deliveries.[].deliveryNo").type(JsonFieldType.STRING).description("출고 PK"),
-                        subsectionWithPath("deliveries.[].employeeName").type(JsonFieldType.STRING).description("담당자"),
-                        subsectionWithPath("deliveries.[].deliveryDate").type(JsonFieldType.STRING).description("출고일"),
-                        subsectionWithPath("deliveries.[].deliveryStatus").type(JsonFieldType.STRING).description("출고 상태"),
-                        subsectionWithPath("deliveries.[].instructionCount").type(JsonFieldType.NUMBER).description("총 지시 수"),
+                        subsectionWithPath("list").description("출고 List"),
+                        subsectionWithPath("list.[].deliveryNo").type(JsonFieldType.STRING).description("출고 PK"),
+                        subsectionWithPath("list.[].employeeName").type(JsonFieldType.STRING).description("담당자"),
+                        subsectionWithPath("list.[].deliveryDate").type(JsonFieldType.STRING).description("출고일"),
+                        subsectionWithPath("list.[].deliveryStatus").type(JsonFieldType.STRING).description("출고 상태"),
+                        subsectionWithPath("list.[].instructionCount").type(JsonFieldType.NUMBER).description("총 지시 수"),
                         fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
                         fieldWithPath("hasNextPage").type(JsonFieldType.BOOLEAN).description("다음 페이지 존재 여부"),
                         fieldWithPath("hasPreviousPage").type(JsonFieldType.BOOLEAN).description("이전 페이지 존재 여부")
