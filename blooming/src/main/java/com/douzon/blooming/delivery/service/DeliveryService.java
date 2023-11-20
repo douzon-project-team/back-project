@@ -1,11 +1,13 @@
 package com.douzon.blooming.delivery.service;
 
 
+import com.douzon.blooming.PageDto;
 import com.douzon.blooming.delivery.dto.request.DeliverySearchDto;
 import com.douzon.blooming.delivery.dto.request.RequestDeliveryDto;
 import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveriesDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
+import com.douzon.blooming.delivery.dto.response.ListDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ResponseDeliveryDto;
 import com.douzon.blooming.delivery_instruction.dto.response.GetInstructionDetailDto;
 
@@ -16,7 +18,7 @@ public interface DeliveryService {
 
     GetDeliveryDto findDelivery(String deliveryNo);
 
-    GetDeliveriesDto findDeliveries(DeliverySearchDto dto);
+    PageDto<ListDeliveryDto> findDeliveries(DeliverySearchDto dto);
 
     void updateDelivery(String deliveryNo, UpdateDeliveryDto dto);
 

@@ -1,5 +1,6 @@
 package com.douzon.blooming.delivery.service;
 
+import com.douzon.blooming.PageDto;
 import com.douzon.blooming.delivery.dto.request.DeliverySearchDto;
 import com.douzon.blooming.delivery.dto.request.RequestDeliveryDto;
 import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
@@ -42,10 +43,8 @@ public class DeliveryServiceImpl implements DeliveryService{
     }
 
     @Override
-    public GetDeliveriesDto findDeliveries(DeliverySearchDto searchDto) {
-        searchDto.setPage(Math.max(searchDto.getPage(), DeliverySearchDto.DEFAULT_PAGE));
-        searchDto.setPageSize(Math.max(searchDto.getPageSize(), DeliverySearchDto.DEFAULT_PAGE_SIZE));
-        int start = (searchDto.getPage() - 1) * searchDto.getPageSize();
+    public PageDto<ListDeliveryDto> findDeliveries(DeliverySearchDto searchDto) {
+        int start = (searchDto.getPage()) * searchDto.getPageSize();
         List<ListDeliveryDto> deliveries = deliveryRepository.findDeliveries(searchDto, start, searchDto.getPageSize());
         deliveries.forEach(delivery -> {
             delivery.setInstructionCount(deliveryInstructionRepository.getInstructionCount(delivery.getDeliveryNo()));
@@ -53,10 +52,10 @@ public class DeliveryServiceImpl implements DeliveryService{
 
         int searchInstructionCount = deliveryRepository.getCountDeliveries(searchDto);
 
-        boolean hasNextPage = (start + searchDto.getPageSize()) < searchInstructionCount;
-        boolean hasPreviousPage = start > 0;
-
-        return new GetDeliveriesDto(deliveries, searchDto.getPage(), hasNextPage, hasPreviousPage);
+        return PageDto.<ListDeliveryDto>builder().list(deliveries).currentPage(searchDto.getPage() + 1)
+                .hasNextPage(start + searchDto.getPageSize() < searchInstructionCount)
+                .hasPreviousPage(start > 0)
+                .build();
     }
 
     @Override

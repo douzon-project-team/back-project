@@ -1,10 +1,12 @@
 package com.douzon.blooming.delivery.controller;
 
+import com.douzon.blooming.PageDto;
 import com.douzon.blooming.delivery.dto.request.DeliverySearchDto;
 import com.douzon.blooming.delivery.dto.request.RequestDeliveryDto;
 import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveriesDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
+import com.douzon.blooming.delivery.dto.response.ListDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ResponseDeliveryDto;
 import com.douzon.blooming.delivery.service.DeliveryService;
 import com.douzon.blooming.delivery_instruction.dto.response.GetInstructionDetailDto;
@@ -26,7 +28,7 @@ public class DeliveryController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<GetDeliveriesDto> getDeliveries(@ModelAttribute DeliverySearchDto dto){
+    public ResponseEntity<PageDto<ListDeliveryDto>> getDeliveries(@ModelAttribute DeliverySearchDto dto){
         return ResponseEntity.ok().body(deliveryService.findDeliveries(dto));
     }
 

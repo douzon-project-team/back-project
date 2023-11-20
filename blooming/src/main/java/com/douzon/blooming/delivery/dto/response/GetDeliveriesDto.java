@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class GetDeliveriesDto {
+public class GetDeliveriesDto{
     private List<ListDeliveryDto> deliveries;
     private Integer currentPage;
     private Boolean hasNextPage;
