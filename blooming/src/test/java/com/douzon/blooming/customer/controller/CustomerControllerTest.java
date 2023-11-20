@@ -1,8 +1,11 @@
 package com.douzon.blooming.customer.controller;
 
+import com.douzon.blooming.auth.dto.response.TokenDto;
 import com.douzon.blooming.customer.dto.request.CustomerSearchDto;
 import com.douzon.blooming.customer.dto.request.RequestCustomerDto;
 import com.douzon.blooming.customer.dto.request.UpdateCustomerDto;
+import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
+import com.douzon.blooming.employee.service.EmployeeService;
 import com.douzon.blooming.restdocs.RestDocsConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -37,28 +41,37 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Import(RestDocsConfig.class)
 public class CustomerControllerTest {
+    private static final String BEARER_PREFIX = "Bearer ";
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     protected RestDocumentationResultHandler restDocs;
+    @Autowired
+    private EmployeeService employeeService;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private MockMvc mockMvc;
 
+    private TokenDto tokenDto;
+
     @BeforeEach
-    public void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
+    public void setUp(WebApplicationContext webApplicationContext,
+                      RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(documentationConfiguration(restDocumentation))
                 .alwaysDo(MockMvcResultHandlers.print())
                 .alwaysDo(restDocs)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .build();
-    }
 
+        LoginEmployeeDto loginEmployeeDto = new LoginEmployeeDto("admin", "1234");
+        tokenDto = employeeService.login(loginEmployeeDto);
+    }
     @Test
     @Transactional
     public void insertCustomer() throws Exception {
         RequestCustomerDto dto = new RequestCustomerDto("C0019", "swTech", "010-7777-7777", "박상웅", "프로젝트노에");
         mockMvc.perform(post("/customers")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
@@ -69,7 +82,9 @@ public class CustomerControllerTest {
 
     @Test
     public void getCustomer() throws Exception {
-        mockMvc.perform(get("/customers/{customerNo}", 3L))
+        mockMvc.perform(get("/customers/{customerNo}", 3L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
                         pathParameters(
@@ -90,6 +105,7 @@ public class CustomerControllerTest {
     public void getCustomers() throws Exception{
         mockMvc.perform(get("/customers/list")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
 //                .param("customerName", "ka")
 //                .param("page", "1")
 //                .param("pageSize", "8")
@@ -117,6 +133,7 @@ public class CustomerControllerTest {
         UpdateCustomerDto dto = new UpdateCustomerDto("하나금융지종", "010-7736-6666", "누구여");
         mockMvc.perform(put("/customers/{customerNo}", 18L)
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
@@ -131,7 +148,8 @@ public class CustomerControllerTest {
     @Transactional
     public void deleteCustomer() throws Exception {
         mockMvc.perform(delete("/customers/{customerNo}", 3L)
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
                 .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
                         pathParameters(
