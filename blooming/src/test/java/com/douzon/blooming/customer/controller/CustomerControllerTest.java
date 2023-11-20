@@ -56,7 +56,7 @@ public class CustomerControllerTest {
     @Test
     @Transactional
     public void insertCustomer() throws Exception {
-        RequestCustomerDto dto = new RequestCustomerDto("C0004", "Kakao", "010-7777-7777");
+        RequestCustomerDto dto = new RequestCustomerDto("C0019", "swTech", "010-7777-7777", "박상웅", "프로젝트노에");
         mockMvc.perform(post("/customers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
@@ -79,7 +79,9 @@ public class CustomerControllerTest {
                                 fieldWithPath("customerNo").type(JsonFieldType.NUMBER).description("거래처 PK"),
                                 fieldWithPath("customerCode").type(JsonFieldType.STRING).description("거래처 코드"),
                                 fieldWithPath("customerName").type(JsonFieldType.STRING).description("거래처 명칭"),
-                                fieldWithPath("customerTel").type(JsonFieldType.STRING).description("연락처")
+                                fieldWithPath("customerTel").type(JsonFieldType.STRING).description("연락처"),
+                                fieldWithPath("ceo").type(JsonFieldType.STRING).description("대표자"),
+                                fieldWithPath("sector").type(JsonFieldType.STRING).description("업종")
                         )))
                 .andReturn();
     }
@@ -95,7 +97,13 @@ public class CustomerControllerTest {
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
                     responseFields(
-                            subsectionWithPath("customerList").description("거래처 List"),
+                            subsectionWithPath("list").description("거래처 List"),
+                            subsectionWithPath("list.[].customerNo").type(JsonFieldType.NUMBER).description("거래처 PK"),
+                            subsectionWithPath("list.[].customerCode").type(JsonFieldType.STRING).description("거래처 코드"),
+                            subsectionWithPath("list.[].customerName").type(JsonFieldType.STRING).description("거래처 명칭"),
+                            subsectionWithPath("list.[].customerTel").type(JsonFieldType.STRING).description("연락처"),
+                            subsectionWithPath("list.[].ceo").type(JsonFieldType.STRING).description("대표자"),
+                            subsectionWithPath("list.[].sector").type(JsonFieldType.STRING).description("업종"),
                             fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
                             fieldWithPath("hasNextPage").type(JsonFieldType.BOOLEAN).description("다음 페이지 존재 여부"),
                             fieldWithPath("hasPreviousPage").type(JsonFieldType.BOOLEAN).description("이전 페이지 존재 여부")
@@ -106,8 +114,8 @@ public class CustomerControllerTest {
     @Test
     @Transactional
     public void updateCustomer() throws Exception{
-        UpdateCustomerDto dto = new UpdateCustomerDto("kakao", "010-7736-6666");
-        mockMvc.perform(put("/customers/{customerNo}", 3L)
+        UpdateCustomerDto dto = new UpdateCustomerDto("하나금융지종", "010-7736-6666", "누구여");
+        mockMvc.perform(put("/customers/{customerNo}", 18L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())

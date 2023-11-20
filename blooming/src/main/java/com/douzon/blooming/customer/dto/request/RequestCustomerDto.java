@@ -22,4 +22,13 @@ public class RequestCustomerDto {
     @Size(min = 13, max =13)
     @Pattern(regexp = "\\d{3}-\\d{4}-\\d{4}", message = "연락처의 형식이 잘못되었습니다.")
     private String customerTel;
+
+    @NotBlank
+    @Size(min = 1, max = 10)
+    private String ceo;
+
+    @NotBlank
+    @Size(min = 1, max = 20)
+    private String sector;
+
 }
