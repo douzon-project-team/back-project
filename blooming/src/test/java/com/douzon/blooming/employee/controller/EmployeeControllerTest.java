@@ -67,13 +67,13 @@ class EmployeeControllerTest {
         .addFilters(new CharacterEncodingFilter("UTF-8", true))
         .build();
 
-    LoginEmployeeDto loginEmployeeDto = new LoginEmployeeDto("admin", "admin");
+    LoginEmployeeDto loginEmployeeDto = new LoginEmployeeDto("admin", "1234");
     tokenDto = employeeService.login(loginEmployeeDto);
   }
 
   @Test
   void login() throws Exception {
-    LoginEmployeeDto loginEmployeeDto = new LoginEmployeeDto("member", "member");
+    LoginEmployeeDto loginEmployeeDto = new LoginEmployeeDto("m1", "1234");
 
     mockMvc.perform(post("/employees/login")
             .contentType(MediaType.APPLICATION_JSON)
@@ -124,7 +124,7 @@ class EmployeeControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .param("role", "ROLE_ADMIN")
             .param("employeeNo", String.valueOf(20))
-            .param("name", "admin")
+            .param("name", "관리자")
             .param("page", String.valueOf(1))
             .param("pageSize", String.valueOf(10))
             .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
@@ -161,7 +161,7 @@ class EmployeeControllerTest {
   @Test
   @Transactional
   void updateEmployee() throws Exception {
-    UpdateEmployeeDto updateEmployeeDto = new UpdateEmployeeDto("admin", "newAdmin",
+    UpdateEmployeeDto updateEmployeeDto = new UpdateEmployeeDto("1234", "newAdmin",
         "01045965429", "admin@admin.com");
     mockMvc.perform(put("/employees/{employeeNo}", 200001)
             .contentType(MediaType.APPLICATION_JSON)

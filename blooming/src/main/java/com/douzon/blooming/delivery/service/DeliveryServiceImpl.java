@@ -7,6 +7,7 @@ import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.*;
 import com.douzon.blooming.delivery.exception.NotFoundDeliveryException;
 import com.douzon.blooming.delivery.repo.DeliveryRepository;
+import com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstructionDto;
 import com.douzon.blooming.delivery_instruction.dto.response.GetInstructionDetailDto;
 import com.douzon.blooming.delivery_instruction.repo.DeliveryInstructionRepository;
 import com.douzon.blooming.product_instruction.exception.UnsupportedProductStatusException;
@@ -43,16 +44,16 @@ public class DeliveryServiceImpl implements DeliveryService{
     }
 
     @Override
-    public PageDto<ListDeliveryDto> findDeliveries(DeliverySearchDto searchDto) {
+    public PageDto<DeliveryListInstructionDto> findDeliveries(DeliverySearchDto searchDto) {
         int start = (searchDto.getPage()) * searchDto.getPageSize();
-        List<ListDeliveryDto> deliveries = deliveryRepository.findDeliveries(searchDto, start, searchDto.getPageSize());
+        List<DeliveryListInstructionDto> deliveries = deliveryRepository.findDeliveries(searchDto, start, searchDto.getPageSize());
         deliveries.forEach(delivery -> {
             delivery.setInstructionCount(deliveryInstructionRepository.getInstructionCount(delivery.getDeliveryNo()));
         });
 
         int searchInstructionCount = deliveryRepository.getCountDeliveries(searchDto);
 
-        return PageDto.<ListDeliveryDto>builder().list(deliveries).currentPage(searchDto.getPage() + 1)
+        return PageDto.<DeliveryListInstructionDto>builder().list(deliveries).currentPage(searchDto.getPage() + 1)
                 .hasNextPage(start + searchDto.getPageSize() < searchInstructionCount)
                 .hasPreviousPage(start > 0)
                 .build();

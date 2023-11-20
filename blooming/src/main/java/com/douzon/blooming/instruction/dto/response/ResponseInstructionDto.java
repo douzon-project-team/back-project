@@ -12,7 +12,7 @@ import java.util.List;
 public class ResponseInstructionDto {
     private String instructionNo;
     private String employeeName;
-    private String customerNo;
+    private Long customerNo;
     private String customerName;
     private String instructionDate;
     private String expirationDate;
