@@ -1,20 +1,22 @@
 package com.douzon.blooming.instruction.dto.request;
 
-import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
+import java.time.LocalDate;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class UpdateInstructionDto {
-    private Long customerNo;
-    private List<ProductInstructionDto> products;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate instructionDate;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate expirationDate;
+  @Setter
+  private String instructionNo;
+  private Long customerNo;
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private LocalDate instructionDate;
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private LocalDate expirationDate;
 }

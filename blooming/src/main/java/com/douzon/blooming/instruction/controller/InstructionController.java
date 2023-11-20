@@ -1,60 +1,61 @@
 package com.douzon.blooming.instruction.controller;
 
-import com.douzon.blooming.auth.EmployeeDetails;
-import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.InstructionSearchDto;
+import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
-import com.douzon.blooming.instruction.dto.response.GetInstructionDto;
-import com.douzon.blooming.instruction.dto.response.GetInstructionListDto;
+import com.douzon.blooming.instruction.dto.response.ResponseAddInstructionDto;
+import com.douzon.blooming.instruction.dto.response.ResponseInstructionDto;
+import com.douzon.blooming.instruction.dto.response.ResponseInstructionListDto;
 import com.douzon.blooming.instruction.service.InstructionService;
-import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
-import com.douzon.blooming.product_instruction.dto.response.ResponseProductInstructionDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Objects;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/instructions")
 public class InstructionController {
-    private final InstructionService service;
 
-    @PostMapping
-    public ResponseEntity<Void> addInstruction(@RequestBody RequestInstructionDto dto) {
-//        Object principal = SecurityContextHolder.getContext()
-//                .getAuthentication().getPrincipal();
-//        if(Objects.nonNull(principal)){
-//            System.out.println();
-//        }
-        service.addInstruction(dto);
-        return ResponseEntity.noContent().build();
-    }
+  private final InstructionService instructionService;
 
-    @GetMapping("/list")
-    public ResponseEntity<GetInstructionListDto> getInstructions(@ModelAttribute InstructionSearchDto dto){
-        return ResponseEntity.ok().body(service.findInstructions(dto));
-    }
+  @GetMapping("/list")
+  public ResponseEntity<ResponseInstructionListDto> getInstructions(
+      @ModelAttribute InstructionSearchDto dto) {
+    return ResponseEntity.ok().body(instructionService.findInstructions(dto));
+  }
 
-    @GetMapping("/{instructionNo}")
-    public ResponseEntity<GetInstructionDto> getInstruction(@PathVariable String instructionNo) {
-        return ResponseEntity.ok().body(service.findInstruction(instructionNo));
-    }
+  @GetMapping("/{instructionNo}")
+  public ResponseEntity<ResponseInstructionDto> getInstruction(@PathVariable String instructionNo) {
+    ResponseInstructionDto instruction = instructionService.findInstruction(instructionNo);
+    return ResponseEntity.ok().body(instruction);
+  }
 
-    @PutMapping("/{instructionNo}")
-    public ResponseEntity<Void> updateInstruction(@RequestBody UpdateInstructionDto dto, @PathVariable String instructionNo) {
-        service.updateInstruction(instructionNo, dto);
-        return ResponseEntity.noContent().build();
-    }
+  @PostMapping
+  public ResponseEntity<ResponseAddInstructionDto> addInstruction(
+      @RequestBody RequestInstructionDto dto) {
+    dto.setEmployeeNo(200003L);
+    return ResponseEntity.ok(new ResponseAddInstructionDto(instructionService.addInstruction(dto)));
+  }
 
-    @DeleteMapping("/{instructionNo}")
-    public ResponseEntity<Void> removeInstruction(@PathVariable String instructionNo) {
-        service.deleteInstruction(instructionNo);
-        return ResponseEntity.noContent().build();
-    }
+  @PutMapping("/{instructionNo}")
+  public ResponseEntity<Void> updateInstruction(@RequestBody UpdateInstructionDto dto,
+      @PathVariable String instructionNo) {
+    instructionService.updateInstruction(dto, instructionNo);
+    return ResponseEntity.noContent().build();
+  }
+
+  @DeleteMapping("/{instructionNo}")
+  public ResponseEntity<Void> removeInstruction(@PathVariable String instructionNo) {
+    instructionService.deleteInstruction(instructionNo);
+    return ResponseEntity.noContent().build();
+  }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class GetInstructionListDto {
+public class ResponseInstructionListDto {
     private List<ListInstructionDto> instructions;
     private Integer currentPage;
     private boolean hasNextPage;

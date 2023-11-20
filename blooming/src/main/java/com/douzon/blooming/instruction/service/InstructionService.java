@@ -1,25 +1,20 @@
 package com.douzon.blooming.instruction.service;
 
-import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.InstructionSearchDto;
+import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
-import com.douzon.blooming.instruction.dto.response.GetInstructionDto;
-import com.douzon.blooming.instruction.dto.response.GetInstructionListDto;
-import com.douzon.blooming.product_instruction.dto.response.ResponseProductInstructionDto;
-
-import java.util.List;
+import com.douzon.blooming.instruction.dto.response.ResponseInstructionDto;
+import com.douzon.blooming.instruction.dto.response.ResponseInstructionListDto;
 
 public interface InstructionService {
-    void addInstruction(RequestInstructionDto dto);
 
-    GetInstructionDto findInstruction(String instructionNo);
+  ResponseInstructionListDto findInstructions(InstructionSearchDto searchDto);
 
-    List<ResponseProductInstructionDto> findInstructionDetail(String instructionNo);
+  ResponseInstructionDto findInstruction(String instructionNo);
 
-    GetInstructionListDto findInstructions(InstructionSearchDto instructionSearchDto);
+  String addInstruction(RequestInstructionDto dto);
 
-    void updateInstruction(String instructionNo, UpdateInstructionDto dto);
+  void updateInstruction(UpdateInstructionDto dto, String instructionNo);
 
-    void deleteInstruction(String instructionNo);
-
+  void deleteInstruction(String instructionNo);
 }
