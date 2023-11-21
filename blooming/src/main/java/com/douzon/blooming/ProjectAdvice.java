@@ -1,13 +1,25 @@
 package com.douzon.blooming;
 
-import com.douzon.blooming.auth.exception.NotFoundEmployeeAuthException;
+import com.douzon.blooming.auth.exception.EmployeePermissionDefinedException;
 import com.douzon.blooming.auth.exception.TokenMissingAuthorizationInfoException;
 import com.douzon.blooming.auth.exception.UnsupportedEmployeeRoleException;
-import com.douzon.blooming.employee.exception.EmployeeNotFoundException;
+import com.douzon.blooming.customer.exception.NotFoundCustomerException;
+import com.douzon.blooming.delivery.exception.NotFoundDeliveryException;
+import com.douzon.blooming.employee.exception.NotFoundEmployeeException;
+import com.douzon.blooming.employee.exception.ImageUploadException;
+import com.douzon.blooming.employee.exception.NotFoundImageException;
+import com.douzon.blooming.employee.exception.PasswordDoesNotMatchException;
 import com.douzon.blooming.employee.exception.UnsupportedTargetTypeException;
+import com.douzon.blooming.instruction.exception.NotFoundInstructionException;
 import com.douzon.blooming.log.exception.UnsupportedLogTypeException;
-import org.apache.ibatis.binding.BindingException;
+import com.douzon.blooming.product.exception.NotFoundProductException;
+import com.douzon.blooming.product_instruction.exception.NotFoundProductInstructionException;
+import com.douzon.blooming.product_instruction.exception.UnsupportedProductStatusException;
+import com.douzon.blooming.token.exception.NotFoundRefreshTokenException;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -21,20 +33,51 @@ public class ProjectAdvice {
   }
 
   @ExceptionHandler({
-      NotFoundEmployeeAuthException.class,
+      EmployeePermissionDefinedException.class
+  })
+  public ResponseEntity<String> forbiddenError(Exception e) {
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+  }
+
+  @ExceptionHandler({
+      NotFoundEmployeeException.class,
+      NotFoundCustomerException.class,
+      NotFoundDeliveryException.class,
+      com.douzon.blooming.auth.exception.NotFoundEmployeeException.class,
+      NotFoundImageException.class,
+      NotFoundProductException.class,
+      NotFoundInstructionException.class,
+      NotFoundProductInstructionException.class,
+  })
+  public ResponseEntity<String> notFoundError(Exception e) {
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+  }
+
+  @ExceptionHandler({
       TokenMissingAuthorizationInfoException.class,
       UnsupportedEmployeeRoleException.class,
-      EmployeeNotFoundException.class,
       UnsupportedTargetTypeException.class,
       UnsupportedLogTypeException.class,
-      IllegalArgumentException.class
+      IllegalArgumentException.class,
+      PasswordDoesNotMatchException.class,
+      UnsupportedProductStatusException.class,
+      ImageUploadException.class
   })
   public ResponseEntity<String> requestError(Exception e) {
     return ResponseEntity.badRequest().body(e.getMessage());
   }
 
-  @ExceptionHandler(BindingException.class)
-  public ResponseEntity<String> requestError(BindingException e) {
-    return ResponseEntity.badRequest().body(e.getMessage());
+  @ExceptionHandler({
+      BindException.class
+  })
+  public ResponseEntity<String> requestError(BindException e) {
+    return ResponseEntity.badRequest().body(e.getFieldErrors().toString());
+  }
+
+  @ExceptionHandler({
+      NotFoundRefreshTokenException.class
+  })
+  public ResponseEntity<String> refreshTokenError(NotFoundRefreshTokenException e) {
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
   }
 }
