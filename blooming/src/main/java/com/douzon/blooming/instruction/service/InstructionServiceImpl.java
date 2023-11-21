@@ -1,6 +1,7 @@
 package com.douzon.blooming.instruction.service;
 
 import com.douzon.blooming.PageDto;
+import com.douzon.blooming.auth.EmployeeDetails;
 import com.douzon.blooming.instruction.dto.request.InstructionSearchDto;
 import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
@@ -12,6 +13,7 @@ import com.douzon.blooming.product_instruction.dto.response.ResponseProductInstr
 import com.douzon.blooming.product_instruction.repo.ProductInstructionRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,9 @@ public class InstructionServiceImpl implements InstructionService {
 
   @Override
   public String addInstruction(RequestInstructionDto dto) {
+    EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
+    dto.setEmployeeNo(employeeDetails.getEmployeeNo());
     instructionRepository.insertInstruction(dto);
     return instructionRepository.getInstructionNo();
   }

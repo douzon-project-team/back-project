@@ -1,7 +1,6 @@
 package com.douzon.blooming.employee.service;
 
 import com.douzon.blooming.PageDto;
-import com.douzon.blooming.auth.dto.response.TokenDto;
 import com.douzon.blooming.employee.dto.request.AuthUpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
@@ -29,5 +28,5 @@ public interface EmployeeService {
 
   void removeEmployee(Long employeeNo);
 
-  TokenDto login(LoginEmployeeDto loginEmployeeDto);
+  Long findEmployeeNoByDto(LoginEmployeeDto loginEmployeeDto);
 }

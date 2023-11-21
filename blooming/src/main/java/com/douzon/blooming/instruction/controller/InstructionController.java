@@ -43,7 +43,6 @@ public class InstructionController {
   @PostMapping
   public ResponseEntity<ResponseAddInstructionDto> addInstruction(
       @RequestBody RequestInstructionDto dto) {
-    dto.setEmployeeNo(200001L);
     return ResponseEntity.ok(new ResponseAddInstructionDto(instructionService.addInstruction(dto)));
   }
 
