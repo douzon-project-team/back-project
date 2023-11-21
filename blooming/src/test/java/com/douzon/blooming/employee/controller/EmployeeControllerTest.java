@@ -4,7 +4,11 @@ import static com.douzon.blooming.restdocs.RestDocsConfig.field;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -16,8 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.douzon.blooming.auth.dto.response.TokenDto;
 import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
-import com.douzon.blooming.employee.service.EmployeeService;
 import com.douzon.blooming.restdocs.RestDocsConfig;
+import com.douzon.blooming.token.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +54,7 @@ class EmployeeControllerTest {
   @Autowired
   protected RestDocumentationResultHandler restDocs;
   @Autowired
-  private EmployeeService employeeService;
+  private TokenService tokenService;
 
   private MockMvc mockMvc;
 
@@ -66,9 +70,7 @@ class EmployeeControllerTest {
         .alwaysDo(restDocs)
         .addFilters(new CharacterEncodingFilter("UTF-8", true))
         .build();
-
-    LoginEmployeeDto loginEmployeeDto = new LoginEmployeeDto("admin", "1234");
-    tokenDto = employeeService.login(loginEmployeeDto);
+    tokenDto = tokenService.createToken("admin", "1234", 200001L);
   }
 
   @Test
@@ -89,7 +91,8 @@ class EmployeeControllerTest {
             responseFields(
                 fieldWithPath("grantType").type(JsonFieldType.STRING)
                     .description("승인 타입 : Bearer 고정"),
-                fieldWithPath("accessToken").type(JsonFieldType.STRING).description("토큰")
+                fieldWithPath("accessToken").type(JsonFieldType.STRING).description("Access 토큰"),
+                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("Refresh 토큰")
             )
         )).andReturn();
   }

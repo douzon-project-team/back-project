@@ -17,14 +17,12 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.douzon.blooming.auth.dto.response.TokenDto;
-import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
-import com.douzon.blooming.employee.service.EmployeeService;
 import com.douzon.blooming.product.dto.request.InsertProductDto;
 import com.douzon.blooming.product.dto.request.UpdateProductDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
+import com.douzon.blooming.token.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +53,7 @@ class ProductControllerTest {
   protected RestDocumentationResultHandler restDocs;
 
   @Autowired
-  private EmployeeService employeeService;
+  private TokenService tokenService;
 
   private MockMvc mockMvc;
 
@@ -71,8 +69,7 @@ class ProductControllerTest {
         .addFilters(new CharacterEncodingFilter("UTF-8", true))
         .build();
 
-    LoginEmployeeDto loginEmployeeDto = new LoginEmployeeDto("admin", "1234");
-    tokenDto = employeeService.login(loginEmployeeDto);
+    tokenDto = tokenService.createToken("admin", "1234", 200001L);
   }
 
   @Test
