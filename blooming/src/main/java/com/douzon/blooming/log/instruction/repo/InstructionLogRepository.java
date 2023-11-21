@@ -7,6 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface InstructionLogRepository {
 
-  @Insert("INSERT INTO project.instruction_log (ip_address, modifier_no, instruction_no, type) VALUE (#{idAddress},#{modifierNo},#{instructionNo},#{type}})")
+  @Insert("INSERT INTO project.instruction_log (ip_address, modifier_no, instruction_no, type) VALUE (#{ipAddress},#{modifierNo},#{instructionNo},#{type})")
   void insertInstructionLogByInstructionLogDto(InstructionLogDto insertInstructionLogDto);
 }

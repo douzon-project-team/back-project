@@ -99,6 +99,14 @@
     WHERE employee_no = #{employeeId}
   </select>
 
+  <select id="findEmployeeNoByDto" resultType="java.lang.Long">
+    SELECT employee_no
+    FROM project.employee
+    WHERE id = #{dto.id}
+      AND password = #{dto.password}
+  </select>
+
+
   <update id="updateEmployeeImage">
     UPDATE project.employee
     SET img = #{imageUrl}

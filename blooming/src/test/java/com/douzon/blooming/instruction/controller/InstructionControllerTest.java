@@ -18,12 +18,11 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.douzon.blooming.auth.dto.response.TokenDto;
-import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
-import com.douzon.blooming.employee.service.EmployeeService;
 import com.douzon.blooming.instruction.dto.ProgressStatus;
 import com.douzon.blooming.instruction.dto.TestAddDto;
 import com.douzon.blooming.instruction.dto.TestUpdateDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
+import com.douzon.blooming.token.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +57,7 @@ class InstructionControllerTest {
   protected RestDocumentationResultHandler restDocs;
   private MockMvc mockMvc;
   @Autowired
-  private EmployeeService employeeService;
+  private TokenService tokenService;
   private TokenDto tokenDto;
 
   @BeforeEach
@@ -70,7 +69,7 @@ class InstructionControllerTest {
         .alwaysDo(restDocs)
         .addFilters(new CharacterEncodingFilter("UTF-8", true))
         .build();
-    tokenDto = employeeService.login(new LoginEmployeeDto("admin", "1234"));
+    tokenDto = tokenService.createToken("admin", "1234", 200001L);
   }
 
   @Test

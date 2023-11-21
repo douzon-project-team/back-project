@@ -10,13 +10,13 @@ import com.douzon.blooming.employee.dto.response.EmployeeListDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
 import com.douzon.blooming.employee.service.EmployeeImageService;
 import com.douzon.blooming.employee.service.EmployeeService;
+import com.douzon.blooming.token.service.TokenService;
 import java.net.MalformedURLException;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,10 +36,20 @@ public class EmployeeController {
 
   private final EmployeeService employeeService;
   private final EmployeeImageService employeeImageService;
+  private final TokenService tokenService;
 
   @PostMapping("/login")
   public ResponseEntity<TokenDto> login(@RequestBody @Valid LoginEmployeeDto loginEmployeeDto) {
-    return ResponseEntity.ok(employeeService.login(loginEmployeeDto));
+    Long employeeNo = employeeService.findEmployeeNoByDto(loginEmployeeDto);
+    TokenDto token = tokenService.createToken(loginEmployeeDto.getId(),
+        loginEmployeeDto.getPassword(), employeeNo);
+    return ResponseEntity.ok(token);
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<Void> logout(@RequestBody String refreshToken) {
+    tokenService.removeRefreshToken(refreshToken);
+    return ResponseEntity.noContent().build();
   }
 
   @GetMapping("/me")

@@ -1,7 +1,7 @@
 package com.douzon.blooming;
 
 import com.douzon.blooming.auth.filter.JwtFilter;
-import com.douzon.blooming.auth.provider.TokenProvider;
+import com.douzon.blooming.token.provider.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

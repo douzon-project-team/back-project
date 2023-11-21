@@ -23,14 +23,15 @@ public class WebConfig implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-//    registry.addInterceptor(productLogInterceptor)
-//        .addPathPatterns("/products/**");
-//    registry.addInterceptor(deliveryLogInterceptor)
-//        .addPathPatterns("/delivery/**");
-//    registry.addInterceptor(instructionLogInterceptor)
-//        .addPathPatterns("/instruction/**");
-//    registry.addInterceptor(employeeLogInterceptor)
-//        .addPathPatterns("/employees/**");
+    registry.addInterceptor(productLogInterceptor)
+        .addPathPatterns("/products/**", "/products");
+    registry.addInterceptor(deliveryLogInterceptor)
+        .addPathPatterns("/deliveries/**", "/deliveries");
+    registry.addInterceptor(instructionLogInterceptor)
+        .addPathPatterns("/instructions/**", "/instructions");
+    registry.addInterceptor(employeeLogInterceptor)
+        .addPathPatterns("/employees/**", "/employees")
+        .excludePathPatterns("/employees/login", "/employees/logout");
 
 //    registry.addInterceptor(employeeCheckInterceptor)
 //        .addPathPatterns("/employees/**");

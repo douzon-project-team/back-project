@@ -1,8 +1,8 @@
-package com.douzon.blooming.auth.provider;
+package com.douzon.blooming.token.provider;
 
+import com.douzon.blooming.auth.EmployeeDetails;
 import com.douzon.blooming.auth.dto.response.TokenDto;
 import com.douzon.blooming.auth.exception.TokenMissingAuthorizationInfoException;
-import com.douzon.blooming.auth.EmployeeDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,6 +30,8 @@ public class TokenProvider {
   private final Key key;
   @Value("${jwt.secret.access-expire-time}")
   private Long accessTokenExpireTime;
+  @Value("${jwt.secret.refresh-expire-time}")
+  private Long refreshTokenExpireTime;
 
   public TokenProvider(@Value("${jwt.secret.symbol}") String secretKey) {
     byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -38,27 +41,38 @@ public class TokenProvider {
   // 토큰 생성
   // 인증을 성공하면 AbstractUserDetailsAuthenticationProvider 에서 createSuccessAuthication 메서드를 통해 principal 에 userDetails를 넣어줌
   // credential 은 protect 라 널임
-  public TokenDto generateToken(Authentication authentication) {
+
+  /**
+   * Access 토큰 생성
+   * @param authentication
+   * @return
+   */
+  public String createAccessToken(Authentication authentication) {
     EmployeeDetails principal = (EmployeeDetails) authentication.getPrincipal();
-    Long employeeNo = principal.getEmployeeNo();
     String authorities = principal.getAuthorities().stream()
         .map(GrantedAuthority::getAuthority)
         .collect(Collectors.joining(","));
 
-    long now = (new Date()).getTime();
-    Date tokenExpiresIn = new Date(now + accessTokenExpireTime);
-
-    String accessToken = Jwts.builder()
+    return Jwts
+        .builder()
         .subject(authentication.getName())
-        .claims(Map.of(AUTHORITIES_KEY, authorities, "employeeNo", employeeNo))
-        .expiration(tokenExpiresIn)
-        .signWith(key, SignatureAlgorithm.HS256)
+        .claims(Map.of(AUTHORITIES_KEY, authorities, "employeeNo", principal.getEmployeeNo()))
+        .expiration(new Date(System.currentTimeMillis() + accessTokenExpireTime))
+        .signWith(SignatureAlgorithm.HS256, key)
         .compact();
+  }
 
-    return TokenDto.builder()
-        .grantType("bearer")
-        .accessToken(accessToken)
-        .build();
+  /**
+   * refresh 토큰 생성
+   * @param authentication
+   * @return
+   */
+  public String createRefreshToken(Authentication authentication) {
+    return Jwts.builder()
+        .subject(authentication.getName())
+        .expiration(new Date(System.currentTimeMillis() + refreshTokenExpireTime))
+        .signWith(SignatureAlgorithm.HS256, key)
+        .compact();
   }
 
   public Authentication getAuthentication(String accessToken) {
@@ -73,12 +87,18 @@ public class TokenProvider {
             .map(SimpleGrantedAuthority::new)
             .collect(Collectors.toList());
 
-    EmployeeDetails principal = new EmployeeDetails(Long.parseLong(claims.get("employeeNo").toString()),
+    EmployeeDetails principal = new EmployeeDetails(
+        Long.parseLong(claims.get("employeeNo").toString()),
         claims.getSubject(), "", authorities);
 
     return new UsernamePasswordAuthenticationToken(principal, "", authorities);
   }
 
+  /**
+   * 토큰 검증
+   * @param token
+   * @return
+   */
   public boolean validateToken(String token) {
     try {
       Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);

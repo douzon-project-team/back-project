@@ -2,7 +2,7 @@ package com.douzon.blooming.auth.service;
 
 import com.douzon.blooming.auth.EmployeeDetails;
 import com.douzon.blooming.employee.dto.response.EmployeeDto;
-import com.douzon.blooming.auth.exception.NotFoundEmployeeAuthException;
+import com.douzon.blooming.auth.exception.NotFoundEmployeeException;
 import com.douzon.blooming.employee.repo.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     return employeeRepository.findEmployeeById(username)
         .map(this::createEmployeeDetails)
-        .orElseThrow(NotFoundEmployeeAuthException::new);
+        .orElseThrow(NotFoundEmployeeException::new);
   }
 
   private EmployeeDetails createEmployeeDetails(EmployeeDto employeeDto) {

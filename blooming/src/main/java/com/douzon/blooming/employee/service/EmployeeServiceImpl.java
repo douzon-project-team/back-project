@@ -1,8 +1,6 @@
 package com.douzon.blooming.employee.service;
 
 import com.douzon.blooming.PageDto;
-import com.douzon.blooming.auth.dto.response.TokenDto;
-import com.douzon.blooming.auth.provider.TokenProvider;
 import com.douzon.blooming.employee.dto.request.AuthUpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
@@ -10,26 +8,23 @@ import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.response.EmployeeListDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
-import com.douzon.blooming.employee.exception.EmployeeNotFoundException;
+import com.douzon.blooming.employee.exception.NotFoundEmployeeException;
 import com.douzon.blooming.employee.exception.PasswordDoesNotMatchException;
 import com.douzon.blooming.employee.repo.EmployeeRepository;
 import com.douzon.blooming.product.exception.NotFoundProductException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
 
-  private final AuthenticationManagerBuilder managerBuilder;
   private final EmployeeRepository employeeRepository;
   private final PasswordEncoder passwordEncoder;
-  private final TokenProvider tokenProvider;
 
   @Override
   public boolean employeeNoCheck(Long employeeNo) {
@@ -44,7 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   @Override
   public ResponseEmployeeDto getEmployeeByNo(Long employeeNo) {
     return employeeRepository.findEmployeeByNo(employeeNo)
-        .orElseThrow(EmployeeNotFoundException::new);
+        .orElseThrow(NotFoundEmployeeException::new);
   }
 
   @Override
@@ -88,12 +83,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     employeeRepository.deleteEmployee(employeeNo);
   }
 
-  @Override
-  public TokenDto login(LoginEmployeeDto loginEmployeeDto) {
-    UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-        loginEmployeeDto.getId(), loginEmployeeDto.getPassword());
-    Authentication authenticate = managerBuilder.getObject().authenticate(token);
 
-    return tokenProvider.generateToken(authenticate);
+  @Override
+  public Long findEmployeeNoByDto(LoginEmployeeDto loginEmployeeDto) {
+    Long employeeNo = employeeRepository.findEmployeeNoByDto(loginEmployeeDto);
+    if (employeeNo == 0) {
+      throw new com.douzon.blooming.auth.exception.NotFoundEmployeeException();
+    }
+    return employeeNo;
   }
 }

@@ -12,10 +12,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.douzon.blooming.auth.dto.response.TokenDto;
-import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
-import com.douzon.blooming.employee.service.EmployeeService;
 import com.douzon.blooming.product_instruction.dto.TestAddDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
+import com.douzon.blooming.token.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +49,7 @@ class ProductInstructionControllerTest {
   protected RestDocumentationResultHandler restDocs;
   private MockMvc mockMvc;
   @Autowired
-  private EmployeeService employeeService;
+  private TokenService tokenService;
   private TokenDto tokenDto;
 
   @BeforeEach
@@ -62,7 +61,7 @@ class ProductInstructionControllerTest {
         .alwaysDo(restDocs)
         .addFilters(new CharacterEncodingFilter("UTF-8", true))
         .build();
-    tokenDto = employeeService.login(new LoginEmployeeDto("admin", "1234"));
+    tokenDto = tokenService.createToken("admin", "1234", 200001L);
   }
 
   @Test
@@ -90,7 +89,8 @@ class ProductInstructionControllerTest {
   @Test
   @Transactional
   void updateProductInstruction() throws Exception {
-    mockMvc.perform(put("/product-instruction/instruction/{instructionNo}/productNo/{productNo}", "WO2311000001","1")
+    mockMvc.perform(put("/product-instruction/instruction/{instructionNo}/productNo/{productNo}",
+            "WO2311000001", "1")
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
             .content("{\"amount\":10}")
@@ -103,13 +103,14 @@ class ProductInstructionControllerTest {
                 fieldWithPath("amount").type(JsonFieldType.NUMBER).description("갯수")
                     .attributes(field("constraints", "NOT NULL"))
             )
-            )).andReturn();
+        )).andReturn();
   }
 
   @Test
   @Transactional
   void deleteProductInstruction() throws Exception {
-    mockMvc.perform(delete("/product-instruction/instruction/{instructionNo}/productNo/{productNo}", "WO2311000001","1")
+    mockMvc.perform(delete("/product-instruction/instruction/{instructionNo}/productNo/{productNo}",
+            "WO2311000001", "1")
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
         ).andExpect(status().isNoContent())
@@ -117,6 +118,6 @@ class ProductInstructionControllerTest {
             requestHeaders(
                 headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
             )
-            )).andReturn();
+        )).andReturn();
   }
 }

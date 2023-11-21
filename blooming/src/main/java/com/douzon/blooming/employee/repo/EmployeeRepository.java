@@ -3,6 +3,7 @@ package com.douzon.blooming.employee.repo;
 import com.douzon.blooming.employee.dto.request.AuthUpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
+import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.response.EmployeeDto;
 import com.douzon.blooming.employee.dto.response.EmployeeListDto;
@@ -40,6 +41,8 @@ public interface EmployeeRepository {
   boolean existById(String id);
 
   boolean existByEmployeeNo(Long employeeNo);
+
+  Long findEmployeeNoByDto(@Param("dto") LoginEmployeeDto loginEmployeeDto);
 
   void updateEmployeeImage(@Param("imageUrl") String imageUrl,
       @Param("employeeNo") Long employeeNo);
