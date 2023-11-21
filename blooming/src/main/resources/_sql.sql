@@ -101,7 +101,7 @@ CREATE TABLE `delivery_instruction`
 
 CREATE TABLE `employee_log`
 (
-    `log_no`      BIGINT PRIMARY KEY,
+    `log_no`      BIGINT PRIMARY KEY AUTO_INCREMENT,
     `ip_address`  VARCHAR(20) NOT NULL,
     `date`        DATETIME    NOT NULL DEFAULT NOW(),
     `modifier_no` BIGINT      NOT NULL,
@@ -111,7 +111,7 @@ CREATE TABLE `employee_log`
 
 CREATE TABLE `product_log`
 (
-    `log_no`      BIGINT PRIMARY KEY,
+    `log_no`      BIGINT PRIMARY KEY AUTO_INCREMENT,
     `ip_address`  VARCHAR(20) NOT NULL,
     `date`        DATETIME    NOT NULL DEFAULT NOW(),
     `modifier_no` BIGINT      NOT NULL,
@@ -121,7 +121,7 @@ CREATE TABLE `product_log`
 
 CREATE TABLE `instruction_log`
 (
-    `log_no`         BIGINT PRIMARY KEY,
+    `log_no`         BIGINT PRIMARY KEY AUTO_INCREMENT,
     `ip_address`     VARCHAR(20) NOT NULL,
     `date`           DATETIME    NOT NULL DEFAULT NOW(),
     `modifier_no`    BIGINT      NOT NULL,
