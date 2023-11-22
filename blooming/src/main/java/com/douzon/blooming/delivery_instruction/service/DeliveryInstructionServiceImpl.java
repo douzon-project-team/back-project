@@ -3,7 +3,7 @@ package com.douzon.blooming.delivery_instruction.service;
 import com.douzon.blooming.delivery.repo.DeliveryRepository;
 import com.douzon.blooming.delivery_instruction.dto.request.DeleteDeliveryInstructionProductDto;
 import com.douzon.blooming.delivery_instruction.dto.request.InsertDeliveryInstructionDto;
-import com.douzon.blooming.delivery_instruction.dto.request.UpdateDeliveryInstructionProductDto;
+import com.douzon.blooming.delivery_instruction.dto.request.UpdateInstructionProductDto;
 import com.douzon.blooming.delivery_instruction.repo.DeliveryInstructionRepository;
 import com.douzon.blooming.product.exception.NotFoundProductException;
 import com.douzon.blooming.product_instruction.exception.UnsupportedProductStatusException;
@@ -39,24 +39,15 @@ public class DeliveryInstructionServiceImpl implements DeliveryInstructionServic
     }
 
     @Override
-    public void updateDeliveryInstructions(String deliveryNo, UpdateDeliveryInstructionProductDto dto) {
-        dto.getProducts().forEach(product -> {
-            switch (product.getStatus()) {
-                case "added":
-                    deliveryInstructionRepository.insertProduct(deliveryNo, dto.getInstructionNo(), product);
-                    break;
-                case "updated":
-                    deliveryInstructionRepository.updateProduct(deliveryNo, dto.getInstructionNo(), product);
-                    break;
-                default:
-                    throw new UnsupportedProductStatusException();
-            }
-        });
+    public void updateDeliveryInstructions(String deliveryNo, UpdateInstructionProductDto dto) {
+        if(deliveryInstructionRepository.updateProduct(deliveryNo, dto.getInstructionNo(), dto.getProducts()) <= 0){
+            throw new NotFoundProductException();
+        };
     }
 
     @Override
-    public void deleteDeliveryInstructions(String deliveryNo, DeleteDeliveryInstructionProductDto dto) {
-        if(deliveryInstructionRepository.deleteProduct(deliveryNo, dto)<=0){
+    public void deleteDeliveryInstructions(String deliveryNo, String instructionNo, String productNo) {
+        if(deliveryInstructionRepository.deleteProduct(deliveryNo, instructionNo, productNo)<=0){
             throw new NotFoundProductException();
         };
     }
