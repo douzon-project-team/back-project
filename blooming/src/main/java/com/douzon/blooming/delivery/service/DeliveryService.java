@@ -24,5 +24,7 @@ public interface DeliveryService {
     void updateDelivery(String deliveryNo, UpdateDeliveryDto dto);
 
     void removeDelivery(String deliveryNo);
+
+    void changeStatus(String deliveryNo);
 }
 

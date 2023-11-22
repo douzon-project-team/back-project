@@ -17,6 +17,4 @@ public class ProductInstructionDto {
     @NotNull
     @Min(value = 1)
     private Integer amount;
-
-    private String status;
 }

@@ -2,6 +2,7 @@ package com.douzon.blooming.delivery.service;
 
 import com.douzon.blooming.PageDto;
 import com.douzon.blooming.auth.EmployeeDetails;
+import com.douzon.blooming.delivery.dto.DeliveryStatus;
 import com.douzon.blooming.delivery.dto.request.DeliverySearchDto;
 import com.douzon.blooming.delivery.dto.request.RequestDeliveryDto;
 import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
@@ -11,11 +12,15 @@ import com.douzon.blooming.delivery.exception.NotFoundDeliveryException;
 import com.douzon.blooming.delivery.repo.DeliveryRepository;
 import com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstructionDto;
 import com.douzon.blooming.delivery_instruction.repo.DeliveryInstructionRepository;
+
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import static java.time.LocalDate.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +34,8 @@ public class DeliveryServiceImpl implements DeliveryService {
   public ResponseDeliveryDto addDelivery(RequestDeliveryDto dto) {
     EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
-    deliveryRepository.insertDelivery(employeeDetails.getEmployeeNo(), dto);
+    DeliveryStatus status= dto.getDeliveryDate().isBefore(now())? DeliveryStatus.COMPLETE : DeliveryStatus.INCOMPLETE;
+    deliveryRepository.insertDelivery(employeeDetails.getEmployeeNo(), dto, status);
     return new ResponseDeliveryDto(deliveryRepository.getDeliveryNo());
   }
 
@@ -73,6 +79,11 @@ public class DeliveryServiceImpl implements DeliveryService {
     if (deliveryRepository.deleteDelivery(deliveryNo) <= 0) {
       throw new NotFoundDeliveryException();
     }
+  }
+
+  @Override
+  public void changeStatus(String deliveryNo) {
+    deliveryRepository.changeStatus(deliveryNo);
   }
 
 }

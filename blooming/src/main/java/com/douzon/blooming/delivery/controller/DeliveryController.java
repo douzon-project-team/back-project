@@ -50,4 +50,10 @@ public class DeliveryController {
         deliveryService.removeDelivery(deliveryNo);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{deliveryNo}/complete")
+    public ResponseEntity<Void> completeDelivery(@PathVariable String deliveryNo){
+        deliveryService.changeStatus(deliveryNo);
+        return ResponseEntity.noContent().build();
+    }
 }

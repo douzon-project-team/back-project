@@ -42,9 +42,9 @@ public interface DeliveryInstructionRepository {
 
     @Update("UPDATE project.delivery_instruction SET amount = #{dto.amount} " +
             "WHERE delivery_no = #{deliveryNo} AND instruction_no = #{instructionNo} AND product_no = #{dto.productNo}")
-    void updateProduct(String deliveryNo, String instructionNo, @Param("dto") ProductInstructionDto product);
+    Integer updateProduct(String deliveryNo, String instructionNo, @Param("dto") ProductInstructionDto product);
 
     @Delete("DELETE FROM project.delivery_instruction " +
-            "WHERE delivery_no = #{deliveryNo} AND instruction_no = #{dto.instructionNo} AND product_no = #{dto.productNo}")
-    Integer deleteProduct(String deliveryNo, @Param("dto") DeleteDeliveryInstructionProductDto dto);
+            "WHERE delivery_no = #{deliveryNo} AND instruction_no = #{instructionNo} AND product_no = #{productNo}")
+    Integer deleteProduct(String deliveryNo, String instructionNo, String productNo);
 }

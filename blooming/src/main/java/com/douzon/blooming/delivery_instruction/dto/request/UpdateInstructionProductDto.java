@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class UpdateDeliveryInstructionProductDto {
+public class UpdateInstructionProductDto {
     private String instructionNo;
-    private List<ProductInstructionDto> products;
+    private ProductInstructionDto products;
 }
