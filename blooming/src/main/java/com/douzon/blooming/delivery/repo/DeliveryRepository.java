@@ -1,5 +1,6 @@
 package com.douzon.blooming.delivery.repo;
 
+import com.douzon.blooming.delivery.dto.DeliveryStatus;
 import com.douzon.blooming.delivery.dto.request.DeliverySearchDto;
 import com.douzon.blooming.delivery.dto.request.RequestDeliveryDto;
 import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 @Mapper
 public interface DeliveryRepository {
-    void insertDelivery(Long employeeNo, @Param("dto") RequestDeliveryDto dto);
+    void insertDelivery(Long employeeNo, @Param("dto") RequestDeliveryDto dto, DeliveryStatus status);
 
     String getDeliveryNo();
 
@@ -28,4 +29,6 @@ public interface DeliveryRepository {
     Optional<GetDeliveryDto> findDelivery(String deliveryNo);
 
     int updateDelivery(String deliveryNo, @Param("dto") UpdateDeliveryDto dto);
+
+    void changeStatus(String deliveryNo);
 }

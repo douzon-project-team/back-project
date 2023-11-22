@@ -4,8 +4,8 @@
 <mapper namespace="com.douzon.blooming.delivery.repo.DeliveryRepository">
 
     <insert id="insertDelivery" parameterType="com.douzon.blooming.delivery.dto.request.RequestDeliveryDto">
-        INSERT INTO project.delivery(employee_no, delivery_date)
-        VALUES (#{employeeNo}, #{dto.deliveryDate})
+        INSERT INTO project.delivery(employee_no, delivery_date, progress_status)
+        VALUES (#{employeeNo}, #{dto.deliveryDate}, #{status})
     </insert>
 
     <select id="getDeliveryNo" resultType="java.lang.String">
@@ -126,4 +126,8 @@
     <delete id="deleteDelivery" parameterType="java.lang.String">
         DELETE FROM project.delivery WHERE delivery_no = #{deliveryNo}
     </delete>
+
+    <update id="changeStatus" parameterType="java.lang.String">
+        UPDATE project.delivery SET progress_status = !progress_status WHERE delivery_no = #{deliveryNo}
+    </update>
 </mapper>
