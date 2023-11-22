@@ -18,10 +18,12 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.douzon.blooming.auth.dto.response.TokenDto;
+import com.douzon.blooming.auth.filter.JwtFilter;
 import com.douzon.blooming.instruction.dto.ProgressStatus;
 import com.douzon.blooming.instruction.dto.TestAddDto;
 import com.douzon.blooming.instruction.dto.TestUpdateDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
+import com.douzon.blooming.token.provider.TokenProvider;
 import com.douzon.blooming.token.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -51,165 +53,169 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @Slf4j
 class InstructionControllerTest {
 
-  private static final String BEARER_PREFIX = "Bearer ";
-  private final ObjectMapper objectMapper = new ObjectMapper();
-  @Autowired
-  protected RestDocumentationResultHandler restDocs;
-  private MockMvc mockMvc;
-  @Autowired
-  private TokenService tokenService;
-  private TokenDto tokenDto;
+    private static final String BEARER_PREFIX = "Bearer ";
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    protected RestDocumentationResultHandler restDocs;
+    private MockMvc mockMvc;
+    @Autowired
+    private TokenService tokenService;
+    private TokenDto tokenDto;
+    @Autowired
+    private TokenProvider tokenProvider;
 
-  @BeforeEach
-  public void setUp(WebApplicationContext webApplicationContext,
-      RestDocumentationContextProvider restDocumentation) {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-        .apply(documentationConfiguration(restDocumentation))
-        .alwaysDo(MockMvcResultHandlers.print())
-        .alwaysDo(restDocs)
-        .addFilters(new CharacterEncodingFilter("UTF-8", true))
-        .build();
-    tokenDto = tokenService.createToken("admin", "1234", 200001L);
-  }
+    @BeforeEach
+    public void setUp(WebApplicationContext webApplicationContext,
+                      RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(documentationConfiguration(restDocumentation))
+                .alwaysDo(MockMvcResultHandlers.print())
+                .alwaysDo(restDocs)
+                .addFilters(new CharacterEncodingFilter("UTF-8", true))
+                .addFilters(new JwtFilter(tokenProvider))
+                .build();
+        tokenDto = tokenService.createToken("admin", "1234", 200001L);
+    }
 
-  @Test
-  void getInstructions() throws Exception {
-    mockMvc.perform(get("/instructions/list")
-            .contentType(MediaType.APPLICATION_JSON)
-            .param("progressStatus", "PROGRESS")
-            .param("employeeName", "박상웅")
-            .param("startDate", "2019-10-03")
-            .param("endDate", "2024-10-10")
-            .param("page", "1")
-            .param("size", "8")
-            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
-        .andExpect(status().isOk())
-        .andDo(restDocs.document(
-            requestHeaders(
-                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
-            ),
-            responseFields(
-                subsectionWithPath("list").description("지시 List"),
-                fieldWithPath("list[].instructionNo").type(JsonFieldType.STRING)
-                    .description("지시 번호"),
-                fieldWithPath("list[].employeeName").type(JsonFieldType.STRING)
-                    .description("사원 이름"),
-                fieldWithPath("list[].customerNo").type(JsonFieldType.NUMBER)
-                    .description("거래처 번호"),
-                fieldWithPath("list[].customerName").type(JsonFieldType.STRING)
-                    .description("거래처 이름"),
-                fieldWithPath("list[].instructionDate").type(JsonFieldType.STRING)
-                    .description("지시 일"),
-                fieldWithPath("list[].expirationDate").type(JsonFieldType.STRING)
-                    .description("마감 일"),
-                fieldWithPath("list[].progressStatus").type(JsonFieldType.STRING)
-                    .description("지시 상태"),
-                fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
-                fieldWithPath("hasNextPage").type(JsonFieldType.BOOLEAN)
-                    .description("다음 페이지 존재 여부"),
-                fieldWithPath("hasPreviousPage").type(JsonFieldType.BOOLEAN)
-                    .description("이전 페이지 존재 여부")
-            )))
-        .andReturn();
-  }
+    @Test
+    void getInstructions() throws Exception {
+        mockMvc.perform(get("/instructions/list")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("progressStatus", "PROGRESS")
+                        .param("employeeName", "박상웅")
+                        .param("startDate", "2019-10-03")
+                        .param("endDate", "2024-10-10")
+                        .param("page", "1")
+                        .param("size", "8")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
+                        responseFields(
+                                subsectionWithPath("list").description("지시 List"),
+                                fieldWithPath("list[].instructionNo").type(JsonFieldType.STRING)
+                                        .description("지시 번호"),
+                                fieldWithPath("list[].employeeName").type(JsonFieldType.STRING)
+                                        .description("사원 이름"),
+                                fieldWithPath("list[].customerNo").type(JsonFieldType.NUMBER)
+                                        .description("거래처 번호"),
+                                fieldWithPath("list[].customerName").type(JsonFieldType.STRING)
+                                        .description("거래처 이름"),
+                                fieldWithPath("list[].instructionDate").type(JsonFieldType.STRING)
+                                        .description("지시 일"),
+                                fieldWithPath("list[].expirationDate").type(JsonFieldType.STRING)
+                                        .description("마감 일"),
+                                fieldWithPath("list[].progressStatus").type(JsonFieldType.STRING)
+                                        .description("지시 상태"),
+                                fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
+                                fieldWithPath("hasNextPage").type(JsonFieldType.BOOLEAN)
+                                        .description("다음 페이지 존재 여부"),
+                                fieldWithPath("hasPreviousPage").type(JsonFieldType.BOOLEAN)
+                                        .description("이전 페이지 존재 여부")
+                        )))
+                .andReturn();
+    }
 
-  @Test
-  void getInstruction() throws Exception {
-    mockMvc.perform(get("/instructions/{instructionNo}", "WO2311000001")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
-        .andExpect(status().isOk())
-        .andDo(restDocs.document(
-            requestHeaders(
-                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
-            ),
-            pathParameters(
-                parameterWithName("instructionNo").description("지시 번호")
-            ),
-            responseFields(
-                fieldWithPath("instructionNo").type(JsonFieldType.STRING).description("지시 번호"),
-                fieldWithPath("employeeName").type(JsonFieldType.STRING).description("담당자"),
-                fieldWithPath("customerName").type(JsonFieldType.STRING).description("거래처"),
-                fieldWithPath("customerNo").type(JsonFieldType.NUMBER).description("거래처 번호"),
-                subsectionWithPath("products").description("지시한 품목 List"),
-                fieldWithPath("instructionDate").type(JsonFieldType.STRING).description("지시일"),
-                fieldWithPath("expirationDate").type(JsonFieldType.STRING).description("완료일"),
-                fieldWithPath("progressStatus").type(JsonFieldType.STRING).description("진행 상태")
-            ))).andReturn();
-  }
+    @Test
+    void getInstruction() throws Exception {
+        mockMvc.perform(get("/instructions/{instructionNo}", "WO2311000001")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
+                        pathParameters(
+                                parameterWithName("instructionNo").description("지시 번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("instructionNo").type(JsonFieldType.STRING).description("지시 번호"),
+                                fieldWithPath("employeeName").type(JsonFieldType.STRING).description("담당자"),
+                                fieldWithPath("customerName").type(JsonFieldType.STRING).description("거래처"),
+                                fieldWithPath("customerNo").type(JsonFieldType.NUMBER).description("거래처 번호"),
+                                subsectionWithPath("products").description("지시한 품목 List"),
+                                fieldWithPath("instructionDate").type(JsonFieldType.STRING).description("지시일"),
+                                fieldWithPath("expirationDate").type(JsonFieldType.STRING).description("완료일"),
+                                fieldWithPath("progressStatus").type(JsonFieldType.STRING).description("진행 상태")
+                        ))).andReturn();
+    }
 
-  @Test
-  @Transactional
-  void addInstruction() throws Exception {
-    TestAddDto dto = new TestAddDto(200001L, 1L, "2023-11-24", "2023-11-24",
-        ProgressStatus.STANDBY);
-    mockMvc.perform(post("/instructions")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
-            .content(objectMapper.writeValueAsString(dto)))
-        .andDo(restDocs.document(
-            requestHeaders(
-                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
-            ),
-            requestFields(
-                fieldWithPath("employeeNo").type(JsonFieldType.NUMBER).description("지시 번호")
-                    .attributes(field("constraints", "NOT NULL")),
-                fieldWithPath("customerNo").type(JsonFieldType.NUMBER).description("상품 번호")
-                    .attributes(field("constraints", "NOT NULL")),
-                fieldWithPath("instructionDate").type(JsonFieldType.STRING).description("지시 일")
-                    .attributes(field("constraints", "YYYY-MM-DD")),
-                fieldWithPath("expirationDate").type(JsonFieldType.STRING).description("마감 일")
-                    .attributes(field("constraints", "YYYY-MM-DD")),
-                fieldWithPath("progressStatus").type(JsonFieldType.STRING).description("지시 상태")
-                    .attributes(field("constraints", "NOT NULL"))
-            )
-        ))
-        .andReturn();
-  }
+    @Test
+    @Transactional
+    void addInstruction() throws Exception {
+        TestAddDto dto = new TestAddDto(200001L, 1L, "2023-11-24", "2023-11-24",
+                ProgressStatus.STANDBY);
+        mockMvc.perform(post("/instructions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
+                        requestFields(
+                                fieldWithPath("employeeNo").type(JsonFieldType.NUMBER).description("지시 번호")
+                                        .attributes(field("constraints", "NOT NULL")),
+                                fieldWithPath("customerNo").type(JsonFieldType.NUMBER).description("상품 번호")
+                                        .attributes(field("constraints", "NOT NULL")),
+                                fieldWithPath("instructionDate").type(JsonFieldType.STRING).description("지시 일")
+                                        .attributes(field("constraints", "YYYY-MM-DD")),
+                                fieldWithPath("expirationDate").type(JsonFieldType.STRING).description("마감 일")
+                                        .attributes(field("constraints", "YYYY-MM-DD")),
+                                fieldWithPath("progressStatus").type(JsonFieldType.STRING).description("지시 상태")
+                                        .attributes(field("constraints", "NOT NULL"))
+                        )
+                ))
+                .andReturn();
+    }
 
-  @Test
-  @Transactional
-  void updateInstruction() throws Exception {
-    TestUpdateDto dto = new TestUpdateDto("WO2311000002", 1L, "2023-11-22", "2023-12-22");
-    mockMvc.perform(put("/instructions/{instructionNo}", "WO2311000002")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(dto))
-            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
-        .andExpect(status().isNoContent())
-        .andDo(restDocs.document(
-            requestHeaders(
-                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
-            ),
-            pathParameters(
-                parameterWithName("instructionNo").description("지시 번호")
-            ),
-            requestFields(
-                fieldWithPath("instructionNo").type(JsonFieldType.STRING).description("지시 번호")
-                    .attributes(field("constraints", "NOT NULL")),
-                fieldWithPath("customerNo").type(JsonFieldType.NUMBER).description("상품 번호")
-                    .attributes(field("constraints", "NOT NULL")),
-                fieldWithPath("instructionDate").type(JsonFieldType.STRING).description("지시 일")
-                    .attributes(field("constraints", "YYYY-MM-DD")),
-                fieldWithPath("expirationDate").type(JsonFieldType.STRING).description("마감 일")
-                    .attributes(field("constraints", "YYYY-MM-DD"))
-            )
-        )).andReturn();
-  }
+    @Test
+    @Transactional
+    void updateInstruction() throws Exception {
+        TestUpdateDto dto = new TestUpdateDto("WO2311000002", 1L, "2023-11-22", "2023-12-22");
+        mockMvc.perform(put("/instructions/{instructionNo}", "WO2311000002")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto))
+                        .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
+                .andExpect(status().isNoContent())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
+                        pathParameters(
+                                parameterWithName("instructionNo").description("지시 번호")
+                        ),
+                        requestFields(
+                                fieldWithPath("instructionNo").type(JsonFieldType.STRING).description("지시 번호")
+                                        .attributes(field("constraints", "NOT NULL")),
+                                fieldWithPath("customerNo").type(JsonFieldType.NUMBER).description("상품 번호")
+                                        .attributes(field("constraints", "NOT NULL")),
+                                fieldWithPath("instructionDate").type(JsonFieldType.STRING).description("지시 일")
+                                        .attributes(field("constraints", "YYYY-MM-DD")),
+                                fieldWithPath("expirationDate").type(JsonFieldType.STRING).description("마감 일")
+                                        .attributes(field("constraints", "YYYY-MM-DD"))
+                        )
+                )).andReturn();
+    }
 
-  @Test
-  @Transactional
-  void removeInstruction() throws Exception {
-    mockMvc.perform(delete("/instructions/{instructionNo}", "WO2311000002")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
-        .andExpect(status().isNoContent())
-        .andDo(restDocs.document(
-            requestHeaders(
-                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
-            ),
-            pathParameters(
-                parameterWithName("instructionNo").description("지시 번호")
-            )
-        )).andReturn();
-  }
+    @Test
+    @Transactional
+    void removeInstruction() throws Exception {
+        mockMvc.perform(delete("/instructions/{instructionNo}", "WO2311000002")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
+                .andExpect(status().isNoContent())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
+                        pathParameters(
+                                parameterWithName("instructionNo").description("지시 번호")
+                        )
+                )).andReturn();
+    }
 }

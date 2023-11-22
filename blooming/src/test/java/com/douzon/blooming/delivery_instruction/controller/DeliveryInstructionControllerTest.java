@@ -10,10 +10,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.douzon.blooming.auth.dto.response.TokenDto;
-import com.douzon.blooming.delivery_instruction.dto.request.DeleteDeliveryInstructionProductDto;
 import com.douzon.blooming.delivery_instruction.dto.request.InsertDeliveryInstructionDto;
 import com.douzon.blooming.delivery_instruction.dto.request.InsertDeliveryInstructionProductDto;
-import com.douzon.blooming.delivery_instruction.dto.request.UpdateDeliveryInstructionProductDto;
+import com.douzon.blooming.delivery_instruction.dto.request.UpdateInstructionProductDto;
 import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
 import com.douzon.blooming.token.service.TokenService;
@@ -90,15 +89,12 @@ public class DeliveryInstructionControllerTest {
   @Test
   @Transactional
   void updateDeliveryInstructionTest() throws Exception {
-    List<ProductInstructionDto> productDtoList = new ArrayList<>();
-    productDtoList.add(new ProductInstructionDto(1L, 10, "updated"));
-    productDtoList.add(new ProductInstructionDto(2L, 10, "updated"));
-    productDtoList.add(new ProductInstructionDto(3L, 15, "added"));
+    ProductInstructionDto productInstructionDto = new ProductInstructionDto(1L, 10);
 
-    UpdateDeliveryInstructionProductDto dto = new UpdateDeliveryInstructionProductDto(
-        "WO2311000002", productDtoList);
+    UpdateInstructionProductDto dto = new UpdateInstructionProductDto(
+        "WO2311000002", productInstructionDto);
 
-    mockMvc.perform(put("/delivery-instructions/{deliveryNo}", "MW2311000002")
+    mockMvc.perform(put("/delivery-instructions/{deliveryNo}", "MW2311000001")
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
             .content(objectMapper.writeValueAsString(dto)))
@@ -115,17 +111,19 @@ public class DeliveryInstructionControllerTest {
   @Test
   @Transactional
   void deleteDeliveryInstructionTest() throws Exception {
-    DeleteDeliveryInstructionProductDto dto = new DeleteDeliveryInstructionProductDto(
-        "WO2311000002", 2L);
-    mockMvc.perform(delete("/delivery-instructions/{deliveryNo}", "MW2311000001")
+    mockMvc.perform(delete("/delivery-instructions/{deliveryNo}/{instructionNo}/{productNo}",
+                    "MW2311000001", "WO2311000002", 2L)
             .contentType(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
-            .content(objectMapper.writeValueAsString(dto)))
+            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
         .andExpect(status().isNoContent())
         .andDo(restDocs.document(
             pathParameters(
                 parameterWithName("deliveryNo").description("출고 번호")
-                    .attributes(field("constraints", "NOT NULL"))
+                    .attributes(field("constraints", "NOT NULL")),
+                parameterWithName("instructionNo").description("지시 번호")
+                        .attributes(field("constraints", "NOT NULL")),
+                parameterWithName("productNo").description("품목 번호")
+                        .attributes(field("constraints", "NOT NULL"))
             )
         ))
         .andReturn();
