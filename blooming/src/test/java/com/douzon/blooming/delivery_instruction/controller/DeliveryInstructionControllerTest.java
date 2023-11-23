@@ -53,13 +53,13 @@ public class DeliveryInstructionControllerTest {
 
   @BeforeEach
   public void setUp(WebApplicationContext webApplicationContext,
-      RestDocumentationContextProvider restDocumentation) {
+                    RestDocumentationContextProvider restDocumentation) {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-        .apply(documentationConfiguration(restDocumentation))
-        .alwaysDo(MockMvcResultHandlers.print())
-        .alwaysDo(restDocs)
-        .addFilters(new CharacterEncodingFilter("UTF-8", true))
-        .build();
+            .apply(documentationConfiguration(restDocumentation))
+            .alwaysDo(MockMvcResultHandlers.print())
+            .alwaysDo(restDocs)
+            .addFilters(new CharacterEncodingFilter("UTF-8", true))
+            .build();
     tokenDto = tokenService.createToken("admin", "1234", 200001L);
   }
 
@@ -70,42 +70,41 @@ public class DeliveryInstructionControllerTest {
     productDtoList.add(new InsertDeliveryInstructionProductDto(1L, 5));
     productDtoList.add(new InsertDeliveryInstructionProductDto(2L, 15));
     InsertDeliveryInstructionDto insertDeliveryInstructionDto =
-        new InsertDeliveryInstructionDto("WO2311000002", productDtoList);
+            new InsertDeliveryInstructionDto("WO2311000002", productDtoList);
 
     mockMvc.perform(post("/delivery-instructions/{deliveryNo}", "MW2311000002")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
-            .content(objectMapper.writeValueAsString(insertDeliveryInstructionDto)))
-        .andExpect(status().isNoContent())
-        .andDo(restDocs.document(
-            pathParameters(
-                parameterWithName("deliveryNo").description("출고 번호")
-                    .attributes(field("constraints", "NOT NULL"))
-            )
-        ))
-        .andReturn();
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
+                    .content(objectMapper.writeValueAsString(insertDeliveryInstructionDto)))
+            .andExpect(status().isNoContent())
+            .andDo(restDocs.document(
+                    pathParameters(
+                            parameterWithName("deliveryNo").description("출고 번호")
+                                    .attributes(field("constraints", "NOT NULL"))
+                    )
+            ))
+            .andReturn();
   }
 
   @Test
   @Transactional
   void updateDeliveryInstructionTest() throws Exception {
-    ProductInstructionDto productInstructionDto = new ProductInstructionDto(1L, 10);
 
     UpdateInstructionProductDto dto = new UpdateInstructionProductDto(
-        "WO2311000002", productInstructionDto);
+            "WO2311000002", 1L, 10);
 
     mockMvc.perform(put("/delivery-instructions/{deliveryNo}", "MW2311000001")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
-            .content(objectMapper.writeValueAsString(dto)))
-        .andExpect(status().isNoContent())
-        .andDo(restDocs.document(
-            pathParameters(
-                parameterWithName("deliveryNo").description("출고 번호")
-                    .attributes(field("constraints", "NOT NULL"))
-            )
-        ))
-        .andReturn();
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
+                    .content(objectMapper.writeValueAsString(dto)))
+            .andExpect(status().isNoContent())
+            .andDo(restDocs.document(
+                    pathParameters(
+                            parameterWithName("deliveryNo").description("출고 번호")
+                                    .attributes(field("constraints", "NOT NULL"))
+                    )
+            ))
+            .andReturn();
   }
 
   @Test
@@ -113,19 +112,19 @@ public class DeliveryInstructionControllerTest {
   void deleteDeliveryInstructionTest() throws Exception {
     mockMvc.perform(delete("/delivery-instructions/{deliveryNo}/{instructionNo}/{productNo}",
                     "MW2311000001", "WO2311000002", 2L)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
-        .andExpect(status().isNoContent())
-        .andDo(restDocs.document(
-            pathParameters(
-                parameterWithName("deliveryNo").description("출고 번호")
-                    .attributes(field("constraints", "NOT NULL")),
-                parameterWithName("instructionNo").description("지시 번호")
-                        .attributes(field("constraints", "NOT NULL")),
-                parameterWithName("productNo").description("품목 번호")
-                        .attributes(field("constraints", "NOT NULL"))
-            )
-        ))
-        .andReturn();
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
+            .andExpect(status().isNoContent())
+            .andDo(restDocs.document(
+                    pathParameters(
+                            parameterWithName("deliveryNo").description("출고 번호")
+                                    .attributes(field("constraints", "NOT NULL")),
+                            parameterWithName("instructionNo").description("지시 번호")
+                                    .attributes(field("constraints", "NOT NULL")),
+                            parameterWithName("productNo").description("품목 번호")
+                                    .attributes(field("constraints", "NOT NULL"))
+                    )
+            ))
+            .andReturn();
   }
 }

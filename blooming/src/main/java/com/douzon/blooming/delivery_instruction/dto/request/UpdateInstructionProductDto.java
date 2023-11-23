@@ -10,5 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 public class UpdateInstructionProductDto {
     private String instructionNo;
-    private ProductInstructionDto products;
+    private Long productNo;
+    private Integer amount;
 }
