@@ -40,7 +40,7 @@ public class DeliveryInstructionServiceImpl implements DeliveryInstructionServic
 
     @Override
     public void updateDeliveryInstructions(String deliveryNo, UpdateInstructionProductDto dto) {
-        if(deliveryInstructionRepository.updateProduct(deliveryNo, dto.getInstructionNo(), dto.getProducts()) <= 0){
+        if(deliveryInstructionRepository.updateProduct(deliveryNo, dto.getInstructionNo(), dto.getProductNo(), dto.getAmount()) <= 0){
             throw new NotFoundProductException();
         };
     }

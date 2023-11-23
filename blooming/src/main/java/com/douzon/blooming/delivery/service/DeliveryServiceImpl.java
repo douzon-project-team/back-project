@@ -32,39 +32,41 @@ public class DeliveryServiceImpl implements DeliveryService {
 
   @Override
   public ResponseDeliveryDto addDelivery(RequestDeliveryDto dto) {
-    EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
+//    EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
+//        .getAuthentication().getPrincipal();
     DeliveryStatus status= dto.getDeliveryDate().isBefore(now())? DeliveryStatus.COMPLETE : DeliveryStatus.INCOMPLETE;
-    deliveryRepository.insertDelivery(employeeDetails.getEmployeeNo(), dto, status);
+    deliveryRepository.insertDelivery(200002L, dto, status);
     return new ResponseDeliveryDto(deliveryRepository.getDeliveryNo());
   }
 
   @Override
   public GetDeliveryDto findDelivery(String deliveryNo) {
     GetDeliveryDto getDeliveryDto = deliveryRepository.findDelivery(deliveryNo)
-        .orElseThrow(NotFoundDeliveryException::new);
+            .orElseThrow(NotFoundDeliveryException::new);
     getDeliveryDto.setInstructions(
-        deliveryInstructionRepository.findInstructionsByDeliverNo(deliveryNo));
+            deliveryInstructionRepository.findInstructionsByDeliverNo(deliveryNo));
     return getDeliveryDto;
   }
 
   @Override
   public PageDto<DeliveryListInstructionDto> findDeliveries(DeliverySearchDto searchDto) {
+    log.error(searchDto.toString());
+    log.info(searchDto.getPage()+"AND"+ searchDto.getPageSize());
     int start = (searchDto.getPage()) * searchDto.getPageSize();
     List<DeliveryListInstructionDto> deliveries = deliveryRepository.findDeliveries(searchDto,
-        start, searchDto.getPageSize());
+            start, searchDto.getPageSize());
     deliveries.forEach(delivery -> {
       delivery.setInstructionCount(
-          deliveryInstructionRepository.getInstructionCount(delivery.getDeliveryNo()));
+              deliveryInstructionRepository.getInstructionCount(delivery.getDeliveryNo()));
     });
 
     int searchInstructionCount = deliveryRepository.getCountDeliveries(searchDto);
 
     return PageDto.<DeliveryListInstructionDto>builder().list(deliveries)
-        .currentPage(searchDto.getPage() + 1)
-        .hasNextPage(start + searchDto.getPageSize() < searchInstructionCount)
-        .hasPreviousPage(start > 0)
-        .build();
+            .currentPage(searchDto.getPage() + 1)
+            .hasNextPage(start + searchDto.getPageSize() < searchInstructionCount)
+            .hasPreviousPage(start > 0)
+            .build();
   }
 
   @Override
