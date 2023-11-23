@@ -103,6 +103,7 @@ public class DeliveryControllerTest {
                                 fieldWithPath("deliveryNo").type(JsonFieldType.STRING).description("출고 PK"),
                                 fieldWithPath("employeeName").type(JsonFieldType.STRING).description("출고 담당자"),
                                 fieldWithPath("deliveryDate").type(JsonFieldType.STRING).description("출고일"),
+                                fieldWithPath("deliveryStatus").type(JsonFieldType.STRING).description("출고 상태"),
                                 subsectionWithPath("instructions").description("출고할 지시 List"),
                                 subsectionWithPath("instructions.[].instructionNo").type(JsonFieldType.STRING)
                                         .description("지시 PK"),
