@@ -2,17 +2,12 @@ package com.douzon.blooming.product_instruction.controller;
 
 import com.douzon.blooming.product_instruction.dto.request.AddProductInstructionDto;
 import com.douzon.blooming.product_instruction.dto.request.UpdateProductInstructionDto;
+import com.douzon.blooming.product_instruction.dto.response.ResponseProductRemainAmountDto;
 import com.douzon.blooming.product_instruction.service.ProductInstructionService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductInstructionController {
 
   private final ProductInstructionService productInstructionService;
+
+  @GetMapping("/{instructionNo}/{productNo}")
+  public ResponseEntity<ResponseProductRemainAmountDto> getRemainAmount(@PathVariable String instructionNo,
+                                                                        @PathVariable Integer productNo){
+    return ResponseEntity.ok().body(productInstructionService.getRemainAmount(instructionNo, productNo));
+  }
 
   @PostMapping("/instruction/{instructionNo}")
   public ResponseEntity<Void> addProductInstruction(@PathVariable String instructionNo,

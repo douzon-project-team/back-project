@@ -5,6 +5,8 @@ import com.douzon.blooming.product_instruction.dto.request.DeleteProductInstruct
 import com.douzon.blooming.product_instruction.dto.request.UpdateProductInstructionDto;
 import com.douzon.blooming.product_instruction.dto.response.ResponseProductInstructionDto;
 import java.util.List;
+
+import com.douzon.blooming.product_instruction.dto.response.ResponseProductRemainAmountDto;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -28,4 +30,7 @@ public interface ProductInstructionRepository {
 
   @Select("SELECT p.product_no as productNo, p.product_code as productCode, p.product_name as productName, pi.amount as amount, pi.remain_amount as remainAmount FROM project.product_instruction pi INNER JOIN project.product p ON p.product_no = pi.product_no WHERE instruction_no = #{instructionNo}")
   List<ResponseProductInstructionDto> findProductInstructionByInstructionNo(String instructionNo);
+
+  @Select("SELECT remain_amount FROM project.product_instruction WHERE instruction_no = #{instructionNo} AND product_no = #{productNo}")
+  ResponseProductRemainAmountDto getProductRemainAmount(String instructionNo, Integer productNo);
 }
