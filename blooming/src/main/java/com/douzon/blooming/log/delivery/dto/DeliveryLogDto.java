@@ -15,6 +15,6 @@ public class DeliveryLogDto {
 
   private String idAddress;
   private Long modifierNo;
-  private Long deliveryNo;
+  private String deliveryNo;
   private LogType type;
 }

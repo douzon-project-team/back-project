@@ -15,6 +15,6 @@ public class InstructionLogDto {
 
   private String ipAddress;
   private Long modifierNo;
-  private Long instructionNo;
+  private String instructionNo;
   private LogType type;
 }

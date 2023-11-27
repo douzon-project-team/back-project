@@ -2,6 +2,7 @@ package com.douzon.blooming.log.product.interceptor;
 
 
 import com.douzon.blooming.auth.EmployeeDetails;
+import com.douzon.blooming.kafka.KafkaProducerService;
 import com.douzon.blooming.log.AbstractLogInterceptor;
 import com.douzon.blooming.log.LogType;
 import com.douzon.blooming.log.product.dto.ProductLogDto;
@@ -10,20 +11,25 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class ProductLogInterceptor extends AbstractLogInterceptor<ProductLogDto> {
 
-  public ProductLogInterceptor(ProductLogService productLogService) {
-    super(productLogService);
+  public ProductLogInterceptor(ProductLogService productLogService, KafkaProducerService kafkaProducerService) {
+    super(productLogService, kafkaProducerService);
   }
 
   @Override
   public ProductLogDto getLogDto(HttpServletRequest req) {
     EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
+    String target = getTarget(req);
+    String message = target.isBlank()? "새로운 품목을 " :  "품목(품목번호: " + target + ")을 ";
+    kafkaProducerService.sendCRUDEvent(employeeDetails.getUsername() + "님이 " + message + getVerb(req));
     return ProductLogDto.builder()
         .ipAddress(getClientIp(req))
-        .productNo(1L) // TODO : 나중에 Refactor 필요
+        .productNo(target.isBlank()?null: Long.valueOf(target))
         .modifierNo(employeeDetails.getEmployeeNo())
         .type(LogType.fromRequestMethod(req.getMethod()))
         .build();
