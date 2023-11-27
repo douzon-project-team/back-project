@@ -62,7 +62,8 @@ public class EmployeeServiceImpl implements EmployeeService {
   public void updateEmployee(UpdateEmployeeDto updateEmployeeDto, Long employeeNo) {
     ResponseEmployeeDto responseEmployeeDto = employeeRepository.findEmployeeByNo(employeeNo)
         .orElseThrow(NotFoundProductException::new);
-    if (!responseEmployeeDto.getPassword().equals(updateEmployeeDto.getOldPassword())) {
+    if (updateEmployeeDto.getOldPassword() != null && !updateEmployeeDto.getOldPassword().isBlank()
+        && !responseEmployeeDto.getPassword().equals(updateEmployeeDto.getOldPassword())) {
       throw new PasswordDoesNotMatchException();
     }
     employeeRepository.updateEmployeeByUpdateEmployeeDto(updateEmployeeDto, employeeNo);

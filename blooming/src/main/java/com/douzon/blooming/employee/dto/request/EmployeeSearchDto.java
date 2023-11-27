@@ -8,13 +8,8 @@ import lombok.Getter;
 public class EmployeeSearchDto extends SearchDto {
 
   private final String name;
-  private Long employeeNo;
-  private EmployeeRole role;
-
-  protected EmployeeSearchDto() {
-    super();
-    this.name = DEFAULT_STRING;
-  }
+  private final Long employeeNo;
+  private final EmployeeRole role;
 
   public EmployeeSearchDto(Long employeeNo, String name, EmployeeRole role, Integer pageSize,
       Integer page) {
