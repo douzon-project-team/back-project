@@ -1,6 +1,7 @@
 package com.douzon.blooming.log.employee.interceptor;
 
 import com.douzon.blooming.auth.EmployeeDetails;
+import com.douzon.blooming.kafka.KafkaProducerService;
 import com.douzon.blooming.log.AbstractLogInterceptor;
 import com.douzon.blooming.log.LogType;
 import com.douzon.blooming.log.employee.dto.EmployeeLogDto;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmployeeLogInterceptor extends AbstractLogInterceptor<EmployeeLogDto> {
 
-  public EmployeeLogInterceptor(EmployeeLogService employeeLogService) {
-    super(employeeLogService);
+  public EmployeeLogInterceptor(EmployeeLogService employeeLogService, KafkaProducerService kafkaProducerService) {
+    super(employeeLogService, kafkaProducerService);
   }
 
   @Override
