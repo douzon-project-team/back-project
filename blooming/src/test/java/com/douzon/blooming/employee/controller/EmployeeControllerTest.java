@@ -191,6 +191,32 @@ class EmployeeControllerTest {
   }
 
   @Test
+  @Transactional
+  void updateEmployee2() throws Exception {
+    UpdateEmployeeDto updateEmployeeDto = new UpdateEmployeeDto("1234", "123456",
+        "01045965429", "admin@admin.com");
+    mockMvc.perform(put("/employees/{employeeNo}", 200001)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(updateEmployeeDto))
+            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
+        .andExpect(status().isNoContent())
+        .andDo(restDocs.document(
+            pathParameters(
+                parameterWithName("employeeNo").description("사원 번호")
+            ),
+            requestFields(
+                fieldWithPath("oldPassword").type(JsonFieldType.STRING).description("기존 비밀번호"),
+                fieldWithPath("password").type(JsonFieldType.STRING).description("새로운 비밀번호"),
+                fieldWithPath("tel").type(JsonFieldType.STRING).description("전화번호"),
+                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일")
+            ),
+            requestHeaders(
+                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+            )
+        )).andReturn();
+  }
+
+  @Test
   void getImage() throws Exception {
     mockMvc.perform(get("/employees/{employeeNo}/image", 200001)
             .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
