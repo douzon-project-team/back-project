@@ -18,9 +18,11 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.douzon.blooming.auth.dto.response.TokenDto;
+import com.douzon.blooming.auth.filter.JwtFilter;
 import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
+import com.douzon.blooming.token.provider.TokenProvider;
 import com.douzon.blooming.token.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,13 +55,12 @@ class EmployeeControllerTest {
   private final ObjectMapper objectMapper = new ObjectMapper();
   @Autowired
   protected RestDocumentationResultHandler restDocs;
+  private MockMvc mockMvc;
   @Autowired
   private TokenService tokenService;
-
-  private MockMvc mockMvc;
-
   private TokenDto tokenDto;
-
+  @Autowired
+  private TokenProvider tokenProvider;
 
   @BeforeEach
   public void setUp(WebApplicationContext webApplicationContext,
@@ -69,6 +70,7 @@ class EmployeeControllerTest {
         .alwaysDo(MockMvcResultHandlers.print())
         .alwaysDo(restDocs)
         .addFilters(new CharacterEncodingFilter("UTF-8", true))
+        .addFilters(new JwtFilter(tokenProvider))
         .build();
     tokenDto = tokenService.createToken("admin", "1234", 200001L);
   }
@@ -116,7 +118,8 @@ class EmployeeControllerTest {
                 fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"),
                 fieldWithPath("name").type(JsonFieldType.STRING).description("이름"),
                 fieldWithPath("tel").type(JsonFieldType.STRING).description("전화번호"),
-                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일")
+                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
+                fieldWithPath("role").type(JsonFieldType.STRING).description("권한")
             )
         )).andReturn();
   }
@@ -164,7 +167,7 @@ class EmployeeControllerTest {
   @Test
   @Transactional
   void updateEmployee() throws Exception {
-    UpdateEmployeeDto updateEmployeeDto = new UpdateEmployeeDto("1234", "newAdmin",
+    UpdateEmployeeDto updateEmployeeDto = new UpdateEmployeeDto("", "",
         "01045965429", "admin@admin.com");
     mockMvc.perform(put("/employees/{employeeNo}", 200001)
             .contentType(MediaType.APPLICATION_JSON)
