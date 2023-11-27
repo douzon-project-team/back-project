@@ -15,6 +15,25 @@ CREATE TABLE `employee`
     `email`       VARCHAR(30) NULL
 );
 
+CREATE TABLE `todo`
+(
+    `todo_no`     BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `employee_no` BIGINT NOT NULL,
+    `content`     TEXT   NOT NULL,
+    `created`     DATE       DEFAULT NOW(),
+    `checked`     TINYINT(1) DEFAULT 0
+);
+
+INSERT INTO `todo` (`employee_no`, `content`)
+VALUES (200001, 'TODO 1'),
+       (200001, 'TODO 2'),
+       (200001, 'TODO 3'),
+       (200001, 'TODO 4'),
+       (200001, 'TODO 5'),
+       (200001, 'TODO 6'),
+       (200001, 'TODO 7');
+
+
 CREATE TABLE `product`
 (
     `product_no`   BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -52,12 +71,12 @@ VALUES ('AP0001', 'MacBook Air 13', '1000mm * 100mm', 1),
 
 CREATE TABLE `customer`
 (
-    `customer_no`      BIGINT      PRIMARY KEY AUTO_INCREMENT,
-    `customer_code`    VARCHAR(5)  NOT NULL UNIQUE,
-    `customer_name`    VARCHAR(10) NOT NULL,
-    `customer_tel`     VARCHAR(13) NOT NULL,
-    `ceo`              VARCHAR(10) NOT NULL,
-    `sector`           VARCHAR(20) NOT NULL
+    `customer_no`   BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `customer_code` VARCHAR(5)  NOT NULL UNIQUE,
+    `customer_name` VARCHAR(10) NOT NULL,
+    `customer_tel`  VARCHAR(13) NOT NULL,
+    `ceo`           VARCHAR(10) NOT NULL,
+    `sector`        VARCHAR(20) NOT NULL
 );
 
 
