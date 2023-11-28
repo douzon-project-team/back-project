@@ -3,7 +3,7 @@ package com.douzon.blooming;
 import com.douzon.blooming.employee.interceptor.EmployeeCheckInterceptor;
 import com.douzon.blooming.log.customer.interceptor.CustomerLogInterceptor;
 import com.douzon.blooming.log.delivery.interceptor.DeliveryLogInterceptor;
-import com.douzon.blooming.log.employee.interceptor.EmployeeLogInterceptor;
+import com.douzon.blooming.log.employee.interceptor.*;
 import com.douzon.blooming.log.instruction.interceptor.InstructionLogInterceptor;
 import com.douzon.blooming.log.product.interceptor.ProductLogInterceptor;
 import lombok.RequiredArgsConstructor;

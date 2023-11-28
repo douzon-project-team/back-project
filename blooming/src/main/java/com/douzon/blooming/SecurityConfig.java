@@ -3,6 +3,7 @@ package com.douzon.blooming;
 import com.douzon.blooming.auth.advice.JwtAccessDeniedHandler;
 import com.douzon.blooming.auth.advice.JwtAuthenticationEntryPoint;
 import com.douzon.blooming.token.provider.TokenProvider;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +12,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -24,6 +27,19 @@ public class SecurityConfig {
   public PasswordEncoder passwordEncoder() {
 //    return new BCryptPasswordEncoder();
     return NoOpPasswordEncoder.getInstance();
+  }
+
+  @Bean
+  public WebMvcConfigurer corsConfigurer() {
+    return new WebMvcConfigurer() {
+      @Override
+      public void addCorsMappings(@NonNull CorsRegistry registry) {
+        registry.addMapping("/**")
+            .allowedOrigins("http://localhost:3000")
+            .allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowCredentials(true);
+      }
+    };
   }
 
   @Bean
