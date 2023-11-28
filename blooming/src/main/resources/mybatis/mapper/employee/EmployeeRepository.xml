@@ -11,7 +11,7 @@
 
   <select id="findEmployeeByNo"
     resultType="com.douzon.blooming.employee.dto.response.ResponseEmployeeDto">
-    SELECT employee_no, id, password, name, tel, email
+    SELECT employee_no, id, password, name, tel, email, role
     FROM project.employee
     WHERE employee_no = #{employeeId}
   </select>
@@ -51,9 +51,9 @@
 
   <update id="updateEmployeeByUpdateEmployeeDto">
     UPDATE project.employee
-    SET tel      = #{dto.tel},
+    SET tel      =  CONCAT(SUBSTRING(#{dto.tel}, 1, 3), '-',SUBSTRING(#{dto.tel}, 4, 4), '-',SUBSTRING(#{dto.tel}, 8, 4)),
         email    = #{dto.email}
-        <if test="dto.oldPassword != ''">
+        <if test="dto.oldPassword != '' and dto.oldPassword != null">
           , password = #{dto.password}
         </if>
     WHERE employee_no = #{employeeNo}
@@ -65,7 +65,7 @@
         password = #{dto.password},
         name     = #{dto.name},
         role     = #{dto.role},
-        tel      = #{dto.tel},
+        tel      =  CONCAT(SUBSTRING(#{dto.tel}, 1, 3), '-',SUBSTRING(#{dto.tel}, 4, 4), '-',SUBSTRING(#{dto.tel}, 8, 4)),
         email    = #{dto.email}
     WHERE employee_no = #{employeeNo}
   </update>
@@ -78,7 +78,7 @@
 
   <insert id="insertEmployee">
     INSERT INTO project.employee (employee_no, id, password, name, role, tel, email)
-    VALUES (#{employeeNo}, #{id}, #{password}, #{name}, #{role}, #{tel}, #{email})
+    VALUES (#{employeeNo}, #{id}, #{password}, #{name}, #{role}, CONCAT(SUBSTRING(#{tel}, 1, 3), '-',SUBSTRING(#{tel}, 4, 4), '-',SUBSTRING(#{tel}, 8, 4)), #{email})
   </insert>
 
   <select id="findEmployeeById" resultType="com.douzon.blooming.employee.dto.response.EmployeeDto">

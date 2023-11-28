@@ -43,7 +43,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-////@Disabled
 @ExtendWith(RestDocumentationExtension.class)
 @SpringBootTest
 @Import(RestDocsConfig.class)
@@ -77,7 +76,7 @@ class EmployeeAuthControllerTest {
   void register() throws Exception {
     InsertEmployeeDto insertEmployeeDto = new InsertEmployeeDto(239999L, "tester", "tester",
         "tester",
-        EmployeeRole.ROLE_MEMBER, "010-0000-0000", "test@test.com");
+        EmployeeRole.ROLE_MEMBER, "01000000000", "test@test.com");
 
     mockMvc.perform(post("/auth/employees/register")
             .contentType(MediaType.APPLICATION_JSON)
