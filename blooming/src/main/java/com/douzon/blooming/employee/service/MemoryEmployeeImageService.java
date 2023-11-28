@@ -18,7 +18,7 @@ public class MemoryEmployeeImageService implements
     EmployeeImageService {
 
   private static final String ABSOLUTE_PATH = new File("").getAbsolutePath();
-  private static final String PATH = "image";
+  private static final String PATH = "blooming/image";
   private static final String SEPARATOR = "/";
 
   private final EmployeeRepository employeeRepository;
@@ -74,6 +74,7 @@ public class MemoryEmployeeImageService implements
       multipartFile.transferTo(file);
       return fileName;
     } catch (IOException e) {
+      e.printStackTrace();
       throw new ImageUploadException("Failed to upload image");
     }
   }

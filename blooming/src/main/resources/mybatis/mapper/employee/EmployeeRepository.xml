@@ -96,7 +96,7 @@
   <select id="existByEmployeeNo" resultType="boolean">
     SELECT COUNT(*)
     FROM project.employee
-    WHERE employee_no = #{employeeId}
+    WHERE employee_no = #{employeeNo}
   </select>
 
   <select id="findEmployeeNoByDto" resultType="java.lang.Long">
