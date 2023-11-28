@@ -13,15 +13,16 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.douzon.blooming.auth.EmployeeRole;
-import com.douzon.blooming.auth.dto.request.IdCheckDto;
-import com.douzon.blooming.auth.dto.request.NoCheckDto;
 import com.douzon.blooming.auth.dto.response.TokenDto;
+import com.douzon.blooming.auth.filter.JwtFilter;
 import com.douzon.blooming.employee.dto.request.AuthUpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
+import com.douzon.blooming.token.provider.TokenProvider;
 import com.douzon.blooming.token.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,12 +53,13 @@ class EmployeeAuthControllerTest {
   private final ObjectMapper objectMapper = new ObjectMapper();
   @Autowired
   protected RestDocumentationResultHandler restDocs;
+  private MockMvc mockMvc;
   @Autowired
   private TokenService tokenService;
-
-  private MockMvc mockMvc;
-
   private TokenDto tokenDto;
+  @Autowired
+  private TokenProvider tokenProvider;
+
 
   @BeforeEach
   public void setUp(WebApplicationContext webApplicationContext,
@@ -67,6 +69,7 @@ class EmployeeAuthControllerTest {
         .alwaysDo(MockMvcResultHandlers.print())
         .alwaysDo(restDocs)
         .addFilters(new CharacterEncodingFilter("UTF-8", true))
+        .addFilters(new JwtFilter(tokenProvider))
         .build();
     tokenDto = tokenService.createToken("admin", "1234", 200001L);
   }
@@ -160,19 +163,17 @@ class EmployeeAuthControllerTest {
 
   @Test
   void noCheck() throws Exception {
-    NoCheckDto noCheckDto = new NoCheckDto(200001L);
     mockMvc.perform(get("/auth/employees/no/check")
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
-            .content(objectMapper.writeValueAsString(noCheckDto)))
+            .param("employeeNo", "200001"))
         .andExpect(status().isOk())
         .andDo(restDocs.document(
             requestHeaders(
                 headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
             ),
-            requestFields(
-                fieldWithPath("employeeNo").description("사원 번호")
-                    .attributes(field("constraints", "입사연도 (2) + 무작위 (4)"))
+            requestParameters(
+                parameterWithName("employeeNo").description("사원번호")
             ),
             responseFields(
                 fieldWithPath("availability").description("사용 가능 여부")
@@ -182,19 +183,17 @@ class EmployeeAuthControllerTest {
 
   @Test
   void idCheck() throws Exception {
-    IdCheckDto idCheckDto = new IdCheckDto("admin");
     mockMvc.perform(get("/auth/employees/id/check")
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
-            .content(objectMapper.writeValueAsString(idCheckDto)))
+            .param("id", "m1"))
         .andExpect(status().isOk())
         .andDo(restDocs.document(
             requestHeaders(
                 headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
             ),
-            requestFields(
-                fieldWithPath("id").description("아이디")
-                    .attributes(field("constraints", "NOT NULL"))
+            requestParameters(
+                parameterWithName("id").description("아이디")
             ),
             responseFields(
                 fieldWithPath("availability").description("사용 가능 여부")
