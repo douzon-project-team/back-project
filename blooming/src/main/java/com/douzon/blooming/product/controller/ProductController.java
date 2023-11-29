@@ -2,6 +2,7 @@ package com.douzon.blooming.product.controller;
 
 import com.douzon.blooming.PageDto;
 import com.douzon.blooming.product.dto.request.InsertProductDto;
+import com.douzon.blooming.product.dto.request.ProductCodeCheckDto;
 import com.douzon.blooming.product.dto.request.ProductSearchDto;
 import com.douzon.blooming.product.dto.request.UpdateProductDto;
 import com.douzon.blooming.product.dto.response.ProductDto;
@@ -26,6 +27,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
 
   private final ProductService productService;
+
+  @GetMapping("/customer/code/check")
+  public ResponseEntity<?> duplicateCheckCustomerCode(@ModelAttribute ProductCodeCheckDto dto){
+    return ResponseEntity.ok().body(!productService.ProductCodeCheck(dto));
+  }
 
   @GetMapping("/{productNo}")
   public ResponseEntity<ProductDto> getProduct(@PathVariable Long productNo) {
