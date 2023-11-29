@@ -41,10 +41,14 @@ public interface DeliveryInstructionRepository {
     void insertProduct(String deliveryNo, String instructionNo, @Param("dto") ProductInstructionDto product);
 
     @Update("UPDATE project.delivery_instruction SET amount = #{amount} " +
-            "WHERE delivery_no = #{deliveryNo} AND instruction_no = #{instructionNo} AND product_no = #{productNo}")
+            "WHERE delivery_no = #{deliveryNo} " +
+            "AND instruction_no = #{instructionNo} " +
+            "AND product_no = #{productNo}")
     Integer updateProduct(String deliveryNo, String instructionNo, Long productNo, Integer amount);
 
     @Delete("DELETE FROM project.delivery_instruction " +
-            "WHERE delivery_no = #{deliveryNo} AND instruction_no = #{instructionNo} AND product_no = #{productNo}")
+            "WHERE delivery_no = #{deliveryNo} " +
+            "AND instruction_no = #{instructionNo} " +
+            "AND product_no = #{productNo}")
     Integer deleteProduct(String deliveryNo, String instructionNo, String productNo);
 }

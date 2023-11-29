@@ -3,22 +3,25 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.douzon.blooming.product.repo.ProductRepository">
   <insert id="insertByRequestProductDto">
-    INSERT INTO project.product (product_code, product_name, standard, unit)
-      VALUE (#{productCode}, #{productName}, #{standard}, #{unit});
+    INSERT INTO project.product (product_code, product_name, standard, unit, weight, price)
+      VALUE (#{productCode}, #{productName}, #{standard}, #{unit}, #{weight}, #{price});
   </insert>
-
-  <delete id="deleteByProductNo">
-    DELETE
-    FROM project.product
-    WHERE product_no = #{productNo};
-  </delete>
 
   <update id="updateByRequestProductDto">
     UPDATE project.product
     SET product_name = #{productName},
         product_code = #{productCode},
-        standard     = #{standard},
-        unit         = #{unit}
+        standard = #{standard},
+        unit = #{unit},
+        weight = #{weight},
+        price = #{price}
+    WHERE product_no = #{productNo}
+    AND hide = 0
+  </update>
+
+  <update id="updateProductHide">
+    UPDATE project.product
+    SET hide = 1
     WHERE product_no = #{productNo}
   </update>
 
@@ -26,14 +29,17 @@
     resultType="com.douzon.blooming.product.dto.response.ProductDto">
     SELECT *
     FROM project.product
-    WHERE product_no = #{productNo};
+    WHERE product_no = #{productNo}
+    AND hide = 0
   </select>
+
   <select id="findAllBySearchProductDto"
     resultType="com.douzon.blooming.product.dto.response.ProductListDto">
     SELECT *
     FROM project.product
     WHERE product_code LIKE CONCAT('%', #{productSearchDto.productCode}, '%')
     AND product_name LIKE CONCAT('%', #{productSearchDto.productName}, '%')
+    AND hide = 0
     <choose>
       <when test='productSearchDto.page == 0'>
         LIMIT #{productSearchDto.pageSize}
@@ -48,6 +54,13 @@
     SELECT COUNT(*)
     FROM project.product
     WHERE product_code LIKE CONCAT('%', #{productCode}, '%')
-      AND product_name LIKE CONCAT('%', #{productName}, '%')
+    AND product_name LIKE CONCAT('%', #{productName}, '%')
+    AND hide = 0
+  </select>
+
+  <select id="existByproductCode" parameterType="com.douzon.blooming.product.dto.request.ProductCodeCheckDto" resultType="boolean">
+    SELECT COUNT(*)
+    FROM project.product
+    WHERE product_code = #{dto.productCode}
   </select>
 </mapper>

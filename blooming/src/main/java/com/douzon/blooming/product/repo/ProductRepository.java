@@ -1,6 +1,7 @@
 package com.douzon.blooming.product.repo;
 
 import com.douzon.blooming.product.dto.request.InsertProductDto;
+import com.douzon.blooming.product.dto.request.ProductCodeCheckDto;
 import com.douzon.blooming.product.dto.request.ProductSearchDto;
 import com.douzon.blooming.product.dto.request.UpdateProductDto;
 import com.douzon.blooming.product.dto.response.ProductDto;
@@ -15,9 +16,9 @@ public interface ProductRepository {
 
   void insertByRequestProductDto(InsertProductDto insertProductDto);
 
-  void deleteByProductNo(long productNo);
+  int updateProductHide(long productNo);
 
-  void updateByRequestProductDto(UpdateProductDto requestProductDto);
+  int updateByRequestProductDto(UpdateProductDto requestProductDto);
 
   Optional<ProductDto> findByProductNo(long productNo);
 
@@ -25,4 +26,6 @@ public interface ProductRepository {
       @Param("productSearchDto") ProductSearchDto productSearchDto, @Param("start") int start);
 
   int getProductsCountBySearchProductDto(ProductSearchDto productSearchDto);
+
+  boolean existByproductCode(ProductCodeCheckDto dto);
 }

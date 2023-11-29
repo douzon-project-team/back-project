@@ -56,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService{
 
     @Override
     public void removeCustomer(Long customerNo) {
-        if(repository.deleteCustomer(customerNo) <= 0){
+        if(repository.updateCustomerHide(customerNo) <= 0){
             throw new NotFoundCustomerException();
         }
     }
