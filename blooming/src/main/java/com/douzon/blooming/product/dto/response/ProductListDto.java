@@ -14,4 +14,5 @@ public class ProductListDto {
   private String productCode;
   private String productName;
   private int unit;
+  private int price;
 }

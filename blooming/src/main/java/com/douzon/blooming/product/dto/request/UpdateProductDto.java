@@ -25,4 +25,8 @@ public class UpdateProductDto {
   private String standard;
   @NotNull(message = "개수는 필수 값입니다.")
   private int unit;
+  @NotNull(message = "무게는 필수 값입니다.")
+  private int weight;
+  @NotNull(message = "가격은 필수 값입니다.")
+  private int price;
 }
