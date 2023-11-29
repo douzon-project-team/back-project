@@ -12,7 +12,8 @@ CREATE TABLE `employee`
     `img`         TEXT        NULL,
     `role`        TINYINT(1)  NOT NULL DEFAULT 1,
     `tel`         VARCHAR(13) NULL,
-    `email`       VARCHAR(30) NULL
+    `email`       VARCHAR(30) NULL,
+    `hide`        TINYINT(1)  DEFAULT 0
 );
 
 CREATE TABLE `todo`
@@ -33,41 +34,44 @@ VALUES (200001, 'TODO 1'),
        (200001, 'TODO 6'),
        (200001, 'TODO 7');
 
-
 CREATE TABLE `product`
 (
     `product_no`   BIGINT PRIMARY KEY AUTO_INCREMENT,
     `product_code` VARCHAR(6)  NOT NULL UNIQUE,
     `product_name` VARCHAR(45) NOT NULL,
     `standard`     TEXT        NOT NULL,
-    `unit`         INT         NOT NULL
+    `unit`         INT         NOT NULL,
+    `weight`       INT         NOT NULL,
+    `price`        INT         NOT NULL,
+    `hide`         TINYINT(1)  DEFAULT 0
 );
 
-INSERT INTO product (product_code, product_name, standard, unit)
-VALUES ('AP0001', 'MacBook Air 13', '1000mm * 100mm', 1),
-       ('AP0002', 'MacBook Air 15', '1000mm * 100mm', 1),
-       ('AP0003', 'iPhone 15 Pro', '250mm * 110mm', 1),
-       ('AP0004', 'Apple Watch Series 9', '100mm * 60mm', 1),
-       ('AP0005', 'AirPods Pro MagSafe', '100mm * 100mm', 1),
-       ('AP0006', 'AirTag', '50mm * 50mm', 1),
-       ('AP0007', 'iPad Pro', '400mm * 250mm', 1),
-       ('AP0008', 'iPad Air', '400mm * 250mm', 1),
-       ('AP0009', 'iPad 10', '400mm * 250mm', 1),
-       ('AP0010', 'AirPods Pro 2', '100mm * 100mm', 1),
-       ('AP0011', 'AirPods 3', '100mm * 100mm', 1),
-       ('AP0012', 'AirPods 2', '100mm * 100mm', 1),
-       ('SS0001', 'Samsung Galaxy S21', '160mm * 75mm', 1),
-       ('SS0002', 'Samsung Galaxy Note 20', '165mm * 76mm', 1),
-       ('SS0003', 'Samsung Galaxy A72', '158mm * 72mm', 1),
-       ('SS0004', 'Samsung Galaxy A52', '155mm * 70mm', 1),
-       ('SS0005', 'Samsung Galaxy S20', '155mm * 73mm', 1),
-       ('SS0006', 'Samsung Galaxy S20 Ultra', '165mm * 80mm', 1),
-       ('SS0007', 'Samsung Galaxy A32', '160mm * 72mm', 1),
-       ('SS0008', 'Samsung Galaxy Z Fold 3', '160mm * 175mm', 1),
-       ('SS0009', 'Samsung Galaxy Z Flip 3', '160mm * 75mm', 1),
-       ('SS0010', 'Samsung Galaxy S10 Lite', '159mm * 74mm', 1),
-       ('SS0011', 'Samsung Galaxy A51', '158mm * 73mm', 1),
-       ('SS0012', 'Samsung Galaxy A21s', '160mm * 75mm', 1);
+INSERT INTO product (product_code, product_name, standard, unit, weight, price)
+VALUES
+    ('AP0001', 'MacBook Air 13', '1000mm * 100mm', '20', 800, 3000000),
+    ('AP0002', 'MacBook Air 15', '1000mm * 100mm', '30', 1200, 2500000),
+    ('AP0003', 'iPhone 15 Pro', '250mm * 110mm', '40', 1500, 3500000),
+    ('AP0004', 'Apple Watch Series 9', '100mm * 60mm', '50', 1000, 2000000),
+    ('AP0005', 'AirPods Pro MagSafe', '100mm * 100mm', '60', 900, 1500000),
+    ('AP0006', 'AirTag', '50mm * 50mm', '70', 600, 500000),
+    ('AP0007', 'iPad Pro', '400mm * 250mm', '80', 1800, 4000000),
+    ('AP0008', 'iPad Air', '400mm * 250mm', '90', 1400, 3000000),
+    ('AP0009', 'iPad 10', '400mm * 250mm', '100', 1000, 2000000),
+    ('AP0010', 'AirPods Pro 2', '100mm * 100mm', '10', 700, 2500000),
+    ('AP0011', 'AirPods 3', '100mm * 100mm', '20', 800, 2800000),
+    ('AP0012', 'AirPods 2', '100mm * 100mm', '30', 900, 3200000),
+    ('SS0001', 'Samsung Galaxy S21', '160mm * 75mm', '40', 1000, 1500000),
+    ('SS0002', 'Samsung Galaxy Note 20', '165mm * 76mm', '50', 1100, 1800000),
+    ('SS0003', 'Samsung Galaxy A72', '158mm * 72mm', '60', 1300, 2000000),
+    ('SS0004', 'Samsung Galaxy A52', '155mm * 70mm', '70', 1400, 2200000),
+    ('SS0005', 'Samsung Galaxy S20', '155mm * 73mm', '80', 1200, 1700000),
+    ('SS0006', 'Samsung Galaxy S20 Ultra', '165mm * 80mm', '90', 1600, 2500000),
+    ('SS0007', 'Samsung Galaxy A32', '160mm * 72mm', '100', 900, 1300000),
+    ('SS0008', 'Samsung Galaxy Z Fold 3', '160mm * 175mm', '10', 2000, 4000000),
+    ('SS0009', 'Samsung Galaxy Z Flip 3', '160mm * 75mm', '20', 1100, 2200000),
+    ('SS0010', 'Samsung Galaxy S10 Lite', '159mm * 74mm', '30', 950, 1600000),
+    ('SS0011', 'Samsung Galaxy A51', '158mm * 73mm', '40', 1200, 1900000),
+    ('SS0012', 'Samsung Galaxy A21s', '160mm * 75mm', '50', 850, 1400000);
 
 CREATE TABLE `customer`
 (
@@ -76,7 +80,8 @@ CREATE TABLE `customer`
     `customer_name` VARCHAR(10) NOT NULL,
     `customer_tel`  VARCHAR(13) NOT NULL,
     `ceo`           VARCHAR(10) NOT NULL,
-    `sector`        VARCHAR(20) NOT NULL
+    `sector`        VARCHAR(20) NOT NULL,
+    `hide`          TINYINT(1)  DEFAULT 0
 );
 
 
@@ -150,7 +155,7 @@ CREATE TABLE `instruction_log`
 
 CREATE TABLE `delivery_log`
 (
-    `log_no`      BIGINT PRIMARY KEY,
+    `log_no`      BIGINT PRIMARY KEY AUTO_INCREMENT,
     `ip_address`  VARCHAR(20) NOT NULL,
     `date`        DATETIME    NOT NULL DEFAULT NOW(),
     `modifier_no` BIGINT      NOT NULL,
@@ -168,6 +173,7 @@ CREATE TABLE `delivery_log`
 #     ADD CONSTRAINT `PK_DELIVERY_INSTRUCTION` PRIMARY KEY (
 #                                                           `delivery_no`,
 #                                                           `instruction_no`
+#                                                           `product_no`
 #         );
 
 # ALTER TABLE `product_instruction`
@@ -177,6 +183,7 @@ CREATE TABLE `delivery_log`
 #         REFERENCES `product` (
 #                               `product_no`
 #             );
+
 #
 # ALTER TABLE `product_instruction`
 #     ADD CONSTRAINT `FK_instruction_TO_product_instruction_1` FOREIGN KEY (
@@ -193,7 +200,8 @@ CREATE TABLE `delivery_log`
 #         )
 #         REFERENCES `delivery` (
 #                                `delivery_no`
-#             );
+#             )
+#     ON DELETE CASCADE;
 #
 # ALTER TABLE `delivery_instruction`
 #     ADD CONSTRAINT `FK_instruction_TO_delivery_instruction_1` FOREIGN KEY (
@@ -202,8 +210,91 @@ CREATE TABLE `delivery_log`
 #         REFERENCES `instruction` (
 #                                   `instruction_no`
 #             );
-#     ON DELETE CASCADE;
+
+
+# ALTER TABLE `instruction` ADD CONSTRAINT `FK_customer_TO_instruction_1` FOREIGN KEY (
+#                                                                                      `customer_no`
+#     )
+#     REFERENCES `customer` (
+#                            `customer_no`
+#         );
 #
+# ALTER TABLE `instruction` ADD CONSTRAINT `FK_employee_TO_instruction_1` FOREIGN KEY (
+#                                                                                      `employee_no`
+#     )
+#     REFERENCES `employee` (
+#                            `employee_no`
+#         );
+#
+# ALTER TABLE `delivery` ADD CONSTRAINT `FK_employee_TO_delivery_1` FOREIGN KEY (
+#                                                                                `employee_no`
+#     )
+#     REFERENCES `employee` (
+#                            `employee_no`
+#         );
+# ALTER TABLE `todo` ADD CONSTRAINT `FK_employee_TO_todo_1` FOREIGN KEY (
+#                                                                                `employee_no`
+#     )
+#     REFERENCES `employee` (
+#                            `employee_no`
+#         );
+#
+# ALTER TABLE `employee_log` ADD CONSTRAINT `FK_employee_TO_employee_log_1` FOREIGN KEY (
+#                                                                                        `modifier_no`
+#     )
+#     REFERENCES `employee` (
+#                            `employee_no`
+#         );
+#
+# ALTER TABLE `employee_log` ADD CONSTRAINT `FK_employee_TO_employee_log_2` FOREIGN KEY (
+#                                                                                        `target_no`
+#     )
+#     REFERENCES `employee` (
+#                            `employee_no`
+#         );
+#
+# ALTER TABLE `product_log` ADD CONSTRAINT `FK_employee_TO_product_log_1` FOREIGN KEY (
+#                                                                                      `modifier_no`
+#     )
+#     REFERENCES `employee` (
+#                            `employee_no`
+#         );
+#
+# ALTER TABLE `product_log` ADD CONSTRAINT `FK_product_TO_product_log_1` FOREIGN KEY (
+#                                                                                     `product_no`
+#     )
+#     REFERENCES `product` (
+#                           `product_no`
+#         );
+#
+# ALTER TABLE `instruction_log` ADD CONSTRAINT `FK_employee_TO_instruction_log_1` FOREIGN KEY (
+#                                                                                              `modifier_no`
+#     )
+#     REFERENCES `employee` (
+#                            `employee_no`
+#         );
+#
+# ALTER TABLE `instruction_log` ADD CONSTRAINT `FK_instruction_TO_instruction_log_1` FOREIGN KEY (
+#                                                                                                 `instruction_no`
+#     )
+#     REFERENCES `instruction` (
+#                               `instruction_no`
+#         );
+#
+# ALTER TABLE `delivery_log` ADD CONSTRAINT `FK_employee_TO_delivery_log_1` FOREIGN KEY (
+#                                                                                        `modifier_no`
+#     )
+#     REFERENCES `employee` (
+#                            `employee_no`
+#         );
+#
+# ALTER TABLE `delivery_log` ADD CONSTRAINT `FK_delivery_TO_delivery_log_1` FOREIGN KEY (
+#                                                                                        `delivery_no`
+#     )
+#     REFERENCES `delivery` (
+#                            `delivery_no`
+#         );
+
 
 # Instruction 자동 채번 Trigger
 DELIMITER //
@@ -234,8 +325,7 @@ END;
 DELIMITER ;
 
 
-# Delivery 수정시 inistruction의 잔량, 진행 상태 변화 Trigger
-# remain_amount = remain_amount + Old.amount - new.amount
+# Delivery 수정시 instruction의 잔량, 진행 상태 변화 Trigger
 DELIMITER //
 CREATE TRIGGER update_remain_amount
     AFTER UPDATE
@@ -311,7 +401,7 @@ VALUES (200001, 'admin', '1234', '관리자', '4bce5389-8191-46f8-ad91-a5ee197ee
         '010-1111-2222', 'member@member.com');
 
 INSERT
-INTO customer
+INTO customer(customer_no, customer_code, customer_name, customer_tel, ceo, sector)
 VALUES (1, 'C0001', '더존비즈온', '010-1234-1234', '김용우', '컴퓨터 서비스업'),
        (2, 'C0002', '삼성전자', '010-3214-3214', '경계현', '이동전화기 제조업'),
        (3, 'C0003', 'HMM', '010-6254-5164', '김경배', '외항 화물 운송업'),
