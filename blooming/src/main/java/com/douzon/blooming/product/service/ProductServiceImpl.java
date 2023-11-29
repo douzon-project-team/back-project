@@ -2,6 +2,7 @@ package com.douzon.blooming.product.service;
 
 import com.douzon.blooming.PageDto;
 import com.douzon.blooming.product.dto.request.InsertProductDto;
+import com.douzon.blooming.product.dto.request.ProductCodeCheckDto;
 import com.douzon.blooming.product.dto.request.ProductSearchDto;
 import com.douzon.blooming.product.dto.request.UpdateProductDto;
 import com.douzon.blooming.product.dto.response.ProductDto;
@@ -27,12 +28,16 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public void removeProduct(long productNo) {
-    productRepository.deleteByProductNo(productNo);
+    if(productRepository.updateProductHide(productNo) <= 0){
+      throw new NotFoundProductException();
+    }
   }
 
   @Override
   public void updateProduct(UpdateProductDto requestProductDto) {
-    productRepository.updateByRequestProductDto(requestProductDto);
+    if(productRepository.updateByRequestProductDto(requestProductDto) <= 0){
+      throw new NotFoundProductException();
+    }
   }
 
   @Transactional(readOnly = true)
@@ -57,5 +62,10 @@ public class ProductServiceImpl implements ProductService {
         .hasNextPage(start + dto.getPageSize() < count)
         .hasPreviousPage(start > 0)
         .build();
+  }
+
+  @Override
+  public boolean ProductCodeCheck(ProductCodeCheckDto dto) {
+    return productRepository.existByproductCode(dto);
   }
 }

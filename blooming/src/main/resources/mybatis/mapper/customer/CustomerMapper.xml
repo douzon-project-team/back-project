@@ -17,6 +17,7 @@
         SELECT *
         FROM project.customer
         WHERE customer_no = #{customerNo}
+        AND hide = 0;
     </select>
 
     <select id="getCountCustomers" resultType="java.lang.Integer">
@@ -24,8 +25,8 @@
         FROM project.customer
         WHERE customer_code LIKE CONCAT('%', #{dto.customerCode}, '%')
         AND customer_name LIKE CONCAT('%', #{dto.customerName}, '%')
-        AND customer_name LIKE CONCAT('%', #{dto.customerName}, '%')
         AND sector LIKE CONCAT('%', #{dto.sector}, '%')
+        AND hide = 0
     </select>
 
     <select id="findCustomers" parameterType="com.douzon.blooming.customer.dto.request.CustomerSearchDto" resultType="com.douzon.blooming.customer.dto.response.ResponseCustomerDto">
@@ -33,59 +34,24 @@
         FROM project.customer
         WHERE customer_code LIKE CONCAT('%', #{dto.customerCode}, '%')
         AND customer_name LIKE CONCAT('%', #{dto.customerName}, '%')
-        AND customer_name LIKE CONCAT('%', #{dto.customerName}, '%')
         AND sector LIKE CONCAT('%', #{dto.sector}, '%')
+        AND hide = 0
         LIMIT #{start}, #{pageSize}
     </select>
 
     <update id="updateCustomer">
         UPDATE project.customer
-        SET customer_name = #{dto.customerName}, customer_tel = #{dto.customerTel}, ceo = #{dto.ceo}
+        SET customer_name = #{dto.customerName},
+            customer_tel = #{dto.customerTel},
+            ceo = #{dto.ceo}
+        WHERE customer_no = #{customerNo}
+        AND hide = 0
+    </update>
+
+    <update id="updateCustomerHide">
+        UPDATE project.customer
+        SET hide = 1
         WHERE customer_no = #{customerNo}
     </update>
 
-    <delete id="deleteCustomer">
-        DELETE FROM project.customer
-        WHERE customer_no = #{customerCode}
-    </delete>
 </mapper>
-
-        <!--@Select("SELECT customer_code FROM project.customer WHERE customer_code = #{customerCoode}")-->
-<!--        String customerCodeCheck(String customerCode);-->
-
-<!--        @Insert("INSERT INTO project.customer(customer_code, customer_name, customer_tel) VALUES (#{customerCode}, #{customerName}, #{customerTel})")-->
-<!--        void insertCustomer(RequestCustomerDto dto);-->
-
-<!--        @Select("SELECT customer_no FROM project.customer WHERE customer_name = #{customerName}")-->
-<!--        Long findCustomerNoByName(String customerName);-->
-
-<!--        @Select("SELECT * FROM project.customer WHERE customer_no = #{customerNo}")-->
-<!--        ResponseCustomerDto getCustomer(Long customerNo);-->
-
-<!--        @Select("<script>" +-->
-<!--    "SELECT COUNT(*) FROM project.employee" +-->
-<!--    "<where>" +-->
-<!--        "<if test='customerName != null'>" +-->
-<!--            "name LIKE CONCAT('%', #{customerName}, '%')" +-->
-<!--            "</if>" +-->
-<!--        "</where>" +-->
-<!--    "</script>")-->
-<!--        Integer getCountCustomers(String customerName);-->
-
-<!--        @Select("<script>" +-->
-<!--"SELECT COUNT(*) FROM project.employee" +-->
-<!--"<where>" +-->
-<!--    "<if test='customerName != null'>" +-->
-<!--        "name LIKE CONCAT('%', #{customerName}, '%')" +-->
-<!--        "</if>" +-->
-
-<!--    "</where>" +-->
-<!--"LIMIT #{start}, #{pageSize}" +-->
-<!--"</script>")-->
-<!--        List<ResponseCustomerDto> getCustomerList(String customerName, int start, int pageSize);-->
-
-<!--@Update("UPDATE project.customer SET customer_name = #{dto.customerName}, customer_tel = #{dto.customerTel} WHERE customer_no = #{customerNo}")-->
-<!--void updateCustomer(@Param("dto")UpdateCustomerDto dto, Long customerNo);-->
-
-<!--@Delete("DELETE FROM project.customer WHERE customer_no = #{customerCode}")-->
-<!--void deleteCustomer(Long customerNo);-->

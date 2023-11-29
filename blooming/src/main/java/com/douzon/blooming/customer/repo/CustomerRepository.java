@@ -24,5 +24,5 @@ public interface CustomerRepository {
 
     int updateCustomer(@Param("dto")UpdateCustomerDto dto, Long customerNo);
 
-    int deleteCustomer(Long customerNo);
+    int updateCustomerHide(Long customerNo);
 }

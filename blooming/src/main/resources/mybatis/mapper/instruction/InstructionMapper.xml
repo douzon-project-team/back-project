@@ -4,8 +4,7 @@
 <mapper namespace="com.douzon.blooming.instruction.repo.InstructionRepository">
   <insert id="insertInstruction"
     parameterType="com.douzon.blooming.instruction.dto.request.RequestInstructionDto">
-    INSERT INTO project.instruction(instruction_date, customer_no, employee_no, progress_status,
-                                    expiration_date)
+    INSERT INTO project.instruction(instruction_date, customer_no, employee_no, progress_status, expiration_date)
     VALUES (#{instructionDate}, #{customerNo}, #{employeeNo}, #{progressStatus}, #{expirationDate})
   </insert>
 
@@ -19,12 +18,12 @@
   <select id="findInstruction" parameterType="java.lang.String"
     resultType="com.douzon.blooming.instruction.dto.response.ResponseInstructionDto">
     SELECT I.instruction_no   AS instruction_no,
-           I.instruction_date AS instruction_date,
-           C.customer_name    AS customer_name,
-           E.name             AS employee_name,
-           I.progress_status  AS progress_status,
-           I.expiration_date  AS expiration_date,
-           C.customer_no AS customer_no
+        I.instruction_date AS instruction_date,
+        C.customer_name AS customer_name,
+        E.name AS employee_name,
+        I.progress_status AS progress_status,
+        I.expiration_date AS expiration_date,
+        C.customer_no AS customer_no
     FROM project.instruction I
            INNER JOIN project.customer C ON I.customer_no = C.customer_no
            INNER JOIN project.employee E ON I.employee_no = E.employee_no
@@ -35,22 +34,90 @@
     parameterType="com.douzon.blooming.instruction.dto.request.InstructionSearchDto"
     resultType="com.douzon.blooming.instruction.dto.response.ListInstructionDto">
     SELECT I.instruction_no AS instruction_no,
-    E.name AS employee_name,
-    C.customer_no AS customer_no,
-    C.customer_name AS customer_name,
-    I.instruction_date AS instruction_date,
-    I.expiration_date AS expiration_date,
-    I.progress_status AS progress_status
+        E.name AS employee_name,
+        C.customer_no AS customer_no,
+        C.customer_name AS customer_name,
+        I.instruction_date AS instruction_date,
+        I.expiration_date AS expiration_date,
+        I.progress_status AS progress_status
     FROM project.instruction I
-    INNER JOIN project.customer C ON I.customer_no = C.customer_no
-    INNER JOIN project.employee E ON I.employee_no = E.employee_no
+        INNER JOIN project.customer C ON I.customer_no = C.customer_no
+        INNER JOIN project.employee E ON I.employee_no = E.employee_no
     <where>
+      <if test="dto.startDate != null or dto.endDate != null">
+        <choose>
+          <when test="dto.startDate != null and dto.endDate == null">
+            <![CDATA[
+                I.instruction_date >= #{dto.startDate}
+            ]]>
+          </when>
+          <when test="dto.startDate == null and dto.endDate != null">
+            <![CDATA[
+                I.instruction_date <= #{dto.endDate}
+            ]]>
+          </when>
+          <otherwise>
+            <![CDATA[
+                I.instruction_date BETWEEN #{dto.startDate} AND #{dto.endDate}
+            ]]>
+          </otherwise>
+        </choose>
+      </if>
+      <if test="dto.expirationStartDate != null or dto.expirationEndDate != null">
+        <choose>
+          <when test="dto.startDate == null and dto.endDate == null">
+            <choose>
+              <when test="dto.expirationStartDate != null and dto.expirationEndDate == null">
+                <![CDATA[
+                    I.expiration_date >= #{dto.expirationStartDate}
+                ]]>
+              </when>
+              <when test="dto.expirationStartDate == null and dto.expirationEndDate != null">
+                <![CDATA[
+                    I.expiration_date <= #{dto.expirationEndDate}
+                ]]>
+              </when>
+              <otherwise>
+                <![CDATA[
+                    I.expiration_date BETWEEN #{dto.expirationStartDate} AND #{dto.expirationEndDate}
+                ]]>
+              </otherwise>
+            </choose>
+          </when>
+          <otherwise>
+            <choose>
+              <when test="dto.expirationStartDate != null and dto.expirationEndDate == null">
+                <![CDATA[
+                    AND I.expiration_date >= #{dto.expirationStartDate}
+                ]]>
+              </when>
+              <when test="dto.expirationStartDate == null and dto.expirationEndDate != null">
+                <![CDATA[
+                    AND I.expiration_date <= #{dto.expirationEndDate}
+                ]]>
+              </when>
+              <otherwise>
+                <![CDATA[
+                    AND I.expiration_date BETWEEN #{dto.expirationStartDate} AND #{dto.expirationEndDate}
+                ]]>
+              </otherwise>
+            </choose>
+          </otherwise>
+        </choose>
+      </if>
       <if test="dto.progressStatus != null">
-        I.progress_status = #{dto.progressStatus}
+        <choose>
+          <when test="dto.startDate == null and dto.endDate == null and dto.expirationStartDate == null and dto.expirationEndDate == null">
+            I.progress_status = #{dto.progressStatus}
+          </when>
+          <otherwise>
+            AND I.progress_status = #{dto.progressStatus}
+          </otherwise>
+        </choose>
       </if>
       <if test="dto.employeeName != null">
         <choose>
-          <when test="dto.progressStatus == null">
+          <when test="dto.progressStatus == null and dto.startDate == null and dto.endDate == null and dto.expirationStartDate == null and dto.expirationEndDate == null">
             E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
           </when>
           <otherwise>
@@ -58,31 +125,8 @@
           </otherwise>
         </choose>
       </if>
-      <if test="dto.startDate != null">
-        <choose>
-          <when test="dto.employeeName == null and dto.progressStatus == null">
-            <choose>
-              <when test="dto.endDate == null">
-                I.instruction_date > #{dto.startDate}
-              </when>
-              <otherwise>
-                I.instruction_date BETWEEN #{dto.startDate} AND #{dto.endDate}
-              </otherwise>
-            </choose>
-          </when>
-          <otherwise>
-            <choose>
-              <when test="dto.endDate == null">
-                AND I.instruction_date > #{dto.startDate}
-              </when>
-              <otherwise>
-                AND I.instruction_date BETWEEN #{dto.startDate} AND #{dto.endDate}
-              </otherwise>
-            </choose>
-          </otherwise>
-        </choose>
-      </if>
     </where>
+    ORDER BY RIGHT(instruction_no,6) DESC
     LIMIT #{start}, #{pageSize}
   </select>
 
@@ -91,29 +135,87 @@
     resultType="java.lang.Integer">
     SELECT COUNT(*)
     FROM project.instruction I
-    INNER JOIN project.customer C ON I.customer_no = C.customer_no
-    INNER JOIN project.employee E ON I.employee_no = E.employee_no
+        INNER JOIN project.customer C ON I.customer_no = C.customer_no
+        INNER JOIN project.employee E ON I.employee_no = E.employee_no
     <where>
+      <if test="dto.startDate != null or dto.endDate != null">
+        <choose>
+          <when test="dto.startDate != null and dto.endDate == null">
+            <![CDATA[
+                I.instruction_date >= #{dto.startDate}
+            ]]>
+          </when>
+          <when test="dto.startDate == null and dto.endDate != null">
+            <![CDATA[
+                I.instruction_date <= #{dto.endDate}
+            ]]>
+          </when>
+          <otherwise>
+            <![CDATA[
+                I.instruction_date BETWEEN #{dto.startDate} AND #{dto.endDate}
+            ]]>
+          </otherwise>
+        </choose>
+      </if>
+      <if test="dto.expirationStartDate != null or dto.expirationEndDate != null">
+        <choose>
+          <when test="dto.startDate == null and dto.endDate == null">
+            <choose>
+              <when test="dto.expirationStartDate != null and dto.expirationEndDate == null">
+                <![CDATA[
+                    I.expiration_date >= #{dto.expirationStartDate}
+                ]]>
+              </when>
+              <when test="dto.expirationStartDate == null and dto.expirationEndDate != null">
+                <![CDATA[
+                    I.expiration_date <= #{dto.expirationEndDate}
+                ]]>
+              </when>
+              <otherwise>
+                <![CDATA[
+                    I.expiration_date BETWEEN #{dto.expirationStartDate} AND #{dto.expirationEndDate}
+                ]]>
+              </otherwise>
+            </choose>
+          </when>
+          <otherwise>
+            <choose>
+              <when test="dto.expirationStartDate != null and dto.expirationEndDate == null">
+                <![CDATA[
+                    AND I.expiration_date >= #{dto.expirationStartDate}
+                ]]>
+              </when>
+              <when test="dto.expirationStartDate == null and dto.expirationEndDate != null">
+                <![CDATA[
+                    AND I.expiration_date <= #{dto.expirationEndDate}
+                ]]>
+              </when>
+              <otherwise>
+                <![CDATA[
+                    AND I.expiration_date BETWEEN #{dto.expirationStartDate} AND #{dto.expirationEndDate}
+                ]]>
+              </otherwise>
+            </choose>
+          </otherwise>
+        </choose>
+      </if>
       <if test="dto.progressStatus != null">
-        I.progress_status = #{dto.progressStatus}
+        <choose>
+          <when test="dto.startDate == null and dto.endDate == null and dto.expirationStartDate == null and dto.expirationEndDate == null">
+            I.progress_status = #{dto.progressStatus}
+          </when>
+          <otherwise>
+            AND I.progress_status = #{dto.progressStatus}
+          </otherwise>
+        </choose>
       </if>
       <if test="dto.employeeName != null">
         <choose>
-          <when test="dto.progressStatus == null">
+          <when test="dto.progressStatus == null and dto.startDate == null and dto.endDate == null and dto.expirationStartDate == null and dto.expirationEndDate == null">
             E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
           </when>
           <otherwise>
             AND E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
-          </otherwise>
-        </choose>
-      </if>
-      <if test="dto.startDate != null">
-        <choose>
-          <when test="dto.employeeName == null and dto.progressStatus == null">
-            I.instruction_date BETWEEN #{dto.startDate} AND #{dto.endDate}
-          </when>
-          <otherwise>
-            AND I.instruction_date BETWEEN #{dto.startDate} AND #{dto.endDate}
           </otherwise>
         </choose>
       </if>
@@ -123,9 +225,9 @@
   <update id="updateInstruction"
     parameterType="com.douzon.blooming.instruction.dto.request.RequestInstructionDto">
     UPDATE project.instruction
-    SET customer_no      = #{dto.customerNo},
+    SET customer_no = #{dto.customerNo},
         instruction_date = #{dto.instructionDate},
-        expiration_date  = #{dto.expirationDate}
+        expiration_date = #{dto.expirationDate}
     WHERE instruction_no = #{dto.instructionNo}
   </update>
 

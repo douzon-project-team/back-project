@@ -91,7 +91,9 @@ class ProductControllerTest {
                 fieldWithPath("productCode").type(JsonFieldType.STRING).description("상품 코드"),
                 fieldWithPath("productName").type(JsonFieldType.STRING).description("명칭"),
                 fieldWithPath("standard").type(JsonFieldType.STRING).description("규격"),
-                fieldWithPath("unit").type(JsonFieldType.NUMBER).description("단위")
+                fieldWithPath("unit").type(JsonFieldType.NUMBER).description("단위"),
+                fieldWithPath("weight").type(JsonFieldType.NUMBER).description("무게"),
+                fieldWithPath("price").type(JsonFieldType.NUMBER).description("가격")
             )))
         .andReturn();
   }
@@ -123,6 +125,7 @@ class ProductControllerTest {
                 fieldWithPath("list[].productCode").type(JsonFieldType.STRING).description("상품 코드"),
                 fieldWithPath("list[].productName").type(JsonFieldType.STRING).description("품명"),
                 fieldWithPath("list[].unit").type(JsonFieldType.NUMBER).description("개수"),
+                fieldWithPath("list[].price").type(JsonFieldType.NUMBER).description("가격"),
                 fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
                 fieldWithPath("hasNextPage").type(JsonFieldType.BOOLEAN)
                     .description("다음 페이지 존재 여부"),
@@ -137,7 +140,7 @@ class ProductControllerTest {
   @Transactional
   void addProduct() throws Exception {
     InsertProductDto insertProductDto =
-        new InsertProductDto("TT0001", "Test Product", "standard : X", 10);
+        new InsertProductDto("TT0001", "Test Product", "standard : X", 10, 100, 10000);
 
     mockMvc.perform(post("/products")
             .contentType(MediaType.APPLICATION_JSON)
@@ -181,7 +184,7 @@ class ProductControllerTest {
   void updateProduct() throws Exception {
     UpdateProductDto updateProductDto = new UpdateProductDto(1L, "AP0001", "MacBook Air 13",
         "1000mm * 100mm",
-        20);
+        20, 10, 10000);
     mockMvc.perform(put("/products/{productNo}", 1)
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())

@@ -15,4 +15,6 @@ public class ProductDto {
   private String productName;
   private String standard;
   private int unit;
+  private int weight;
+  private int price;
 }
