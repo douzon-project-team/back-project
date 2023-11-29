@@ -123,6 +123,19 @@
         </where>
     </select>
 
+    <select id="findDeliveryCount" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM project.delivery;
+    </select>
+
+    <select id="findThisMonthDeliveryCount" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM project.delivery
+        WHERE YEAR(delivery_date) = YEAR(CURRENT_DATE)
+        AND MONTH(delivery_date) = MONTH(CURRENT_DATE);
+    </select>
+
+
     <update id="updateDelivery" parameterType="com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto">
         UPDATE project.delivery
         SET delivery_date = #{dto.deliveryDate}

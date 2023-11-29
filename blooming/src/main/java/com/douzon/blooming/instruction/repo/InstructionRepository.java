@@ -4,27 +4,41 @@ package com.douzon.blooming.instruction.repo;
 import com.douzon.blooming.instruction.dto.request.InstructionSearchDto;
 import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
-import com.douzon.blooming.instruction.dto.response.ResponseInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
-import org.apache.ibatis.annotations.*;
-
+import com.douzon.blooming.instruction.dto.response.ResponseInstructionDto;
+import com.douzon.blooming.main.dto.request.BarGraphDto;
+import com.douzon.blooming.main.dto.request.CircleGraphDto;
+import com.douzon.blooming.main.dto.request.ExpirationDateNearInstruction;
 import java.util.List;
 import java.util.Optional;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface InstructionRepository {
 
-    void insertInstruction(RequestInstructionDto insertDto);
+  void insertInstruction(RequestInstructionDto insertDto);
 
-    String getInstructionNo();
+  String getInstructionNo();
 
-    Optional<ResponseInstructionDto> findInstruction(@Param("instructionNo") String instructionNo);
+  Optional<ResponseInstructionDto> findInstruction(@Param("instructionNo") String instructionNo);
 
-    List<ListInstructionDto> findInstructions(@Param("dto") InstructionSearchDto searchDto, Integer start, Integer pageSize);
+  List<ListInstructionDto> findInstructions(@Param("dto") InstructionSearchDto searchDto,
+      Integer start, Integer pageSize);
 
-    Integer getCountInstructions(@Param("dto") InstructionSearchDto searchDto);
+  Integer getCountInstructions(@Param("dto") InstructionSearchDto searchDto);
 
-    int updateInstruction(@Param("dto") UpdateInstructionDto dto);
+  int updateInstruction(@Param("dto") UpdateInstructionDto dto);
 
-    int deleteInstruction(String instructionNo);
+  int deleteInstruction(String instructionNo);
+
+  Long findInstructionCount();
+
+  Long findThisMonthInstructionCount();
+
+  List<ExpirationDateNearInstruction> findExpirationDateNearInstruction();
+
+  List<BarGraphDto> findMainPageBarGraphData(@Param("type") String type);
+
+  List<CircleGraphDto> findMainPageCircleGraphData(@Param("type") String type);
 }

@@ -38,8 +38,18 @@
         AND hide = 0
         LIMIT #{start}, #{pageSize}
     </select>
+  <select id="findManyTransactionCustomers"
+          resultType="com.douzon.blooming.main.dto.request.MainPageCustomerDto">
+        SELECT C.customer_no as customerNo,
+            C.customer_name as customerName,
+            COUNT(I.customer_no) AS count
+        FROM project.customer as C
+            LEFT JOIN project.instruction as I ON I.customer_no = C.customer_no
+        GROUP BY C.customer_no, C.customer_name
+        ORDER BY count DESC LIMIT 2;
+  </select>
 
-    <update id="updateCustomer">
+  <update id="updateCustomer">
         UPDATE project.customer
         SET customer_name = #{dto.customerName},
             customer_tel = #{dto.customerTel},

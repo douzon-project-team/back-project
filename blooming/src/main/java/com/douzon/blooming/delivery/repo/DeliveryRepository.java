@@ -31,4 +31,8 @@ public interface DeliveryRepository {
     int updateDelivery(String deliveryNo, @Param("dto") UpdateDeliveryDto dto);
 
     void changeStatus(String deliveryNo);
+
+    Long findDeliveryCount();
+
+    Long findThisMonthDeliveryCount();
 }
