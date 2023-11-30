@@ -63,6 +63,7 @@ public class SecurityConfig {
         .authorizeRequests()
         .antMatchers("/employees/login","/token/reissue","/employees/logout","/employees/*/image").permitAll()
         .antMatchers("/auth/employees/**").hasRole("ADMIN")
+        .antMatchers("/sse/**").permitAll()
         .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
         .and()
         .apply(new JwtSecurityConfig(tokenProvider));
