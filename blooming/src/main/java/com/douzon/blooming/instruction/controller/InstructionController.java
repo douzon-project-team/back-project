@@ -1,12 +1,14 @@
 package com.douzon.blooming.instruction.controller;
 
 import com.douzon.blooming.PageDto;
+import com.douzon.blooming.delivery.dto.response.ResponseMyDeliveryDto;
 import com.douzon.blooming.instruction.dto.request.InstructionSearchDto;
 import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ResponseAddInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ResponseInstructionDto;
+import com.douzon.blooming.instruction.dto.response.ResponseMyInstructionDto;
 import com.douzon.blooming.instruction.service.InstructionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -57,5 +59,10 @@ public class InstructionController {
   public ResponseEntity<Void> removeInstruction(@PathVariable String instructionNo) {
     instructionService.deleteInstruction(instructionNo);
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/myInstruction")
+  public ResponseEntity<ResponseMyInstructionDto> getMyDelivery(){
+    return ResponseEntity.ok().body(instructionService.findMyInstruction());
   }
 }

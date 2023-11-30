@@ -6,6 +6,7 @@ import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ResponseInstructionDto;
+import com.douzon.blooming.instruction.dto.response.ResponseMyInstructionDto;
 import com.douzon.blooming.main.dto.request.BarGraphDto;
 import com.douzon.blooming.main.dto.request.CircleGraphDto;
 import com.douzon.blooming.main.dto.request.ExpirationDateNearInstruction;
@@ -41,4 +42,6 @@ public interface InstructionRepository {
   List<BarGraphDto> findMainPageBarGraphData(@Param("type") String type);
 
   List<CircleGraphDto> findMainPageCircleGraphData(@Param("type") String type);
+
+  ResponseMyInstructionDto findMyInstruction(Long employeeNo);
 }

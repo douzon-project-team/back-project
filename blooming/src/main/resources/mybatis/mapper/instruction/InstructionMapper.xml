@@ -318,6 +318,12 @@
     </choose>
   </select>
 
+  <select id="findMyInstruction"
+          resultType="com.douzon.blooming.instruction.dto.response.ResponseMyInstructionDto">
+    SELECT instruction_no, instruction_date, expiration_date, progress_status
+    FROM project.instruction
+    WHERE employee_no = #{employeeNo}
+  </select>
 
   <update id="updateInstruction"
     parameterType="com.douzon.blooming.instruction.dto.request.RequestInstructionDto">
