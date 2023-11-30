@@ -39,7 +39,7 @@ public class CustomerServiceImpl implements CustomerService{
     public PageDto<ResponseCustomerDto> findCustomers(CustomerSearchDto dto) {
         int start = dto.getPage() * dto.getPageSize();
         List<ResponseCustomerDto> customerList = repository.findCustomers(dto, start, dto.getPageSize());
-        int searchCustomerCount = repository.getCountCustomers(dto.getCustomerName());
+        int searchCustomerCount = repository.getCountCustomers(dto);
 
         boolean hasNextPage = (start + dto.getPageSize()) < searchCustomerCount;
         boolean hasPreviousPage = start > 0;

@@ -19,7 +19,7 @@ public interface CustomerRepository {
 
     Optional<ResponseCustomerDto> findCustomer(Long customerNo);
 
-    Integer getCountCustomers(String customerName);
+    Integer getCountCustomers(@Param("dto") CustomerSearchDto dto);
 
     List<ResponseCustomerDto> findCustomers(@Param("dto") CustomerSearchDto dto, int start, int pageSize);
 
