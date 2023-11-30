@@ -8,6 +8,7 @@ import com.douzon.blooming.delivery.dto.request.RequestDeliveryDto;
 import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ResponseDeliveryDto;
+import com.douzon.blooming.delivery.dto.response.ResponseMyDeliveryDto;
 import com.douzon.blooming.delivery.exception.NotFoundDeliveryException;
 import com.douzon.blooming.delivery.repo.DeliveryRepository;
 import com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstructionDto;
@@ -32,10 +33,10 @@ public class DeliveryServiceImpl implements DeliveryService {
 
   @Override
   public ResponseDeliveryDto addDelivery(RequestDeliveryDto dto) {
-//    EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
-//        .getAuthentication().getPrincipal();
+    EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
     DeliveryStatus status= dto.getDeliveryDate().isBefore(now())? DeliveryStatus.COMPLETE : DeliveryStatus.INCOMPLETE;
-    deliveryRepository.insertDelivery(200002L, dto, status);
+    deliveryRepository.insertDelivery(employeeDetails.getEmployeeNo(), dto, status);
     return new ResponseDeliveryDto(deliveryRepository.getDeliveryNo());
   }
 
@@ -86,6 +87,13 @@ public class DeliveryServiceImpl implements DeliveryService {
   @Override
   public void changeStatus(String deliveryNo) {
     deliveryRepository.changeStatus(deliveryNo);
+  }
+
+  @Override
+  public ResponseMyDeliveryDto findMyDelivery() {
+    EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+    return deliveryRepository.findMyDelivery(employeeDetails.getEmployeeNo());
   }
 
 }

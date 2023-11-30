@@ -7,6 +7,7 @@ import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ListDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ListDeliveryWithoutCountDto;
+import com.douzon.blooming.delivery.dto.response.ResponseMyDeliveryDto;
 import com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstructionDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -35,4 +36,6 @@ public interface DeliveryRepository {
     Long findDeliveryCount();
 
     Long findThisMonthDeliveryCount();
+
+    ResponseMyDeliveryDto findMyDelivery(Long employeeNo);
 }

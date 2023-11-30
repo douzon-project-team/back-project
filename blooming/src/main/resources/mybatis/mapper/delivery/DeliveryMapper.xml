@@ -135,6 +135,12 @@
         AND MONTH(delivery_date) = MONTH(CURRENT_DATE);
     </select>
 
+    <select id="findMyDelivery" resultType="com.douzon.blooming.delivery.dto.response.ResponseMyDeliveryDto">
+        SELECT *
+        FROM project.delivery
+        WHERE employee_no = #{employeeNo}
+    </select>
+
 
     <update id="updateDelivery" parameterType="com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto">
         UPDATE project.delivery
