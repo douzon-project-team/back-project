@@ -323,6 +323,7 @@
     SELECT instruction_no, instruction_date, expiration_date, progress_status
     FROM project.instruction
     WHERE employee_no = #{employeeNo}
+    ORDER BY SUBSTRING(instruction_no, 2, 4) DESC, SUBSTRING(instruction_no, 7) DESC LIMIT 6
   </select>
 
   <update id="updateInstruction"

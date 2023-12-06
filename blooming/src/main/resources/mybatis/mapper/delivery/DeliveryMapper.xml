@@ -139,6 +139,7 @@
         SELECT *
         FROM project.delivery
         WHERE employee_no = #{employeeNo}
+        ORDER BY SUBSTRING(delivery_no,2,4) DESC,SUBSTRING(delivery_no,7) DESC LIMIT 6
     </select>
 
 
