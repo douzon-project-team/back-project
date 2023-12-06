@@ -14,6 +14,7 @@ public class EmployeeDto {
 
   private Long employeeNo;
   private String id;
+  private String name;
   private String password;
   private EmployeeRole role;
 }

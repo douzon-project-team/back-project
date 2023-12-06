@@ -27,6 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     return new EmployeeDetails(
         employeeDto.getEmployeeNo(),
         employeeDto.getId(),
+        employeeDto.getName(),
         employeeDto.getPassword(),
         employeeDto.getRole());
   }

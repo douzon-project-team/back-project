@@ -17,13 +17,15 @@ public class EmployeeDetails implements UserDetails {
 
   private Long employeeNo;
   private String id;
+  private String name;
   private String password;
   private EmployeeRole role;
 
-  public EmployeeDetails(Long employeeNo, String id, String password,
+  public EmployeeDetails(Long employeeNo, String id, String name, String password,
       Collection<? extends GrantedAuthority> authorities) {
     this.employeeNo = employeeNo;
     this.id = id;
+    this.name = name;
     this.password = password;
     this.role = EmployeeRole.fromRoleName(authorities.stream()
         .map(GrantedAuthority::getAuthority)
@@ -38,6 +40,8 @@ public class EmployeeDetails implements UserDetails {
   public Long getEmployeeNo() {
     return this.employeeNo;
   }
+
+  public String getName() {return this.name;}
 
   @Override
   public String getPassword() {
