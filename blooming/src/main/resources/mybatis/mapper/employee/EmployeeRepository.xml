@@ -82,7 +82,7 @@
   </insert>
 
   <select id="findEmployeeById" resultType="com.douzon.blooming.employee.dto.response.EmployeeDto">
-    SELECT employee_no, id, password, role
+    SELECT employee_no, id, name, password, role
     FROM project.employee
     WHERE id = #{id}
   </select>
