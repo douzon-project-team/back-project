@@ -24,8 +24,8 @@ public class InstructionLogInterceptor extends AbstractLogInterceptor<Instructio
     EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
     String target = getTarget(req);
-    String message = target.isBlank()? "새로운 지시를 " :  "지시(지시번호: " + target + ")을 ";
-    kafkaProducerService.sendCRUDEvent(employeeDetails.getUsername() + "님이 " + message + getVerb(req));
+    String message = target.isBlank()? "새로운 지시를 " :  "지시(지시번호: " + target + ")를 ";
+    kafkaProducerService.sendCRUDEvent(employeeDetails.getEmployeeNo() + "("+employeeDetails.getName()+ "), " + message + getVerb(req));
     return InstructionLogDto.builder()
         .ipAddress(getClientIp(req))
         .instructionNo(target.isBlank()? null:target)
