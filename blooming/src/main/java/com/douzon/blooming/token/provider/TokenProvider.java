@@ -56,7 +56,7 @@ public class TokenProvider {
     return Jwts
         .builder()
         .subject(authentication.getName())
-        .claims(Map.of(AUTHORITIES_KEY, authorities, "employeeNo", principal.getEmployeeNo()))
+        .claims(Map.of(AUTHORITIES_KEY, authorities, "employeeNo", principal.getEmployeeNo(), "name", principal.getName()))
         .expiration(new Date(System.currentTimeMillis() + accessTokenExpireTime))
         .signWith(SignatureAlgorithm.HS256, key)
         .compact();
@@ -88,7 +88,7 @@ public class TokenProvider {
             .collect(Collectors.toList());
 
     EmployeeDetails principal = new EmployeeDetails(
-        Long.parseLong(claims.get("employeeNo").toString()),
+        Long.parseLong(claims.get("employeeNo").toString()),claims.get("name").toString(),
         claims.getSubject(), "", authorities);
 
     return new UsernamePasswordAuthenticationToken(principal, "", authorities);
