@@ -7,6 +7,7 @@ import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ResponseInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ResponseMyInstructionDto;
+import com.douzon.blooming.instruction.dto.response.ResponseMyInstructionListDto;
 
 public interface InstructionService {
 
@@ -20,5 +21,5 @@ public interface InstructionService {
 
   void deleteInstruction(String instructionNo);
 
-  ResponseMyInstructionDto findMyInstruction();
+  ResponseMyInstructionListDto findMyInstruction();
 }

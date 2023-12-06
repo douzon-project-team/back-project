@@ -8,6 +8,7 @@ import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ResponseInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ResponseMyInstructionDto;
+import com.douzon.blooming.instruction.dto.response.ResponseMyInstructionListDto;
 import com.douzon.blooming.instruction.exception.NotFoundInstructionException;
 import com.douzon.blooming.instruction.repo.InstructionRepository;
 import com.douzon.blooming.product_instruction.dto.response.ResponseProductInstructionDto;
@@ -77,9 +78,9 @@ public class InstructionServiceImpl implements InstructionService {
   }
 
   @Override
-  public ResponseMyInstructionDto findMyInstruction() {
+  public ResponseMyInstructionListDto findMyInstruction() {
     EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
-    return instructionRepository.findMyInstruction(employeeDetails.getEmployeeNo());
+    return new ResponseMyInstructionListDto(instructionRepository.findMyInstruction(employeeDetails.getEmployeeNo()));
   }
 }

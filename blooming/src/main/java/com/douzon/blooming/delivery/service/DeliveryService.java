@@ -24,6 +24,6 @@ public interface DeliveryService {
 
     void changeStatus(String deliveryNo);
 
-    ResponseMyDeliveryDto findMyDelivery();
+    ResponseMyDeliveryListDto findMyDelivery();
 }
 

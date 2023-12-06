@@ -9,6 +9,7 @@ import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ResponseDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ResponseMyDeliveryDto;
+import com.douzon.blooming.delivery.dto.response.ResponseMyDeliveryListDto;
 import com.douzon.blooming.delivery.exception.NotFoundDeliveryException;
 import com.douzon.blooming.delivery.repo.DeliveryRepository;
 import com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstructionDto;
@@ -90,10 +91,10 @@ public class DeliveryServiceImpl implements DeliveryService {
   }
 
   @Override
-  public ResponseMyDeliveryDto findMyDelivery() {
+  public ResponseMyDeliveryListDto findMyDelivery() {
     EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
-    return deliveryRepository.findMyDelivery(employeeDetails.getEmployeeNo());
+    return new ResponseMyDeliveryListDto(deliveryRepository.findMyDelivery(employeeDetails.getEmployeeNo()));
   }
 
 }

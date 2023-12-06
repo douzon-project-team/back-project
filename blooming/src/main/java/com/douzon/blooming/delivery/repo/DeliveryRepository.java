@@ -37,5 +37,5 @@ public interface DeliveryRepository {
 
     Long findThisMonthDeliveryCount();
 
-    ResponseMyDeliveryDto findMyDelivery(Long employeeNo);
+    List<ResponseMyDeliveryDto> findMyDelivery(Long employeeNo);
 }

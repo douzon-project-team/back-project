@@ -5,10 +5,7 @@ import com.douzon.blooming.delivery.dto.response.ResponseMyDeliveryDto;
 import com.douzon.blooming.instruction.dto.request.InstructionSearchDto;
 import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
-import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
-import com.douzon.blooming.instruction.dto.response.ResponseAddInstructionDto;
-import com.douzon.blooming.instruction.dto.response.ResponseInstructionDto;
-import com.douzon.blooming.instruction.dto.response.ResponseMyInstructionDto;
+import com.douzon.blooming.instruction.dto.response.*;
 import com.douzon.blooming.instruction.service.InstructionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +18,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 @RestController
@@ -62,7 +61,7 @@ public class InstructionController {
   }
 
   @GetMapping("/myInstruction")
-  public ResponseEntity<ResponseMyInstructionDto> getMyDelivery(){
+  public ResponseEntity<ResponseMyInstructionListDto> getMyDelivery(){
     return ResponseEntity.ok().body(instructionService.findMyInstruction());
   }
 }
