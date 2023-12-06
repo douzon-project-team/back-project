@@ -55,7 +55,7 @@ public class DeliveryController {
     }
 
     @GetMapping("/myDelivery")
-    public ResponseEntity<ResponseMyDeliveryDto> getMyDelivery(){
+    public ResponseEntity<ResponseMyDeliveryListDto> getMyDelivery(){
         return ResponseEntity.ok().body(deliveryService.findMyDelivery());
     }
 }

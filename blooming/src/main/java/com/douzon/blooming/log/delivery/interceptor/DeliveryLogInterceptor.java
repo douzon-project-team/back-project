@@ -23,9 +23,9 @@ public class DeliveryLogInterceptor extends AbstractLogInterceptor<DeliveryLogDt
         .getAuthentication().getPrincipal();
     String target = getTarget(req);
     String message = target.isBlank()? "새로운 출고를 " :  "출고(출고번호: " + target + ")을 ";
-    kafkaProducerService.sendCRUDEvent(employeeDetails.getUsername() + "님이 " + message + getVerb(req));
+    kafkaProducerService.sendCRUDEvent(employeeDetails.getEmployeeNo() + "("+employeeDetails.getName()+ "), " + message + getVerb(req));
     return DeliveryLogDto.builder()
-        .idAddress(getClientIp(req))
+        .ipAddress(getClientIp(req))
         .deliveryNo(target.isBlank()?null:target)
         .modifierNo(employeeDetails.getEmployeeNo())
         .type(LogType.fromRequestMethod(req.getMethod()))

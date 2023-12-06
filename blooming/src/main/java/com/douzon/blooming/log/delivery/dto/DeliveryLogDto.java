@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DeliveryLogDto {
 
-  private String idAddress;
+  private String ipAddress;
   private Long modifierNo;
   private String deliveryNo;
   private LogType type;

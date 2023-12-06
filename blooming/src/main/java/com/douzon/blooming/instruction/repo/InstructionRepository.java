@@ -43,5 +43,5 @@ public interface InstructionRepository {
 
   List<CircleGraphDto> findMainPageCircleGraphData(@Param("type") String type);
 
-  ResponseMyInstructionDto findMyInstruction(Long employeeNo);
+  List<ResponseMyInstructionDto> findMyInstruction(Long employeeNo);
 }

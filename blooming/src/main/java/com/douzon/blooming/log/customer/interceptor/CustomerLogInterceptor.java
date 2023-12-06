@@ -22,7 +22,7 @@ public class CustomerLogInterceptor extends AbstractLogInterceptor<CustomerLogDt
                 .getAuthentication().getPrincipal();
         String target = getTarget(req);
         String message = target.isBlank()? "새로운 거래처를 " :  "거래처(거래처번호: " + target + ")을 ";
-        kafkaProducerService.sendCRUDEvent(employeeDetails.getUsername() + "님이 " + message + getVerb(req));
+        kafkaProducerService.sendCRUDEvent(employeeDetails.getEmployeeNo() + "("+employeeDetails.getName()+ "), " + message + getVerb(req));
         return null;
     }
 }

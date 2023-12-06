@@ -123,13 +123,25 @@ CREATE TABLE `delivery_instruction`
     `amount`         INT         NOT NULL
 );
 
+CREATE TABLE `message`
+(
+    `message_no`   INT PRIMARY KEY AUTO_INCREMENT,
+    `send_id`      INT NOT NULL,
+    `send_name`    VARCHAR(30) NOT NULL,
+    `target_id`    INT NOT NULL,
+    `target_name`  VARCHAR(30) NOT NULL,
+    `message`      TEXT NOT NULL,
+    `send_time`    TEXT NOT NULL,
+    `messageCheck` TINYINT(1) default 0
+);
+
 CREATE TABLE `employee_log`
 (
     `log_no`      BIGINT PRIMARY KEY AUTO_INCREMENT,
     `ip_address`  VARCHAR(20) NOT NULL,
     `date`        DATETIME    NOT NULL DEFAULT NOW(),
     `modifier_no` BIGINT      NOT NULL,
-    `target_no`   BIGINT      NOT NULL,
+    `target_no`   BIGINT      NULL,
     `type`        TINYINT(1)  NOT NULL
 );
 
@@ -139,7 +151,7 @@ CREATE TABLE `product_log`
     `ip_address`  VARCHAR(20) NOT NULL,
     `date`        DATETIME    NOT NULL DEFAULT NOW(),
     `modifier_no` BIGINT      NOT NULL,
-    `product_no`  BIGINT      NOT NULL,
+    `product_no`  BIGINT      NULL,
     `type`        TINYINT(1)  NOT NULL
 );
 
@@ -149,7 +161,7 @@ CREATE TABLE `instruction_log`
     `ip_address`     VARCHAR(20) NOT NULL,
     `date`           DATETIME    NOT NULL DEFAULT NOW(),
     `modifier_no`    BIGINT      NOT NULL,
-    `instruction_no` VARCHAR(12) NOT NULL,
+    `instruction_no` VARCHAR(12) NULL,
     `type`           TINYINT(1)  NOT NULL
 );
 
@@ -159,7 +171,7 @@ CREATE TABLE `delivery_log`
     `ip_address`  VARCHAR(20) NOT NULL,
     `date`        DATETIME    NOT NULL DEFAULT NOW(),
     `modifier_no` BIGINT      NOT NULL,
-    `delivery_no` VARCHAR(12) NOT NULL,
+    `delivery_no` VARCHAR(12) NULL,
     `type`        TINYINT(1)  NOT NULL
 );
 
