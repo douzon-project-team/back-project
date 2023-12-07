@@ -36,7 +36,7 @@ public class DeliveryServiceImpl implements DeliveryService {
   public ResponseDeliveryDto addDelivery(RequestDeliveryDto dto) {
     EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
-    DeliveryStatus status= dto.getDeliveryDate().isBefore(now())? DeliveryStatus.COMPLETE : DeliveryStatus.INCOMPLETE;
+    DeliveryStatus status= dto.getDeliveryDate().isBefore(now())? DeliveryStatus.COMPLETED : DeliveryStatus.INCOMPLETE;
     deliveryRepository.insertDelivery(employeeDetails.getEmployeeNo(), dto, status);
     return new ResponseDeliveryDto(deliveryRepository.getDeliveryNo());
   }
