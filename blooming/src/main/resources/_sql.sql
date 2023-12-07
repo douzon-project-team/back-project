@@ -132,7 +132,7 @@ CREATE TABLE `message`
     `target_name`  VARCHAR(30) NOT NULL,
     `message`      TEXT NOT NULL,
     `send_time`    TEXT NOT NULL,
-    `messageCheck` TINYINT(1) default 0
+    `message_check` TINYINT(1) default 0
 );
 
 CREATE TABLE `employee_log`
@@ -531,6 +531,18 @@ BEGIN
         SET progress_status = 2
         WHERE instruction_no = NEW.instruction_no;
     end if;
+END;
+//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER before_delete_delivery
+    BEFORE DELETE
+    ON delivery
+    FOR EACH ROW
+BEGIN
+    -- 여기에 삭제되는 행과 관련된 delivery_instruction 행에 대한 작업을 수행
+    DELETE FROM delivery_instruction WHERE delivery_no = OLD.delivery_no;
 END;
 //
 DELIMITER ;
