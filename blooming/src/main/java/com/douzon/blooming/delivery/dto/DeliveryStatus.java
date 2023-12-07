@@ -3,7 +3,7 @@ package com.douzon.blooming.delivery.dto;
 import java.util.Arrays;
 
 public enum DeliveryStatus {
-    INCOMPLETE, COMPLETE;
+    INCOMPLETE, COMPLETED;
 
     public static DeliveryStatus fromDeliveryStatusName(String name) {
         return Arrays.stream(values())

@@ -16,7 +16,7 @@ public class ProductSearchDto extends SearchDto {
   }
 
   public ProductSearchDto(String productCode, String productName, Integer pageSize, Integer page) {
-    super(pageSize, page);
+    super(10, page);
     this.productCode = productCode == null ? DEFAULT_STRING : productCode;
     this.productName = productName == null ? DEFAULT_STRING : productName;
   }

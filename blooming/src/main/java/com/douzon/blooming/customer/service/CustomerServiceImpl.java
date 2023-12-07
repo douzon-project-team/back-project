@@ -44,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService{
         boolean hasNextPage = (start + dto.getPageSize()) < searchCustomerCount;
         boolean hasPreviousPage = start > 0;
 
-        return new PageDto<>(customerList, dto.getPage(), hasNextPage, hasPreviousPage);
+        return new PageDto<>(customerList, dto.getPage()+1, hasNextPage, hasPreviousPage);
     }
 
     @Override
