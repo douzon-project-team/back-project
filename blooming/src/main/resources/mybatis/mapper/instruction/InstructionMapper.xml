@@ -240,7 +240,7 @@
   </select>
 
   <select id="findExpirationDateNearInstruction"
-    resultType="com.douzon.blooming.main.dto.request.ExpirationDateNearInstruction">
+    resultType="com.douzon.blooming.main.dto.ExpirationDateNearInstruction">
     SELECT instruction_no, expiration_date
     FROM project.instruction
     WHERE expiration_date >= CURDATE()
@@ -248,7 +248,7 @@
     LIMIT 2;
   </select>
 
-  <select id="findMainPageBarGraphData" resultType="com.douzon.blooming.main.dto.request.BarGraphDto">
+  <select id="findMainPageBarGraphData" resultType="com.douzon.blooming.main.dto.BarGraphDto">
     <choose>
       <when test="type == 'month'">
         SELECT date, COUNT(CASE WHEN instruction_no IS NOT NULL THEN 1 END) as count
@@ -289,7 +289,7 @@
     </choose>
   </select>
 
-  <select id="findMainPageCircleGraphData" resultType="com.douzon.blooming.main.dto.request.CircleGraphDto">
+  <select id="findMainPageCircleGraphData" resultType="com.douzon.blooming.main.dto.CircleGraphDto">
     <choose>
       <when test="type == 'month'">
         SELECT progress_status AS progress,

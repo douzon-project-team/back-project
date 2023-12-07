@@ -3,9 +3,11 @@ package com.douzon.blooming.main.service;
 import com.douzon.blooming.customer.repo.CustomerRepository;
 import com.douzon.blooming.delivery.repo.DeliveryRepository;
 import com.douzon.blooming.instruction.repo.InstructionRepository;
-import com.douzon.blooming.main.dto.request.BarGraphDto;
-import com.douzon.blooming.main.dto.request.CircleGraphDto;
-import com.douzon.blooming.main.dto.request.CurrentSituation;
+import com.douzon.blooming.main.dto.BarGraphDto;
+import com.douzon.blooming.main.dto.CircleGraphDto;
+import com.douzon.blooming.main.dto.CurrentSituation;
+import com.douzon.blooming.main.dto.request.BarGraphListDto;
+import com.douzon.blooming.main.dto.request.CircleGraphListDto;
 import com.douzon.blooming.main.dto.request.MainPageDataDto;
 import com.douzon.blooming.main.repo.MainPageRepository;
 import java.util.List;
@@ -29,13 +31,25 @@ public class MainPageServiceImpl implements MainPageService {
   }
 
   @Override
-  public List<BarGraphDto> getMainPageBarGraphData(String type) {
-    return instructionRepository.findMainPageBarGraphData(type);
+  public BarGraphListDto getMainPageBarGraphData(String type) {
+    List<BarGraphDto> instructionData = instructionRepository.findMainPageBarGraphData(type);
+    List<BarGraphDto> deliveryData = deliveryRepository.findMainPageBarGraphData(type);
+
+    return BarGraphListDto.builder()
+        .instructionData(instructionData)
+        .deliveryData(deliveryData)
+        .build();
   }
 
   @Override
-  public List<CircleGraphDto> getMainPageCircleGraphData(String type) {
-    return instructionRepository.findMainPageCircleGraphData(type);
+  public CircleGraphListDto getMainPageCircleGraphData(String type) {
+    List<CircleGraphDto> instructionData = instructionRepository.findMainPageCircleGraphData(type);
+    List<CircleGraphDto> deliveryData = deliveryRepository.findMainPageCircleGraphData(type);
+
+    return CircleGraphListDto.builder()
+        .instructionData(instructionData)
+        .deliveryData(deliveryData)
+        .build();
   }
 
   private MainPageDataDto renewMainPageDataDto() {

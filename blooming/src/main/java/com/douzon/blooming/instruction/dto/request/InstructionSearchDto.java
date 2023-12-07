@@ -10,15 +10,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class InstructionSearchDto extends SearchDto {
 
   private final String employeeName;
-  private ProgressStatus progressStatus;
+  private final ProgressStatus progressStatus;
   @DateTimeFormat(pattern = "yyyy-MM-dd")
-  private LocalDate startDate;
+  private final LocalDate startDate;
   @DateTimeFormat(pattern = "yyyy-MM-dd")
-  private LocalDate endDate;
+  private final LocalDate endDate;
   @DateTimeFormat(pattern = "yyyy-MM-dd")
-  private LocalDate expirationStartDate;
+  private final LocalDate expirationStartDate;
   @DateTimeFormat(pattern = "yyyy-MM-dd")
-  private LocalDate expirationEndDate;
+  private final LocalDate expirationEndDate;
 
   public InstructionSearchDto(ProgressStatus progressStatus, String employeeName,
       LocalDate startDate, LocalDate endDate, LocalDate expirationStartDate, LocalDate expirationEndDate, Integer page, Integer pageSize) {

@@ -4,7 +4,7 @@ import com.douzon.blooming.customer.dto.request.CustomerSearchDto;
 import com.douzon.blooming.customer.dto.request.RequestCustomerDto;
 import com.douzon.blooming.customer.dto.request.UpdateCustomerDto;
 import com.douzon.blooming.customer.dto.response.ResponseCustomerDto;
-import com.douzon.blooming.main.dto.request.MainPageCustomerDto;
+import com.douzon.blooming.main.dto.MainPageCustomerDto;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

@@ -39,7 +39,7 @@
         LIMIT #{start}, #{pageSize}
     </select>
   <select id="findManyTransactionCustomers"
-          resultType="com.douzon.blooming.main.dto.request.MainPageCustomerDto">
+          resultType="com.douzon.blooming.main.dto.MainPageCustomerDto">
         SELECT C.customer_no as customerNo,
             C.customer_name as customerName,
             COUNT(I.customer_no) AS count

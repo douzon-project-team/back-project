@@ -5,37 +5,42 @@ import com.douzon.blooming.delivery.dto.request.DeliverySearchDto;
 import com.douzon.blooming.delivery.dto.request.RequestDeliveryDto;
 import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
-import com.douzon.blooming.delivery.dto.response.ListDeliveryDto;
-import com.douzon.blooming.delivery.dto.response.ListDeliveryWithoutCountDto;
 import com.douzon.blooming.delivery.dto.response.ResponseMyDeliveryDto;
 import com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstructionDto;
+import com.douzon.blooming.main.dto.BarGraphDto;
+import com.douzon.blooming.main.dto.CircleGraphDto;
+import java.util.List;
+import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-import java.util.Optional;
-
 @Mapper
 public interface DeliveryRepository {
-    void insertDelivery(Long employeeNo, @Param("dto") RequestDeliveryDto dto, DeliveryStatus status);
 
-    String getDeliveryNo();
+  void insertDelivery(Long employeeNo, @Param("dto") RequestDeliveryDto dto, DeliveryStatus status);
 
-    int deleteDelivery(String deliveryNo);
+  String getDeliveryNo();
 
-    List<DeliveryListInstructionDto> findDeliveries(@Param("dto") DeliverySearchDto dto, Integer start, Integer pageSize);
+  int deleteDelivery(String deliveryNo);
 
-    int getCountDeliveries(@Param("dto") DeliverySearchDto searchDto);
+  List<DeliveryListInstructionDto> findDeliveries(@Param("dto") DeliverySearchDto dto,
+      Integer start, Integer pageSize);
 
-    Optional<GetDeliveryDto> findDelivery(String deliveryNo);
+  int getCountDeliveries(@Param("dto") DeliverySearchDto searchDto);
 
-    int updateDelivery(String deliveryNo, @Param("dto") UpdateDeliveryDto dto);
+  Optional<GetDeliveryDto> findDelivery(String deliveryNo);
 
-    void changeStatus(String deliveryNo);
+  int updateDelivery(String deliveryNo, @Param("dto") UpdateDeliveryDto dto);
 
-    Long findDeliveryCount();
+  void changeStatus(String deliveryNo);
 
-    Long findThisMonthDeliveryCount();
+  Long findDeliveryCount();
 
-    List<ResponseMyDeliveryDto> findMyDelivery(Long employeeNo);
+  Long findThisMonthDeliveryCount();
+
+  List<ResponseMyDeliveryDto> findMyDelivery(Long employeeNo);
+
+  List<BarGraphDto> findMainPageBarGraphData(String type);
+
+  List<CircleGraphDto> findMainPageCircleGraphData(String type);
 }

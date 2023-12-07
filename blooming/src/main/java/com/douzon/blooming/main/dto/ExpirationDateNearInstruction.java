@@ -1,4 +1,4 @@
-package com.douzon.blooming.main.dto.request;
+package com.douzon.blooming.main.dto;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
