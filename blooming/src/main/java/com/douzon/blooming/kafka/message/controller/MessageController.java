@@ -42,8 +42,8 @@ public class MessageController {
         log.info(message.toString());
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm");
-        kafkaProducerService.sendMessage(sendId+","+employeeService.getEmployeeByNo(sendId).getName()+","
-                +targetId+","+employeeService.getEmployeeByNo(targetId).getName()+","+message.getMessage()+","+currentDateTime.format(formatter));
+        kafkaProducerService.sendMessage(sendId+"&&"+employeeService.getEmployeeByNo(sendId).getName()+"&&"
+                +targetId+"&&"+employeeService.getEmployeeByNo(targetId).getName()+"&&"+message.getMessage()+"&&"+currentDateTime.format(formatter));
         return ResponseEntity.ok().build();
     }
 

@@ -88,7 +88,7 @@ public class SseController {
 
         @KafkaListener(topics = "blooming-messages", groupId = "my-group")
         public void consumerMessageEvent(String message) {
-            String[] splitMessage = message.split(",");
+            String[] splitMessage = message.split("&&");
             saveMessageToDatabase(splitMessage[0], splitMessage[1], splitMessage[2], splitMessage[3], splitMessage[4]);
 
             emitters.forEach((clientId, emitter) -> {
