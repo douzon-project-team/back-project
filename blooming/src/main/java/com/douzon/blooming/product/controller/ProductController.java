@@ -28,9 +28,9 @@ public class ProductController {
 
   private final ProductService productService;
 
-  @GetMapping("/customer/code/check")
-  public ResponseEntity<?> duplicateCheckCustomerCode(@ModelAttribute ProductCodeCheckDto dto){
-    return ResponseEntity.ok().body(!productService.ProductCodeCheck(dto));
+  @GetMapping("/code/{productCode}")
+  public ResponseEntity<?> duplicateCheckCustomerCode(@PathVariable String productCode){
+    return ResponseEntity.ok().body(!productService.ProductCodeCheck(productCode));
   }
 
   @GetMapping("/{productNo}")

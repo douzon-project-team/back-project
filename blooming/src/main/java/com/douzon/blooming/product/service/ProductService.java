@@ -22,5 +22,5 @@ public interface ProductService {
 
   PageDto<ProductListDto> findProducts(ProductSearchDto productSearchDto);
 
-  boolean ProductCodeCheck(ProductCodeCheckDto dto);
+  boolean ProductCodeCheck(String productCode);
 }

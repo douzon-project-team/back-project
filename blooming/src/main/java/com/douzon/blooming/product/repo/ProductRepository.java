@@ -27,5 +27,5 @@ public interface ProductRepository {
 
   int getProductsCountBySearchProductDto(ProductSearchDto productSearchDto);
 
-  boolean existByproductCode(ProductCodeCheckDto dto);
+  boolean existByproductCode(String productCode);
 }

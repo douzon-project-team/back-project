@@ -27,9 +27,9 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/customer/code/check")
-    public ResponseEntity<?> duplicateCheckCustomerCode(@ModelAttribute DuplicateRequestDto dto){
-        return ResponseEntity.ok().body(service.customerCodeCheck(dto.getCustomerCode()));
+    @GetMapping("/code/{customerCode}")
+    public ResponseEntity<?> duplicateCheckCustomerCode(@PathVariable String customerCode){
+        return ResponseEntity.ok().body(service.customerCodeCheck(customerCode));
     }
 
     @GetMapping("/list")

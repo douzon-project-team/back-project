@@ -58,9 +58,9 @@
     AND hide = 0
   </select>
 
-  <select id="existByproductCode" parameterType="com.douzon.blooming.product.dto.request.ProductCodeCheckDto" resultType="boolean">
+  <select id="existByproductCode" resultType="boolean">
     SELECT COUNT(*)
     FROM project.product
-    WHERE product_code = #{dto.productCode}
+    WHERE product_code = #{productCode}
   </select>
 </mapper>
