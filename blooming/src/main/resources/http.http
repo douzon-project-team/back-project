@@ -74,3 +74,38 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImVtcGxveWVlTm8iO
 {
   "employeeNo" : 200001
 }
+
+### 메인페이지
+
+GET http://localhost:8080/main-page
+Content-Type: application/json
+
+### 메인페이지 - 바 그래프 - 일
+
+GET http://localhost:8080/main-page/bar-graph/day
+Content-Type: application/json
+
+### 메인페이지 - 바 그래프 - 달
+
+GET http://localhost:8080/main-page/bar-graph/month
+Content-Type: application/json
+
+### 메인페이지 - 바 그래프 - 년
+
+GET http://localhost:8080/main-page/bar-graph/year
+Content-Type: application/json
+
+### 메인페이지 - 사이클 그래프 - 일
+
+GET http://localhost:8080/main-page/circle-graph/day
+Content-Type: application/json
+
+### 메인페이지 - 사이클 그래프 - 달
+
+GET http://localhost:8080/main-page/circle-graph/month
+Content-Type: application/json
+
+### 메인페이지 - 사이클 그래프 - 년
+
+GET http://localhost:8080/main-page/circle-graph/year
+Content-Type: application/json
