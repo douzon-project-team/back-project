@@ -143,7 +143,6 @@ class EmployeeControllerTest {
                 parameterWithName("page").description("현재 페이지 번호"),
                 parameterWithName("pageSize").description("페이지 크기")
             ),
-
             requestHeaders(
                 headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
             ),
@@ -251,24 +250,25 @@ class EmployeeControllerTest {
         )).andReturn();
   }
 
-//  @Test
-//  void modifyImage() throws Exception {
-//    MockMultipartFile file = new MockMultipartFile("file", "test-image.jpg", "image/jpeg",
-//        "YourFileContent".getBytes());
-//
-//    mockMvc.perform(multipart("/employees/{employeeNo}/image", 200001)
-//            .file(file)
-//            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
-//        .andExpect(status().isNoContent())
-//        .andDo(restDocs.document(
-//            pathParameters(
-//                parameterWithName("employeeNo").description("사원 번호")
-//            ),
-//            requestHeaders(
-//                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
-//            )
-//        )).andReturn();
-//  }
+  @Test
+  @Transactional
+  void modifyImage() throws Exception {
+    MockMultipartFile file = new MockMultipartFile("file", "test-image.jpg", "image/jpeg",
+        "YourFileContent".getBytes());
+
+    mockMvc.perform(multipart("/employees/{employeeNo}/image", 200001)
+            .file(file)
+            .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
+        .andExpect(status().isNoContent())
+        .andDo(restDocs.document(
+            pathParameters(
+                parameterWithName("employeeNo").description("사원 번호")
+            ),
+            requestHeaders(
+                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+            )
+        )).andReturn();
+  }
 
   @Test
   @Transactional

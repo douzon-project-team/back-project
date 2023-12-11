@@ -1,16 +1,15 @@
 package com.douzon.blooming.delivery.controller;
 
 import static com.douzon.blooming.restdocs.RestDocsConfig.field;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.douzon.blooming.auth.dto.response.TokenDto;
@@ -21,6 +20,7 @@ import com.douzon.blooming.restdocs.RestDocsConfig;
 import com.douzon.blooming.token.provider.TokenProvider;
 import com.douzon.blooming.token.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Setter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +41,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+
+import java.time.LocalDate;
 
 //@Disabled
 @ExtendWith(RestDocumentationExtension.class)
@@ -82,6 +84,13 @@ public class DeliveryControllerTest {
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
+                        requestFields(
+                                fieldWithPath("deliveryDate").type(JsonFieldType.STRING).description("출고일")
+                                        .attributes(field("constraints", "NOT NULL"))
+                        ),
                         responseFields(
                                 fieldWithPath("deliveryNo").type(JsonFieldType.STRING).description("출고 PK")
                         )
@@ -91,11 +100,14 @@ public class DeliveryControllerTest {
 
     @Test
     void getDelivery() throws Exception {
-        mockMvc.perform(get("/deliveries/{deliveryNo}", "MW2311000001")
+        mockMvc.perform(get("/deliveries/{deliveryNo}", "MW2312000001")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("deliveryNo").description("출고 번호")
                         ),
@@ -104,25 +116,16 @@ public class DeliveryControllerTest {
                                 fieldWithPath("employeeName").type(JsonFieldType.STRING).description("출고 담당자"),
                                 fieldWithPath("deliveryDate").type(JsonFieldType.STRING).description("출고일"),
                                 fieldWithPath("deliveryStatus").type(JsonFieldType.STRING).description("출고 상태"),
-                                subsectionWithPath("instructions").description("출고할 지시 List"),
-                                subsectionWithPath("instructions.[].instructionNo").type(JsonFieldType.STRING)
-                                        .description("지시 PK"),
-                                subsectionWithPath("instructions.[].employeeName").type(JsonFieldType.STRING)
-                                        .description("지시 담당자"),
-                                subsectionWithPath("instructions.[].customerName").type(JsonFieldType.STRING)
-                                        .description("거래처"),
-                                subsectionWithPath("instructions.[].instructionDate").type(JsonFieldType.STRING)
-                                        .description("지시일"),
-                                subsectionWithPath("instructions.[].expirationDate").type(JsonFieldType.STRING)
-                                        .description("만료일"),
-                                subsectionWithPath("instructions.[].productNo").type(JsonFieldType.NUMBER)
-                                        .description("품목 PK"),
-                                subsectionWithPath("instructions.[].productCode").type(JsonFieldType.STRING)
-                                        .description("품목 코드"),
-                                subsectionWithPath("instructions.[].productName").type(JsonFieldType.STRING)
-                                        .description("품목 명칭"),
-                                subsectionWithPath("instructions.[].amount").type(JsonFieldType.NUMBER)
-                                        .description("출고할 수량")
+                                subsectionWithPath("instructions").description("출고할 지시 List").type(JsonFieldType.ARRAY),
+                                subsectionWithPath("instructions.[].instructionNo").type(JsonFieldType.STRING).description("지시 PK"),
+                                subsectionWithPath("instructions.[].employeeName").type(JsonFieldType.STRING).description("지시 담당자"),
+                                subsectionWithPath("instructions.[].customerName").type(JsonFieldType.STRING).description("거래처"),
+                                subsectionWithPath("instructions.[].instructionDate").type(JsonFieldType.STRING).description("지시일"),
+                                subsectionWithPath("instructions.[].expirationDate").type(JsonFieldType.STRING).description("만료일"),
+                                subsectionWithPath("instructions.[].productNo").type(JsonFieldType.NUMBER).description("품목 PK"),
+                                subsectionWithPath("instructions.[].productCode").type(JsonFieldType.STRING).description("품목 코드"),
+                                subsectionWithPath("instructions.[].productName").type(JsonFieldType.STRING).description("품목 명칭"),
+                                subsectionWithPath("instructions.[].amount").type(JsonFieldType.NUMBER).description("출고할 수량")
                         )))
                 .andReturn();
     }
@@ -133,11 +136,19 @@ public class DeliveryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
                         .param("deliveryStatus", String.valueOf(DeliveryStatus.INCOMPLETE))
-//            .param("", String.valueOf(DeliveryStatus.INCOMPLETE))
                         .param("startDate", "2023-10-10")
-                        .param("endDate", "2023-12-26"))
+                        .param("endDate", "2023-12-26")
+                )
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
+                        requestParameters(
+                                parameterWithName("deliveryStatus").description("진행 상태"),
+                                parameterWithName("startDate").description("출고 시작일"),
+                                parameterWithName("endDate").description("출고 종료일")
+                        ),
                         responseFields(
                                 subsectionWithPath("list").description("출고 List"),
                                 subsectionWithPath("list.[].deliveryNo").type(JsonFieldType.STRING)
@@ -164,14 +175,21 @@ public class DeliveryControllerTest {
     @Transactional
     void updateDelivery() throws Exception {
         RequestDeliveryTestDto updateDeliveryDto = new RequestDeliveryTestDto("2023-11-30");
-        mockMvc.perform(put("/deliveries/{deliveryNo}", "MW2311000001")
+        mockMvc.perform(put("/deliveries/{deliveryNo}", "MW2312000001")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
                         .content(objectMapper.writeValueAsString(updateDeliveryDto)))
                 .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("deliveryNo").description("출고 번호")
+                                        .attributes(field("constraints", "NOT NULL"))
+                        ),
+                        requestFields(
+                                fieldWithPath("deliveryDate").type(JsonFieldType.STRING).description("출고일")
                                         .attributes(field("constraints", "NOT NULL"))
                         )
                 ))
@@ -181,11 +199,14 @@ public class DeliveryControllerTest {
     @Test
     @Transactional
     void deleteDelivery() throws Exception {
-        mockMvc.perform(delete("/deliveries/{deliveryNo}", "MW2311000001")
+        mockMvc.perform(delete("/deliveries/{deliveryNo}", "MW2312000002")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
                 .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("deliveryNo").description("출고 번호")
                                         .attributes(field("constraints", "NOT NULL"))

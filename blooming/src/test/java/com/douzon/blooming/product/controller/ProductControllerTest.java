@@ -73,6 +73,24 @@ class ProductControllerTest {
   }
 
   @Test
+  void duplicateCheckProductCode() throws Exception {
+      mockMvc.perform(get("/products/code/{productCode}", "AP0001")
+              .contentType(MediaType.APPLICATION_JSON)
+              .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
+              .andExpect(status().isOk())
+              .andDo(restDocs.document(
+                  requestHeaders(
+                          headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                  ),
+                  pathParameters(
+                          parameterWithName("productCode").description("품목 코드")
+                                  .attributes(field("constraints", "NOT NULL"))
+                  )
+              ))
+              .andReturn();
+  }
+
+  @Test
   void getProduct() throws Exception {
     mockMvc.perform(get("/products/{productNo}", 1)
             .contentType(MediaType.APPLICATION_JSON)
@@ -83,12 +101,12 @@ class ProductControllerTest {
                 headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
             ),
             pathParameters(
-                parameterWithName("productNo").description("상품 번호")
+                parameterWithName("productNo").description("품목 번호")
                     .attributes(field("constraints", "NOT NULL"))
             ),
             responseFields(
-                fieldWithPath("productNo").type(JsonFieldType.NUMBER).description("상품 PK"),
-                fieldWithPath("productCode").type(JsonFieldType.STRING).description("상품 코드"),
+                fieldWithPath("productNo").type(JsonFieldType.NUMBER).description("품목 PK"),
+                fieldWithPath("productCode").type(JsonFieldType.STRING).description("품목 코드"),
                 fieldWithPath("productName").type(JsonFieldType.STRING).description("명칭"),
                 fieldWithPath("standard").type(JsonFieldType.STRING).description("규격"),
                 fieldWithPath("unit").type(JsonFieldType.NUMBER).description("단위"),
@@ -113,16 +131,16 @@ class ProductControllerTest {
                 headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
             ),
             requestParameters(
-                parameterWithName("productCode").description("상품 코드"),
-                parameterWithName("productName").description("상품 이름"),
+                parameterWithName("productCode").description("품목 코드"),
+                parameterWithName("productName").description("품목 이름"),
                 parameterWithName("pageSize").description("페이지 크기"),
                 parameterWithName("page").description("페이지 번호")
             ),
             responseFields(
-                fieldWithPath("list").type(JsonFieldType.ARRAY).description("상품 목록"),
+                fieldWithPath("list").type(JsonFieldType.ARRAY).description("품목 목록"),
                 fieldWithPath("list[].productNo").type(JsonFieldType.NUMBER)
-                    .description("상품 번호"),
-                fieldWithPath("list[].productCode").type(JsonFieldType.STRING).description("상품 코드"),
+                    .description("품목 번호"),
+                fieldWithPath("list[].productCode").type(JsonFieldType.STRING).description("품목 코드"),
                 fieldWithPath("list[].productName").type(JsonFieldType.STRING).description("품명"),
                 fieldWithPath("list[].unit").type(JsonFieldType.NUMBER).description("개수"),
                 fieldWithPath("list[].price").type(JsonFieldType.NUMBER).description("가격"),
@@ -152,10 +170,12 @@ class ProductControllerTest {
                 headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
             ),
             requestFields(
-                fieldWithPath("productCode").type(JsonFieldType.STRING).description("상품 코드"),
+                fieldWithPath("productCode").type(JsonFieldType.STRING).description("품목 코드"),
                 fieldWithPath("productName").type(JsonFieldType.STRING).description("명칭"),
                 fieldWithPath("standard").type(JsonFieldType.STRING).description("규격"),
-                fieldWithPath("unit").type(JsonFieldType.NUMBER).description("갯수")
+                fieldWithPath("unit").type(JsonFieldType.NUMBER).description("갯수"),
+                fieldWithPath("weight").type(JsonFieldType.NUMBER).description("무게"),
+                fieldWithPath("price").type(JsonFieldType.NUMBER).description("가격")
             )
         )).andReturn();
   }
@@ -172,7 +192,7 @@ class ProductControllerTest {
                 headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
             ),
             pathParameters(
-                parameterWithName("productNo").description("상품 번호")
+                parameterWithName("productNo").description("품목 번호")
                     .attributes(field("constraints", "NOT NULL"))
             )
         ))
@@ -196,15 +216,17 @@ class ProductControllerTest {
                 headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
             ),
             pathParameters(
-                parameterWithName("productNo").description("상품 번호")
+                parameterWithName("productNo").description("품목 번호")
                     .attributes(field("constraints", "NOT NULL"))
             ),
             requestFields(
-                fieldWithPath("productNo").type(JsonFieldType.NUMBER).description("상품 번호"),
-                fieldWithPath("productCode").type(JsonFieldType.STRING).description("상품 코드"),
+                fieldWithPath("productNo").type(JsonFieldType.NUMBER).description("품목 번호"),
+                fieldWithPath("productCode").type(JsonFieldType.STRING).description("품목 코드"),
                 fieldWithPath("productName").type(JsonFieldType.STRING).description("명칭"),
                 fieldWithPath("standard").type(JsonFieldType.STRING).description("규격"),
-                fieldWithPath("unit").type(JsonFieldType.NUMBER).description("갯수")
+                fieldWithPath("unit").type(JsonFieldType.NUMBER).description("갯수"),
+                fieldWithPath("weight").type(JsonFieldType.NUMBER).description("무게"),
+                fieldWithPath("price").type(JsonFieldType.NUMBER).description("가격")
             )
         ))
         .andReturn();

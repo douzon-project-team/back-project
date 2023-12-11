@@ -9,6 +9,8 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.douzon.blooming.auth.dto.response.TokenDto;
@@ -74,14 +76,15 @@ class ProductInstructionControllerTest {
             .content(objectMapper.writeValueAsString(testAddDto))
         ).andExpect(status().isNoContent())
         .andDo(restDocs.document(
+            pathParameters(
+                parameterWithName("instructionNo").description("지시 번호")
+            ),
             requestHeaders(
                 headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
             ),
             requestFields(
-                fieldWithPath("productNo").type(JsonFieldType.NUMBER).description("상품 번호")
-                    .attributes(field("constraints", "NOT NULL")),
-                fieldWithPath("amount").type(JsonFieldType.NUMBER).description("갯수")
-                    .attributes(field("constraints", "NOT NULL"))
+                fieldWithPath("productNo").type(JsonFieldType.NUMBER).description("추가할 품목"),
+                fieldWithPath("amount").type(JsonFieldType.NUMBER).description("수량")
             )
         )).andReturn();
   }
@@ -96,6 +99,10 @@ class ProductInstructionControllerTest {
             .content("{\"amount\":10}")
         ).andExpect(status().isNoContent())
         .andDo(restDocs.document(
+            pathParameters(
+                    parameterWithName("instructionNo").description("지시 번호"),
+                    parameterWithName("productNo").description("품목 번호")
+            ),
             requestHeaders(
                 headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
             ),
@@ -115,6 +122,10 @@ class ProductInstructionControllerTest {
             .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
         ).andExpect(status().isNoContent())
         .andDo(restDocs.document(
+            pathParameters(
+                    parameterWithName("instructionNo").description("지시 번호"),
+                    parameterWithName("productNo").description("품목 번호")
+            ),
             requestHeaders(
                 headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
             )

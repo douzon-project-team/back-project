@@ -1,10 +1,14 @@
 package com.douzon.blooming.delivery_instruction.controller;
 
 import static com.douzon.blooming.restdocs.RestDocsConfig.field;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,6 +34,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -78,6 +83,19 @@ public class DeliveryInstructionControllerTest {
                     .content(objectMapper.writeValueAsString(insertDeliveryInstructionDto)))
             .andExpect(status().isNoContent())
             .andDo(restDocs.document(
+                    requestHeaders(
+                            headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                    ),
+                    requestFields(
+                            fieldWithPath("instructionNo").type(JsonFieldType.STRING).description("지시 번호")
+                                    .attributes(field("constraints", "NOT NULL")),
+                            fieldWithPath("products").type(JsonFieldType.ARRAY).description("추가할 품목")
+                                    .attributes(field("constraints", "NOT NULL")),
+                            fieldWithPath("products[].productNo").type(JsonFieldType.NUMBER).description("품목 번호")
+                                    .attributes(field("constraints", "NOT NULL")),
+                            fieldWithPath("products[].amount").type(JsonFieldType.NUMBER).description("수량")
+                                    .attributes(field("constraints", "NOT NULL"))
+                    ),
                     pathParameters(
                             parameterWithName("deliveryNo").description("출고 번호")
                                     .attributes(field("constraints", "NOT NULL"))
@@ -91,14 +109,25 @@ public class DeliveryInstructionControllerTest {
   void updateDeliveryInstructionTest() throws Exception {
 
     UpdateInstructionProductDto dto = new UpdateInstructionProductDto(
-            "WO2311000002", 1L, 10);
+            "WO2312000002", 1L, 10);
 
-    mockMvc.perform(put("/delivery-instructions/{deliveryNo}", "MW2311000001")
+    mockMvc.perform(put("/delivery-instructions/{deliveryNo}", "MW2312000001")
                     .contentType(MediaType.APPLICATION_JSON)
                     .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
                     .content(objectMapper.writeValueAsString(dto)))
             .andExpect(status().isNoContent())
             .andDo(restDocs.document(
+                    requestHeaders(
+                            headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                    ),
+                    requestFields(
+                            fieldWithPath("instructionNo").type(JsonFieldType.STRING).description("지시 번호")
+                                    .attributes(field("constraints", "NOT NULL")),
+                            fieldWithPath("productNo").type(JsonFieldType.NUMBER).description("품목 번호")
+                                    .attributes(field("constraints", "NOT NULL")),
+                            fieldWithPath("amount").type(JsonFieldType.NUMBER).description("수량")
+                                    .attributes(field("constraints", "NOT NULL"))
+                    ),
                     pathParameters(
                             parameterWithName("deliveryNo").description("출고 번호")
                                     .attributes(field("constraints", "NOT NULL"))
@@ -111,11 +140,14 @@ public class DeliveryInstructionControllerTest {
   @Transactional
   void deleteDeliveryInstructionTest() throws Exception {
     mockMvc.perform(delete("/delivery-instructions/{deliveryNo}/{instructionNo}/{productNo}",
-                    "MW2311000001", "WO2311000002", 2L)
+                    "MW2312000001", "WO2312000002", 2L)
                     .contentType(MediaType.APPLICATION_JSON)
                     .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
             .andExpect(status().isNoContent())
             .andDo(restDocs.document(
+                    requestHeaders(
+                            headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                    ),
                     pathParameters(
                             parameterWithName("deliveryNo").description("출고 번호")
                                     .attributes(field("constraints", "NOT NULL")),

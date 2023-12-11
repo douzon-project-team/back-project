@@ -13,8 +13,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.douzon.blooming.auth.dto.response.TokenDto;
@@ -85,6 +84,8 @@ class InstructionControllerTest {
                         .param("employeeName", "박상웅")
                         .param("startDate", "2019-10-03")
                         .param("endDate", "2024-10-10")
+                        .param("expirationStartDate", "2021-10-10")
+                        .param("expirationEndDate", "2024-10-10")
                         .param("page", "1")
                         .param("size", "8")
                         .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
@@ -92,6 +93,16 @@ class InstructionControllerTest {
                 .andDo(restDocs.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
+                        requestParameters(
+                                parameterWithName("progressStatus").description("진행 상태"),
+                                parameterWithName("employeeName").description("담당자"),
+                                parameterWithName("startDate").description("지시 시작일"),
+                                parameterWithName("endDate").description("지시 종료일"),
+                                parameterWithName("expirationStartDate").description("지시 만료 시작일"),
+                                parameterWithName("expirationEndDate").description("지시 만료 종료일"),
+                                parameterWithName("page").description("페이지 번호"),
+                                parameterWithName("size").description("페이지 크기")
                         ),
                         responseFields(
                                 subsectionWithPath("list").description("지시 List"),
@@ -120,7 +131,7 @@ class InstructionControllerTest {
 
     @Test
     void getInstruction() throws Exception {
-        mockMvc.perform(get("/instructions/{instructionNo}", "WO2311000001")
+        mockMvc.perform(get("/instructions/{instructionNo}", "WO2312000001")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
                 .andExpect(status().isOk())
@@ -160,11 +171,11 @@ class InstructionControllerTest {
                         requestFields(
                                 fieldWithPath("employeeNo").type(JsonFieldType.NUMBER).description("지시 번호")
                                         .attributes(field("constraints", "NOT NULL")),
-                                fieldWithPath("customerNo").type(JsonFieldType.NUMBER).description("상품 번호")
+                                fieldWithPath("customerNo").type(JsonFieldType.NUMBER).description("거래처 번호")
                                         .attributes(field("constraints", "NOT NULL")),
-                                fieldWithPath("instructionDate").type(JsonFieldType.STRING).description("지시 일")
+                                fieldWithPath("instructionDate").type(JsonFieldType.STRING).description("지시일")
                                         .attributes(field("constraints", "YYYY-MM-DD")),
-                                fieldWithPath("expirationDate").type(JsonFieldType.STRING).description("마감 일")
+                                fieldWithPath("expirationDate").type(JsonFieldType.STRING).description("만료일")
                                         .attributes(field("constraints", "YYYY-MM-DD")),
                                 fieldWithPath("progressStatus").type(JsonFieldType.STRING).description("지시 상태")
                                         .attributes(field("constraints", "NOT NULL"))
@@ -176,7 +187,7 @@ class InstructionControllerTest {
     @Test
     @Transactional
     void updateInstruction() throws Exception {
-        TestUpdateDto dto = new TestUpdateDto("WO2311000002", 1L, "2023-11-22", "2023-12-22");
+        TestUpdateDto dto = new TestUpdateDto("WO2312000002", 1L, "2023-11-22", "2023-12-22");
         mockMvc.perform(put("/instructions/{instructionNo}", "WO2311000002")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto))
@@ -192,11 +203,11 @@ class InstructionControllerTest {
                         requestFields(
                                 fieldWithPath("instructionNo").type(JsonFieldType.STRING).description("지시 번호")
                                         .attributes(field("constraints", "NOT NULL")),
-                                fieldWithPath("customerNo").type(JsonFieldType.NUMBER).description("상품 번호")
+                                fieldWithPath("customerNo").type(JsonFieldType.NUMBER).description("거래처 번호")
                                         .attributes(field("constraints", "NOT NULL")),
-                                fieldWithPath("instructionDate").type(JsonFieldType.STRING).description("지시 일")
+                                fieldWithPath("instructionDate").type(JsonFieldType.STRING).description("지시일")
                                         .attributes(field("constraints", "YYYY-MM-DD")),
-                                fieldWithPath("expirationDate").type(JsonFieldType.STRING).description("마감 일")
+                                fieldWithPath("expirationDate").type(JsonFieldType.STRING).description("만료일")
                                         .attributes(field("constraints", "YYYY-MM-DD"))
                         )
                 )).andReturn();
@@ -205,7 +216,7 @@ class InstructionControllerTest {
     @Test
     @Transactional
     void removeInstruction() throws Exception {
-        mockMvc.perform(delete("/instructions/{instructionNo}", "WO2311000002")
+        mockMvc.perform(delete("/instructions/{instructionNo}", "WO2312000002")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
                 .andExpect(status().isNoContent())
