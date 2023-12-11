@@ -29,7 +29,7 @@ public class ProductController {
   private final ProductService productService;
 
   @GetMapping("/code/{productCode}")
-  public ResponseEntity<?> duplicateCheckCustomerCode(@PathVariable String productCode){
+  public ResponseEntity<?> duplicateCheckProductCode(@PathVariable String productCode){
     return ResponseEntity.ok().body(!productService.ProductCodeCheck(productCode));
   }
 
