@@ -67,7 +67,7 @@ public class SseController {
 
         @KafkaListener(topics = "blooming-events", groupId = "my-group")
         public void consumerCRUDEvent(String event) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd/HH:mm");
             String formattedDate = LocalDateTime.now().format(formatter);
             emitters.forEach((clientId, emitter) -> {
                 try {
@@ -108,7 +108,7 @@ public class SseController {
 
         private void saveMessageToDatabase(String sendId, String sendName, String targetId, String targetName, String message) {
             LocalDateTime currentDateTime = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
             InsertMessageDto userMessage = new InsertMessageDto(
                     sendId, sendName, targetId, targetName, message, currentDateTime.format(formatter));
             messageRepository.save(userMessage);
