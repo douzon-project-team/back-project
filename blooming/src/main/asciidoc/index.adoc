@@ -24,18 +24,18 @@ operation::employee-auth-controller-test/update-employee[snippets='http-request,
 
 === Employee No 중복 체크
 
-operation::employee-auth-controller-test/no-check[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+operation::employee-auth-controller-test/no-check[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === Employee Id 중복 체크
 
-operation::employee-auth-controller-test/id-check[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+operation::employee-auth-controller-test/id-check[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 [[Employee]]
 == Employee API
 
 === Employee 로그인
 
-operation::employee-controller-test/login[snippets='http-request,http-response']
+operation::employee-controller-test/login[snippets='http-request,request-fields,http-response,response-fields']
 
 === Employee 조회
 
@@ -48,7 +48,7 @@ operation::/employee-controller-test/find-employee-list[snippets='http-request,r
 
 === Employee 수정
 
-operation::employee-controller-test/update-employee[snippets='http-request,request-headers,path-parameters,http-response']
+operation::employee-controller-test/update-employee[snippets='http-request,request-headers,request-fields,path-parameters,http-response']
 
 === 이미지 조회
 
@@ -64,6 +64,10 @@ operation::employee-controller-test/delete-image[snippets='http-request,request-
 
 [[Product]]
 == Product API
+
+=== Product Code 중복 체크
+
+operation::product-controller-test/duplicate-check-product-code[snippets='http-request,request-headers,path-parameters,http-response']
 
 === Product 추가
 
@@ -88,36 +92,33 @@ operation::/product-controller-test/remove-product[snippets='http-request,reques
 [[Customer]]
 == Customer API
 
+=== Customer Code 중복 체크
+
+operation::customer-controller-test/duplicate-check-customer-code[snippets='http-request,request-headers,path-parameters,http-response']
+
+
 === Customer 추가
 
-operation::customer-controller-test/insert-customer[snippets='http-request,http-response']
+operation::customer-controller-test/insert-customer[snippets='http-request,request-headers,request-fields,http-response']
 
 === Customer 조회
 
-operation::customer-controller-test/get-customer[snippets='http-request,path-parameters,http-response,response-fields']
+operation::customer-controller-test/get-customer[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === CustomerList 조회
 
-operation::customer-controller-test/get-customers[snippets='http-request,http-response,response-fields']
+operation::customer-controller-test/get-customers[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === Customer 수정
 
-operation::customer-controller-test/update-customer[snippets='http-request,path-parameters,http-response']
+operation::customer-controller-test/update-customer[snippets='http-request,request-headers,request-fields,path-parameters,http-response']
 
 === Customer 삭제
 
-operation::customer-controller-test/delete-customer[snippets='http-request,path-parameters,http-response']
+operation::customer-controller-test/delete-customer[snippets='http-request,request-headers,path-parameters,http-response']
 
 [[Instruction]]
 == Instruction API
-
-=== Instruction 추가
-
-operation::instruction-controller-test/insert-instruction[snippets='http-request,http-response']
-
-=== Instruction 조회
-
-operation::instruction-controller-test/get-instruction[snippets='http-request,path-parameters,http-response,response-fields']
 
 .ProgressStatus
 [cols=2*,options=header]
@@ -135,52 +136,109 @@ operation::instruction-controller-test/get-instruction[snippets='http-request,pa
 |완료
 |===
 
+=== Instruction 추가
+
+operation::instruction-controller-test/add-instruction[snippets='http-request,request-headers,request-fields,http-response']
+
+=== Instruction 조회
+
+operation::instruction-controller-test/get-instruction[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
 === InstructionList 조회
 
-operation::instruction-controller-test/get-instructions[snippets='http-request,http-response,response-fields']
+operation::instruction-controller-test/get-instructions[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === Instruction 수정
 
-operation::instruction-controller-test/update-instruction[snippets='http-request,path-parameters,http-response']
+operation::instruction-controller-test/update-instruction[snippets='http-request,request-headers,request-fields,path-parameters,http-response']
 
 === Instruction 삭제
 
-operation::instruction-controller-test/delete-instruction[snippets='http-request,path-parameters,http-response']
+operation::instruction-controller-test/remove-instruction[snippets='http-request,request-headers,path-parameters,http-response']
+
+[[Product-Instruction]]
+== Product-Instruction API
+
+=== Product-Instruction 추가
+
+operation::product-instruction-controller-test/add-product-instruction[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+
+=== Product-Instruction 수정
+
+operation::product-instruction-controller-test/update-product-instruction[snippets='http-request,request-headers,path-parameters,request-fields,http-response']
+
+=== Product-Instruction 삭제
+
+operation::product-instruction-controller-test/delete-product-instruction[snippets='http-request,request-headers,path-parameters,http-response']
 
 [[Delivery]]
 == Delivery API
 
 === Delivery 추가
 
-operation::delivery-controller-test/add-delivery[snippets='http-request,http-response']
+operation::delivery-controller-test/add-delivery[snippets='http-request,request-headers,request-fields,http-response']
 
 === Delivery 조회
 
-operation::delivery-controller-test/get-delivery[snippets='http-request,path-parameters,http-response,response-fields']
+operation::delivery-controller-test/get-delivery[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 === DeliveryList 조회
 
-operation::delivery-controller-test/get-deliveries[snippets='http-request,http-response,response-fields']
+operation::delivery-controller-test/get-deliveries[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 === Delivery 수정
 
-operation::delivery-controller-test/update-delivery[snippets='http-request,path-parameters,http-response']
+operation::delivery-controller-test/update-delivery[snippets='http-request,request-headers,request-fields,path-parameters,http-response']
 
 === Delivery 삭제
 
-operation::delivery-controller-test/delete-delivery[snippets='http-request,path-parameters,http-response']
+operation::delivery-controller-test/delete-delivery[snippets='http-request,request-headers,path-parameters,http-response']
 
 [[Delivery-Instruction]]
 == Delivery-Instruction API
 
 === Delivery-Instruction 추가
 
-operation::delivery-instruction-controller-test/add-delivery-instruction-test[snippets='http-request,path-parameters,http-response']
+operation::delivery-instruction-controller-test/add-delivery-instruction-test[snippets='http-request,request-headers,request-fields,path-parameters,http-response']
 
 === Delivery-Instruction 수정
 
-operation::delivery-instruction-controller-test/update-delivery-instruction-test[snippets='http-request,path-parameters,http-response']
+operation::delivery-instruction-controller-test/update-delivery-instruction-test[snippets='http-request,request-headers,request-fields,path-parameters,http-response']
 
 === Delivery-Instruction 삭제
 
-operation::delivery-instruction-controller-test/delete-delivery-instruction-test[snippets='http-request,path-parameters,http-response']
+operation::delivery-instruction-controller-test/delete-delivery-instruction-test[snippets='http-request,request-headers,path-parameters,http-response']
+
+[[Main]]
+== Main API
+
+=== Main Page 내 대시보드
+
+operation::main-controller-test/get-main-page-data[snippets='http-request,request-headers,http-response,response-fields']
+
+=== Main Page 내 Bar-Graph
+
+operation::main-controller-test/get-bar-graph[snippets='http-request,request-headers,http-response,response-fields']
+
+=== Main Page 내 Circle-Graph
+
+operation::main-controller-test/get-circle-graph[snippets='http-request,request-headers,http-response,response-fields']
+
+[[Todo]]
+== Todo API
+
+=== Todo 조회
+
+operation::todo-controller-test/get-todo[snippets='http-request,request-headers,http-response,response-fields']
+
+=== TodoList 조회
+
+operation::todo-controller-test/get-todo-list[snippets='http-request,request-headers,http-response,response-fields']
+
+=== Todo 추가
+
+operation::todo-controller-test/add-todo[snippets='http-request,request-headers,request-body,http-response']
+
+=== Todo 삭제
+
+operation::todo-controller-test/delete-todo[snippets='http-request,request-headers,path-parameters,http-response']
