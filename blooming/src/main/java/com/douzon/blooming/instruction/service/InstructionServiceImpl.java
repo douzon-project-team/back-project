@@ -7,9 +7,8 @@ import com.douzon.blooming.instruction.dto.request.RequestInstructionDto;
 import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ResponseInstructionDto;
-import com.douzon.blooming.instruction.dto.response.ResponseMyInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ResponseMyInstructionListDto;
-import com.douzon.blooming.instruction.exception.NotFoundInstructionException;
+import com.douzon.blooming.instruction.exception.InstructionException;
 import com.douzon.blooming.instruction.repo.InstructionRepository;
 import com.douzon.blooming.product_instruction.dto.response.ResponseProductInstructionDto;
 import com.douzon.blooming.product_instruction.repo.ProductInstructionRepository;
@@ -40,7 +39,7 @@ public class InstructionServiceImpl implements InstructionService {
   public ResponseInstructionDto findInstruction(String instructionNo) {
     ResponseInstructionDto responseInstructionDto = instructionRepository.findInstruction(
             instructionNo)
-        .orElseThrow(NotFoundInstructionException::new);
+        .orElseThrow(InstructionException::new);
     List<ResponseProductInstructionDto> list = productInstructionRepository.findProductInstructionByInstructionNo(
         responseInstructionDto.getInstructionNo());
     responseInstructionDto.setProducts(list);
@@ -66,14 +65,14 @@ public class InstructionServiceImpl implements InstructionService {
   public void updateInstruction(UpdateInstructionDto dto, String instructionNo) {
     dto.setInstructionNo(instructionNo);
     if (instructionRepository.updateInstruction(dto) < 0) {
-      throw new NotFoundInstructionException();
+      throw new InstructionException();
     }
   }
 
   @Override
   public void deleteInstruction(String instructionNo) {
     if (instructionRepository.deleteInstruction(instructionNo) < 0) {
-      throw new NotFoundInstructionException();
+      throw new InstructionException();
     }
   }
 
