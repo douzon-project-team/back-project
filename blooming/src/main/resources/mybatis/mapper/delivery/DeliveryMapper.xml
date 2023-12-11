@@ -235,6 +235,7 @@
     DELETE
     FROM project.delivery
     WHERE delivery_no = #{deliveryNo}
+    AND progress_status = 0
   </delete>
 
   <update id="changeStatus" parameterType="java.lang.String">
