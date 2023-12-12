@@ -2,6 +2,6 @@ package com.douzon.blooming.delivery.exception;
 
 public class NotFoundDeliveryException extends RuntimeException{
     public NotFoundDeliveryException() {
-        super("Delivery not found");
+        super("해당 출고를 찾을수 없습니다.");
     }
 }
