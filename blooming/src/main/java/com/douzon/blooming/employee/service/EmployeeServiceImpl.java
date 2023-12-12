@@ -7,6 +7,7 @@ import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
 import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.response.EmployeeListDto;
+import com.douzon.blooming.employee.dto.response.FindEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
 import com.douzon.blooming.employee.exception.NotFoundEmployeeException;
 import com.douzon.blooming.employee.exception.PasswordDoesNotMatchException;
@@ -87,10 +88,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
   @Override
   public Long findEmployeeNoByDto(LoginEmployeeDto loginEmployeeDto) {
-    Long employeeNo = employeeRepository.findEmployeeNoByDto(loginEmployeeDto);
-    if (employeeNo == 0) {
-      throw new com.douzon.blooming.auth.exception.NotFoundEmployeeException();
+    FindEmployeeDto dto = employeeRepository.findEmployeeNoByDto(
+        loginEmployeeDto.getId());
+    if(dto == null || !passwordEncoder.matches(loginEmployeeDto.getPassword(), dto.getPassword())) {
+      throw new NotFoundEmployeeException("아이디 또는 비밀번호가 틀렸습니다.");
     }
-    return employeeNo;
+    return dto.getEmployeeNo();
   }
 }

@@ -99,11 +99,10 @@
     WHERE employee_no = #{employeeNo}
   </select>
 
-  <select id="findEmployeeNoByDto" resultType="java.lang.Long">
-    SELECT employee_no
+  <select id="findEmployeeNoByDto" resultType="com.douzon.blooming.employee.dto.response.FindEmployeeDto">
+    SELECT employee_no, password
     FROM project.employee
-    WHERE id = #{dto.id}
-      AND password = #{dto.password}
+    WHERE id = #{id}
   </select>
 
 

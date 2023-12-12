@@ -3,10 +3,10 @@ package com.douzon.blooming.employee.repo;
 import com.douzon.blooming.employee.dto.request.AuthUpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
-import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.response.EmployeeDto;
 import com.douzon.blooming.employee.dto.response.EmployeeListDto;
+import com.douzon.blooming.employee.dto.response.FindEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +23,7 @@ public interface EmployeeRepository {
   int getEmployeesCountBySearchEmployeeDto(EmployeeSearchDto dto);
 
   List<EmployeeListDto> findAllByEmployeeSearchDto(
-      @Param("employeeSearchDto") EmployeeSearchDto employeeSearchDto,@Param("start") int start);
+      @Param("employeeSearchDto") EmployeeSearchDto employeeSearchDto, @Param("start") int start);
 
   void updateEmployeeByUpdateEmployeeDto(@Param("dto") UpdateEmployeeDto updateEmployeeDto,
       @Param("employeeNo") Long employeeNo);
@@ -42,7 +42,7 @@ public interface EmployeeRepository {
 
   boolean existByEmployeeNo(Long employeeNo);
 
-  Long findEmployeeNoByDto(@Param("dto") LoginEmployeeDto loginEmployeeDto);
+  FindEmployeeDto findEmployeeNoByDto(@Param("id") String id);
 
   void updateEmployeeImage(@Param("imageUrl") String imageUrl,
       @Param("employeeNo") Long employeeNo);

@@ -12,4 +12,8 @@ public class RequestReissueTokenDto {
 
   private String refreshToken;
   private Long employeeNo;
+
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
+  }
 }

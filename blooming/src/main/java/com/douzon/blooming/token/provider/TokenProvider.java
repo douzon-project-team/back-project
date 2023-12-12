@@ -42,11 +42,6 @@ public class TokenProvider {
   // 인증을 성공하면 AbstractUserDetailsAuthenticationProvider 에서 createSuccessAuthication 메서드를 통해 principal 에 userDetails를 넣어줌
   // credential 은 protect 라 널임
 
-  /**
-   * Access 토큰 생성
-   * @param authentication
-   * @return
-   */
   public String createAccessToken(Authentication authentication) {
     EmployeeDetails principal = (EmployeeDetails) authentication.getPrincipal();
     String authorities = principal.getAuthorities().stream()
@@ -62,11 +57,6 @@ public class TokenProvider {
         .compact();
   }
 
-  /**
-   * refresh 토큰 생성
-   * @param authentication
-   * @return
-   */
   public String createRefreshToken(Authentication authentication) {
     return Jwts.builder()
         .subject(authentication.getName())
@@ -94,11 +84,6 @@ public class TokenProvider {
     return new UsernamePasswordAuthenticationToken(principal, "", authorities);
   }
 
-  /**
-   * 토큰 검증
-   * @param token
-   * @return
-   */
   public boolean validateToken(String token) {
     try {
       Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);
