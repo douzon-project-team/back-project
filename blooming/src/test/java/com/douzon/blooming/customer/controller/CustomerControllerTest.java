@@ -1,14 +1,12 @@
 package com.douzon.blooming.customer.controller;
 
 import com.douzon.blooming.auth.dto.response.TokenDto;
-import com.douzon.blooming.customer.dto.request.CustomerSearchDto;
 import com.douzon.blooming.customer.dto.request.RequestCustomerDto;
 import com.douzon.blooming.customer.dto.request.UpdateCustomerDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
 import com.douzon.blooming.token.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +55,7 @@ class CustomerControllerTest {
                 .alwaysDo(restDocs)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .build();
-        tokenDto = tokenService.createToken("admin", "1234", 200001L);
+        tokenDto = tokenService.getToken("admin", "1234", 200001L);
     }
 
     @Test

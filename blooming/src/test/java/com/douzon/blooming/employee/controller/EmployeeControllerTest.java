@@ -72,7 +72,7 @@ class EmployeeControllerTest {
         .addFilters(new CharacterEncodingFilter("UTF-8", true))
         .addFilters(new JwtFilter(tokenProvider))
         .build();
-    tokenDto = tokenService.createToken("admin", "1234", 200001L);
+    tokenDto = tokenService.getToken("admin", "1234", 200001L);
   }
 
   @Test

@@ -69,7 +69,7 @@ class ProductControllerTest {
         .addFilters(new CharacterEncodingFilter("UTF-8", true))
         .build();
 
-    tokenDto = tokenService.createToken("admin", "1234", 200001L);
+    tokenDto = tokenService.getToken("admin", "1234", 200001L);
   }
 
   @Test
