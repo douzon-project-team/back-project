@@ -22,22 +22,18 @@ public class WebConfig implements WebMvcConfigurer {
   private final EmployeeLogInterceptor employeeLogInterceptor;
   private final  CustomerLogInterceptor customerLogInterceptor;
 
-  private final EmployeeCheckInterceptor employeeCheckInterceptor;
-
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-//    registry.addInterceptor(productLogInterceptor)
-//        .addPathPatterns("/products/**", "/products");
-//    registry.addInterceptor(customerLogInterceptor)
-//            .addPathPatterns("/customers/**", "/customers");
-//    registry.addInterceptor(deliveryLogInterceptor)
-//        .addPathPatterns("/deliveries/**", "/deliveries");
-//    registry.addInterceptor(instructionLogInterceptor)
-//        .addPathPatterns("/instructions/**", "/instructions");
-//    registry.addInterceptor(employeeLogInterceptor)
-//        .addPathPatterns("/employees/**", "/employees")
-//        .excludePathPatterns("/employees/login", "/employees/logout");
-//    registry.addInterceptor(employeeCheckInterceptor)
-//        .addPathPatterns("/employees/**");
+    registry.addInterceptor(productLogInterceptor)
+        .addPathPatterns("/products/**", "/products");
+    registry.addInterceptor(customerLogInterceptor)
+            .addPathPatterns("/customers/**", "/customers");
+    registry.addInterceptor(deliveryLogInterceptor)
+        .addPathPatterns("/deliveries/**", "/deliveries");
+    registry.addInterceptor(instructionLogInterceptor)
+        .addPathPatterns("/instructions/**", "/instructions");
+    registry.addInterceptor(employeeLogInterceptor)
+        .addPathPatterns("/employees/**", "/employees")
+        .excludePathPatterns("/employees/login", "/employees/logout");
   }
 }
