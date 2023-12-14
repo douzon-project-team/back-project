@@ -20,33 +20,24 @@ public class WebConfig implements WebMvcConfigurer {
   private final DeliveryLogInterceptor deliveryLogInterceptor;
   private final InstructionLogInterceptor instructionLogInterceptor;
   private final EmployeeLogInterceptor employeeLogInterceptor;
-  private final CustomerLogInterceptor customerLogInterceptor;
+  private final  CustomerLogInterceptor customerLogInterceptor;
 
   private final EmployeeCheckInterceptor employeeCheckInterceptor;
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(productLogInterceptor)
-        .addPathPatterns("/products/**", "/products");
-    registry.addInterceptor(customerLogInterceptor)
-            .addPathPatterns("/customers/**", "/customers");
-    registry.addInterceptor(deliveryLogInterceptor)
-        .addPathPatterns("/deliveries/**", "/deliveries");
-    registry.addInterceptor(instructionLogInterceptor)
-        .addPathPatterns("/instructions/**", "/instructions");
-    registry.addInterceptor(employeeLogInterceptor)
-        .addPathPatterns("/employees/**", "/employees")
-        .excludePathPatterns("/employees/login", "/employees/logout");
+//    registry.addInterceptor(productLogInterceptor)
+//        .addPathPatterns("/products/**", "/products");
+//    registry.addInterceptor(customerLogInterceptor)
+//            .addPathPatterns("/customers/**", "/customers");
+//    registry.addInterceptor(deliveryLogInterceptor)
+//        .addPathPatterns("/deliveries/**", "/deliveries");
+//    registry.addInterceptor(instructionLogInterceptor)
+//        .addPathPatterns("/instructions/**", "/instructions");
+//    registry.addInterceptor(employeeLogInterceptor)
+//        .addPathPatterns("/employees/**", "/employees")
+//        .excludePathPatterns("/employees/login", "/employees/logout");
 //    registry.addInterceptor(employeeCheckInterceptor)
 //        .addPathPatterns("/employees/**");
-  }
-
-  @Override
-  public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/sse/**")
-            .allowedOrigins("http://localhost:3000")
-            .allowedMethods("GET", "POST", "PUT", "DELETE")
-            .allowCredentials(true)
-            .maxAge(3600);
   }
 }

@@ -43,7 +43,7 @@ public class TodoServiceImpl implements TodoService {
 
   @Override
   public void updateTodoCheck(Long todoNo) {
-    if (todoRepository.updateTodoCheckByTodoNo(todoNo) <= 0) {
+    if (todoRepository.updateTodoCheckByTodoNoAndEmployeeNo(todoNo, getEmployeeNo()) <= 0) {
       throw new NotFoundTodoException();
     }
   }
