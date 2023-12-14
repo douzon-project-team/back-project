@@ -42,8 +42,6 @@ public class TokenService {
     if (token.getEmployeeNo().equals(employeeNo)) {
       UserDetails userDetails = userDetailsService.loadUserByUsername(dto.getId());
       UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());;
-      System.out.println(userDetails.getPassword());
-      System.out.println(userDetails.getUsername());
       return tokenProvider.createAccessToken(authenticationToken);
     }
     throw new NotFoundRefreshTokenException();
