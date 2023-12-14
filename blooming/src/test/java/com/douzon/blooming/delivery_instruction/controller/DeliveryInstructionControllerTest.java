@@ -17,7 +17,6 @@ import com.douzon.blooming.auth.dto.response.TokenDto;
 import com.douzon.blooming.delivery_instruction.dto.request.InsertDeliveryInstructionDto;
 import com.douzon.blooming.delivery_instruction.dto.request.InsertDeliveryInstructionProductDto;
 import com.douzon.blooming.delivery_instruction.dto.request.UpdateInstructionProductDto;
-import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
 import com.douzon.blooming.restdocs.RestDocsConfig;
 import com.douzon.blooming.token.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,7 +64,7 @@ public class DeliveryInstructionControllerTest {
             .alwaysDo(restDocs)
             .addFilters(new CharacterEncodingFilter("UTF-8", true))
             .build();
-    tokenDto = tokenService.createToken("admin", "1234", 200001L);
+    tokenDto = tokenService.getToken("admin", "1234", 200001L);
   }
 
   @Test

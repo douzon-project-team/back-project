@@ -30,4 +30,7 @@ public interface TodoRepository {
         + "FROM project.todo "
         + "WHERE employee_no = #{employeeNo} AND todo_no = #{todoNo}")
   Optional<ResponseTodoDto> findByTodoNoAndEmployeeNo(@Param("todoNo") Long todoNo, @Param("employeeNo") Long employeeNo);
+
+  @Select("UPDATE project.todo SET checked = 1 WHERE todo_no = #{todoNo} AND employee_no = #{employeeNo}")
+  int updateTodoCheckByTodoNoAndEmployeeNo(@Param("todoNo") Long todoNo, @Param("employeeNo") Long employeeNo);
 }

@@ -1,4 +1,4 @@
-package com.douzon.blooming.token.dto.request;
+package com.douzon.blooming.employee.dto.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,12 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class RequestReissueTokenDto {
-
-  private String refreshToken;
+public class FindEmployeeDto {
   private Long employeeNo;
-
-  public void setRefreshToken(String refreshToken) {
-    this.refreshToken = refreshToken;
-  }
+  private String password;
 }

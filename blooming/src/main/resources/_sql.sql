@@ -7,7 +7,7 @@ CREATE TABLE `employee`
 (
     `employee_no` BIGINT      NOT NULL PRIMARY KEY,
     `id`          VARCHAR(20) NOT NULL UNIQUE,
-    `password`    VARCHAR(20) NOT NULL,
+    `password`    TEXT NOT NULL,
     `name`        VARCHAR(30) NOT NULL,
     `img`         TEXT        NULL,
     `role`        TINYINT(1)  NOT NULL DEFAULT 1,
@@ -390,27 +390,27 @@ BEGIN
     END IF;
 END;
 DELIMITER ;
-INSERT INTO `employee` (employee_no, id, password, name, img, role, tel, email)
-VALUES (200001, 'admin', '1234', '관리자', '4bce5389-8191-46f8-ad91-a5ee197ee837.png', 0,
-        '010-1111-2222', 'admin@admin.com'),
-       (200002, 'm1', '1234', '박상웅', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
-        '010-1111-2222', 'member@member.com'),
-       (200003, 'm2', '1234', '송재근', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
-        '010-1111-2222', 'member@member.com'),
-       (200004, 'm3', '1234', '윤찬웅', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
-        '010-1111-2222', 'member@member.com'),
-       (200005, 'm4', '1234', '오수민', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
-        '010-1111-2222', 'member@member.com'),
-       (200006, 'm5', '1234', '김철수', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
-        '010-1111-2222', 'member@member.com'),
-       (200007, 'm6', '1234', '박한나', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
-        '010-1111-2222', 'member@member.com'),
-       (200008, 'm7', '1234', '김지철', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
-        '010-1111-2222', 'member@member.com'),
-       (200009, 'm9', '1234', '한지민', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
-        '010-1111-2222', 'member@member.com'),
-       (200010, 'm10', '1234', '이지훈', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
-        '010-1111-2222', 'member@member.com');
+# INSERT INTO `employee` (employee_no, id, password, name, img, role, tel, email)
+# VALUES (200001, 'admin', '1234', '관리자', '4bce5389-8191-46f8-ad91-a5ee197ee837.png', 0,
+#         '010-1111-2222', 'admin@admin.com'),
+#        (200002, 'm1', '1234', '박상웅', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
+#         '010-1111-2222', 'member@member.com'),
+#        (200003, 'm2', '1234', '송재근', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
+#         '010-1111-2222', 'member@member.com'),
+#        (200004, 'm3', '1234', '윤찬웅', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
+#         '010-1111-2222', 'member@member.com'),
+#        (200005, 'm4', '1234', '오수민', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
+#         '010-1111-2222', 'member@member.com'),
+#        (200006, 'm5', '1234', '김철수', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
+#         '010-1111-2222', 'member@member.com'),
+#        (200007, 'm6', '1234', '박한나', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
+#         '010-1111-2222', 'member@member.com'),
+#        (200008, 'm7', '1234', '김지철', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
+#         '010-1111-2222', 'member@member.com'),
+#        (200009, 'm9', '1234', '한지민', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
+#         '010-1111-2222', 'member@member.com'),
+#        (200010, 'm10', '1234', '이지훈', '4287e7f7-17a8-4710-b32f-d21255ea53e2.png', 1,
+#         '010-1111-2222', 'member@member.com');
 
 INSERT
 INTO customer(customer_no, customer_code, customer_name, customer_tel, ceo, sector)

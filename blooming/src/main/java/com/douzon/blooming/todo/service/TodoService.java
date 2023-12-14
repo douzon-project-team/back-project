@@ -13,4 +13,6 @@ public interface TodoService {
   List<ResponseTodoDto> getTodoList();
 
   ResponseTodoDto getTodo(Long todoNo);
+
+  void updateTodoCheck(Long todoNo);
 }

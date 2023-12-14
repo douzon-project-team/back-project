@@ -49,7 +49,7 @@ public class ProjectAdvice {
       NotFoundProductInstructionException.class,
   })
   public ResponseEntity<String> notFoundError(Exception e) {
-    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    return ResponseEntity.badRequest().body(e.getMessage());
   }
 
   @ExceptionHandler({
@@ -60,7 +60,8 @@ public class ProjectAdvice {
       IllegalArgumentException.class,
       PasswordDoesNotMatchException.class,
       UnsupportedProductStatusException.class,
-      ImageUploadException.class
+      ImageUploadException.class,
+      NotFoundRefreshTokenException.class
   })
   public ResponseEntity<String> requestError(Exception e) {
     return ResponseEntity.badRequest().body(e.getMessage());
@@ -71,12 +72,5 @@ public class ProjectAdvice {
   })
   public ResponseEntity<String> requestError(BindException e) {
     return ResponseEntity.badRequest().body(e.getFieldErrors().toString());
-  }
-
-  @ExceptionHandler({
-      NotFoundRefreshTokenException.class
-  })
-  public ResponseEntity<String> refreshTokenError(NotFoundRefreshTokenException e) {
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
   }
 }

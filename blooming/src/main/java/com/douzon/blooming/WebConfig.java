@@ -20,9 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
   private final DeliveryLogInterceptor deliveryLogInterceptor;
   private final InstructionLogInterceptor instructionLogInterceptor;
   private final EmployeeLogInterceptor employeeLogInterceptor;
-  private final CustomerLogInterceptor customerLogInterceptor;
-
-  private final EmployeeCheckInterceptor employeeCheckInterceptor;
+  private final  CustomerLogInterceptor customerLogInterceptor;
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
@@ -37,16 +35,5 @@ public class WebConfig implements WebMvcConfigurer {
     registry.addInterceptor(employeeLogInterceptor)
         .addPathPatterns("/employees/**", "/employees")
         .excludePathPatterns("/employees/login", "/employees/logout");
-//    registry.addInterceptor(employeeCheckInterceptor)
-//        .addPathPatterns("/employees/**");
-  }
-
-  @Override
-  public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/sse/**")
-            .allowedOrigins("http://localhost:3000")
-            .allowedMethods("GET", "POST", "PUT", "DELETE")
-            .allowCredentials(true)
-            .maxAge(3600);
   }
 }

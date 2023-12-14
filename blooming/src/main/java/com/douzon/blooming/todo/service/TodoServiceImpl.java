@@ -41,6 +41,13 @@ public class TodoServiceImpl implements TodoService {
         .orElseThrow(NotFoundTodoException::new);
   }
 
+  @Override
+  public void updateTodoCheck(Long todoNo) {
+    if (todoRepository.updateTodoCheckByTodoNoAndEmployeeNo(todoNo, getEmployeeNo()) <= 0) {
+      throw new NotFoundTodoException();
+    }
+  }
+
   private Long getEmployeeNo() {
     EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
