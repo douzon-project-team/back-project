@@ -43,7 +43,6 @@ public class ProjectAdvice {
       NotFoundEmployeeException.class,
       NotFoundCustomerException.class,
       DeliveryException.class,
-      com.douzon.blooming.auth.exception.NotFoundEmployeeException.class,
       NotFoundImageException.class,
       NotFoundProductException.class,
       InstructionException.class,

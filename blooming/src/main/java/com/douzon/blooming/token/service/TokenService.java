@@ -1,8 +1,8 @@
 package com.douzon.blooming.token.service;
 
 import com.douzon.blooming.auth.dto.response.TokenDto;
-import com.douzon.blooming.auth.exception.NotFoundEmployeeException;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
+import com.douzon.blooming.employee.exception.NotFoundEmployeeException;
 import com.douzon.blooming.employee.repo.EmployeeRepository;
 import com.douzon.blooming.token.RefreshToken;
 import com.douzon.blooming.token.exception.NotFoundRefreshTokenException;

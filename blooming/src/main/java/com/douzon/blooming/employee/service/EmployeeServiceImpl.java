@@ -89,7 +89,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   public Long findEmployeeNoByDto(LoginEmployeeDto loginEmployeeDto) {
     Long employeeNo = employeeRepository.findEmployeeNoByDto(loginEmployeeDto);
     if (employeeNo == 0) {
-      throw new com.douzon.blooming.auth.exception.NotFoundEmployeeException();
+      throw new NotFoundEmployeeException();
     }
     return employeeNo;
   }
