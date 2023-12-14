@@ -25,12 +25,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import static com.douzon.blooming.restdocs.RestDocsConfig.field;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(RestDocumentationExtension.class)
@@ -68,7 +70,39 @@ class CustomerControllerTest {
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
+                        requestFields(
+                                fieldWithPath("customerCode").type(JsonFieldType.STRING).description("거래처 번호")
+                                        .attributes(field("constraints", "A-Z영어(1) + 1-9무작위(4)")),
+                                fieldWithPath("customerName").type(JsonFieldType.STRING).description("거래처 명칭")
+                                        .attributes(field("constraints", "UNIQUE")),
+                                fieldWithPath("customerTel").type(JsonFieldType.STRING).description("거래처 번호")
+                                        .attributes(field("constraints", "11 자리의 숫자")),
+                                fieldWithPath("ceo").type(JsonFieldType.STRING).description("대표자")
+                                        .attributes(field("constraints", "NOT NULL")),
+                                fieldWithPath("sector").type(JsonFieldType.STRING).description("업종")
+                                        .attributes(field("constraints", "NOT NULL"))
+                        )
+                ))
+                .andReturn();
+    }
 
+    @Test
+    void duplicateCheckCustomerCode() throws Exception {
+        mockMvc.perform(get("/customers/code/{customerCode}", "Z0001")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
+                        pathParameters(
+                                parameterWithName("customerCode").description("거래처 코드")
+                                        .attributes(field("constraints", "NOT NULL"))
+                        )
                 ))
                 .andReturn();
     }
@@ -80,6 +114,9 @@ class CustomerControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("customerNo").description("거래처 번호")
                         ),
@@ -98,38 +135,64 @@ class CustomerControllerTest {
     void getCustomers() throws Exception{
         mockMvc.perform(get("/customers/list")
                 .contentType(MediaType.APPLICATION_JSON)
+                        .param("customerCode", "C")
+                        .param("customerName", "스")
+                        .param("sector", "업")
+                        .param("page", "1")
+                        .param("pageSize", "10")
                 .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
                 )
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
-                    responseFields(
-                            subsectionWithPath("list").description("거래처 List"),
-                            subsectionWithPath("list.[].customerNo").type(JsonFieldType.NUMBER).description("거래처 PK"),
-                            subsectionWithPath("list.[].customerCode").type(JsonFieldType.STRING).description("거래처 코드"),
-                            subsectionWithPath("list.[].customerName").type(JsonFieldType.STRING).description("거래처 명칭"),
-                            subsectionWithPath("list.[].customerTel").type(JsonFieldType.STRING).description("연락처"),
-                            subsectionWithPath("list.[].ceo").type(JsonFieldType.STRING).description("대표자"),
-                            subsectionWithPath("list.[].sector").type(JsonFieldType.STRING).description("업종"),
-                            fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
-                            fieldWithPath("hasNextPage").type(JsonFieldType.BOOLEAN).description("다음 페이지 존재 여부"),
-                            fieldWithPath("hasPreviousPage").type(JsonFieldType.BOOLEAN).description("이전 페이지 존재 여부")
-                    )))
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
+                        requestParameters(
+                                parameterWithName("customerCode").description("거래처 코드"),
+                                parameterWithName("customerName").description("거래처 명칭"),
+                                parameterWithName("sector").description("업종"),
+                                parameterWithName("page").description("페이지 번호"),
+                                parameterWithName("pageSize").description("페이지 크기")
+                        ),
+                        responseFields(
+                                subsectionWithPath("list").description("거래처 List"),
+                                subsectionWithPath("list.[].customerNo").type(JsonFieldType.NUMBER).description("거래처 PK"),
+                                subsectionWithPath("list.[].customerCode").type(JsonFieldType.STRING).description("거래처 코드"),
+                                subsectionWithPath("list.[].customerName").type(JsonFieldType.STRING).description("거래처 명칭"),
+                                subsectionWithPath("list.[].customerTel").type(JsonFieldType.STRING).description("연락처"),
+                                subsectionWithPath("list.[].ceo").type(JsonFieldType.STRING).description("대표자"),
+                                subsectionWithPath("list.[].sector").type(JsonFieldType.STRING).description("업종"),
+                                fieldWithPath("currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
+                                fieldWithPath("hasNextPage").type(JsonFieldType.BOOLEAN).description("다음 페이지 존재 여부"),
+                                fieldWithPath("hasPreviousPage").type(JsonFieldType.BOOLEAN).description("이전 페이지 존재 여부")
+                        )))
                 .andReturn();
     }
 
     @Test
     @Transactional
     void updateCustomer() throws Exception{
-        UpdateCustomerDto dto = new UpdateCustomerDto("하나금융지종", "010-7736-6666", "누구여");
-        mockMvc.perform(put("/customers/{customerNo}", 18L)
+        UpdateCustomerDto dto = new UpdateCustomerDto("하나금융지종", "010-7736-6666", "김아무개");
+        mockMvc.perform(put("/customers/{customerNo}", 1L)
                 .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
-                    pathParameters(
-                            parameterWithName("customerNo").description("거래처 번호")
-                    )
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
+                        pathParameters(
+                                parameterWithName("customerNo").description("거래처 번호")
+                        ),
+                        requestFields(
+                                fieldWithPath("customerName").type(JsonFieldType.STRING).description("거래처 명칭")
+                                        .attributes(field("constraints", "UNIQUE")),
+                                fieldWithPath("customerTel").type(JsonFieldType.STRING).description("거래처 번호")
+                                        .attributes(field("constraints", "11 자리의 숫자")),
+                                fieldWithPath("ceo").type(JsonFieldType.STRING).description("대표자")
+                                        .attributes(field("constraints", "NOT NULL"))
+                        )
                 ))
                 .andReturn();
     }
@@ -142,6 +205,9 @@ class CustomerControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
                 .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("customerNo").description("거래처 번호")
                         )

@@ -339,5 +339,6 @@
     DELETE
     FROM project.instruction
     WHERE instruction_no = #{instructionNo}
+    AND progress_status = 0
   </delete>
 </mapper>

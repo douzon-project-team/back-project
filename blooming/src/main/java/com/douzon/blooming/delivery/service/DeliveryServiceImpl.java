@@ -8,14 +8,12 @@ import com.douzon.blooming.delivery.dto.request.RequestDeliveryDto;
 import com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ResponseDeliveryDto;
-import com.douzon.blooming.delivery.dto.response.ResponseMyDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ResponseMyDeliveryListDto;
-import com.douzon.blooming.delivery.exception.NotFoundDeliveryException;
+import com.douzon.blooming.delivery.exception.DeliveryException;
 import com.douzon.blooming.delivery.repo.DeliveryRepository;
 import com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstructionDto;
 import com.douzon.blooming.delivery_instruction.repo.DeliveryInstructionRepository;
 
-import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +42,7 @@ public class DeliveryServiceImpl implements DeliveryService {
   @Override
   public GetDeliveryDto findDelivery(String deliveryNo) {
     GetDeliveryDto getDeliveryDto = deliveryRepository.findDelivery(deliveryNo)
-            .orElseThrow(NotFoundDeliveryException::new);
+            .orElseThrow(DeliveryException::new);
     getDeliveryDto.setInstructions(
             deliveryInstructionRepository.findInstructionsByDeliverNo(deliveryNo));
     return getDeliveryDto;
@@ -74,14 +72,14 @@ public class DeliveryServiceImpl implements DeliveryService {
   @Override
   public void updateDelivery(String deliveryNo, UpdateDeliveryDto dto) {
     if (deliveryRepository.updateDelivery(deliveryNo, dto) <= 0) {
-      throw new NotFoundDeliveryException();
+      throw new DeliveryException();
     }
   }
 
   @Override
   public void removeDelivery(String deliveryNo) {
     if (deliveryRepository.deleteDelivery(deliveryNo) <= 0) {
-      throw new NotFoundDeliveryException();
+      throw new DeliveryException();
     }
   }
 

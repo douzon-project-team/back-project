@@ -4,13 +4,13 @@ import com.douzon.blooming.auth.exception.EmployeePermissionDefinedException;
 import com.douzon.blooming.auth.exception.TokenMissingAuthorizationInfoException;
 import com.douzon.blooming.auth.exception.UnsupportedEmployeeRoleException;
 import com.douzon.blooming.customer.exception.NotFoundCustomerException;
-import com.douzon.blooming.delivery.exception.NotFoundDeliveryException;
+import com.douzon.blooming.delivery.exception.DeliveryException;
 import com.douzon.blooming.employee.exception.NotFoundEmployeeException;
 import com.douzon.blooming.employee.exception.ImageUploadException;
 import com.douzon.blooming.employee.exception.NotFoundImageException;
 import com.douzon.blooming.employee.exception.PasswordDoesNotMatchException;
 import com.douzon.blooming.employee.exception.UnsupportedTargetTypeException;
-import com.douzon.blooming.instruction.exception.NotFoundInstructionException;
+import com.douzon.blooming.instruction.exception.InstructionException;
 import com.douzon.blooming.log.exception.UnsupportedLogTypeException;
 import com.douzon.blooming.product.exception.NotFoundProductException;
 import com.douzon.blooming.product_instruction.exception.NotFoundProductInstructionException;
@@ -42,10 +42,10 @@ public class ProjectAdvice {
   @ExceptionHandler({
       NotFoundEmployeeException.class,
       NotFoundCustomerException.class,
-      NotFoundDeliveryException.class,
+      DeliveryException.class,
       NotFoundImageException.class,
       NotFoundProductException.class,
-      NotFoundInstructionException.class,
+      InstructionException.class,
       NotFoundProductInstructionException.class,
   })
   public ResponseEntity<String> notFoundError(Exception e) {
