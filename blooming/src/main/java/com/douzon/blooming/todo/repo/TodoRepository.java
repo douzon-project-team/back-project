@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface TodoRepository {
@@ -21,7 +22,7 @@ public interface TodoRepository {
         + "WHERE todo_no = #{todoNo} AND employee_no = #{employeeNo}")
   int deleteTodoByNo(@Param("todoNo") Long todoNo, @Param("employeeNo") Long employeeNo);
 
-  @Select("SELECT todo_no, content "
+  @Select("SELECT todo_no, content, checked "
         + "FROM project.todo "
         + "WHERE employee_no = #{employeeNo}")
   List<ResponseTodoDto> findAllByEmployeeNo(Long employeeNo);
@@ -31,6 +32,6 @@ public interface TodoRepository {
         + "WHERE employee_no = #{employeeNo} AND todo_no = #{todoNo}")
   Optional<ResponseTodoDto> findByTodoNoAndEmployeeNo(@Param("todoNo") Long todoNo, @Param("employeeNo") Long employeeNo);
 
-  @Select("UPDATE project.todo SET checked = 1 WHERE todo_no = #{todoNo} AND employee_no = #{employeeNo}")
+  @Update("UPDATE project.todo SET checked = !checked WHERE todo_no = #{todoNo} AND employee_no = #{employeeNo}")
   int updateTodoCheckByTodoNoAndEmployeeNo(@Param("todoNo") Long todoNo, @Param("employeeNo") Long employeeNo);
 }
