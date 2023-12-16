@@ -194,7 +194,7 @@
   </select>
 
   <select id="findMainPageCircleGraphData"
-    resultType="com.douzon.blooming.main.dto.CircleGraphDto">
+    resultType="com.douzon.blooming.main.dto.CircleGraphDeliveryDto">
       <choose>
           <when test="type == 'month'">
               SELECT progress_status AS progress,

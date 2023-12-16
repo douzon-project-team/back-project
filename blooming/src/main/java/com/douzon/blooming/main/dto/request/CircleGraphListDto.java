@@ -1,6 +1,7 @@
 package com.douzon.blooming.main.dto.request;
 
-import com.douzon.blooming.main.dto.CircleGraphDto;
+import com.douzon.blooming.main.dto.CircleGraphDeliveryDto;
+import com.douzon.blooming.main.dto.CircleGraphInstructionDto;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CircleGraphListDto {
 
-  List<CircleGraphDto> instructionData;
-  List<CircleGraphDto> deliveryData;
+  List<CircleGraphInstructionDto> instructionData;
+  List<CircleGraphDeliveryDto> deliveryData;
 }

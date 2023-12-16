@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class CircleGraphDto {
+public class CircleGraphInstructionDto {
   private ProgressStatus progress;
   private Long count;
 }

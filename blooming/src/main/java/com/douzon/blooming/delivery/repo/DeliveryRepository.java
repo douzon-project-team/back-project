@@ -8,7 +8,7 @@ import com.douzon.blooming.delivery.dto.response.GetDeliveryDto;
 import com.douzon.blooming.delivery.dto.response.ResponseMyDeliveryDto;
 import com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstructionDto;
 import com.douzon.blooming.main.dto.BarGraphDto;
-import com.douzon.blooming.main.dto.CircleGraphDto;
+import com.douzon.blooming.main.dto.CircleGraphDeliveryDto;
 import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
@@ -42,5 +42,5 @@ public interface DeliveryRepository {
 
   List<BarGraphDto> findMainPageBarGraphData(String type);
 
-  List<CircleGraphDto> findMainPageCircleGraphData(String type);
+  List<CircleGraphDeliveryDto> findMainPageCircleGraphData(String type);
 }

@@ -4,7 +4,8 @@ import com.douzon.blooming.customer.repo.CustomerRepository;
 import com.douzon.blooming.delivery.repo.DeliveryRepository;
 import com.douzon.blooming.instruction.repo.InstructionRepository;
 import com.douzon.blooming.main.dto.BarGraphDto;
-import com.douzon.blooming.main.dto.CircleGraphDto;
+import com.douzon.blooming.main.dto.CircleGraphDeliveryDto;
+import com.douzon.blooming.main.dto.CircleGraphInstructionDto;
 import com.douzon.blooming.main.dto.CurrentSituation;
 import com.douzon.blooming.main.dto.request.BarGraphListDto;
 import com.douzon.blooming.main.dto.request.CircleGraphListDto;
@@ -43,8 +44,8 @@ public class MainPageServiceImpl implements MainPageService {
 
   @Override
   public CircleGraphListDto getMainPageCircleGraphData(String type) {
-    List<CircleGraphDto> instructionData = instructionRepository.findMainPageCircleGraphData(type);
-    List<CircleGraphDto> deliveryData = deliveryRepository.findMainPageCircleGraphData(type);
+    List<CircleGraphInstructionDto> instructionData = instructionRepository.findMainPageCircleGraphData(type);
+    List<CircleGraphDeliveryDto> deliveryData = deliveryRepository.findMainPageCircleGraphData(type);
 
     return CircleGraphListDto.builder()
         .instructionData(instructionData)
