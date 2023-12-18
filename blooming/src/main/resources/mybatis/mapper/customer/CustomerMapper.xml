@@ -23,19 +23,67 @@
     <select id="getCountCustomers" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM project.customer
-        WHERE customer_code LIKE CONCAT('%', #{dto.customerCode}, '%')
-        AND customer_name LIKE CONCAT('%', #{dto.customerName}, '%')
-        AND sector LIKE CONCAT('%', #{dto.sector}, '%')
+        <where>
+            <choose>
+                <when test="dto.customerName != ''">
+                    MATCH (customer_name) AGAINST(CONCAT(#{dto.customerName},'*') IN BOOLEAN MODE)
+                </when>
+            </choose>
+            <choose>
+                <when test="dto.sector != ''">
+                    <choose>
+                        <when test="dto.customerName == ''">
+                            MATCH (sector) AGAINST(CONCAT(#{dto.sector},'*') IN BOOLEAN MODE)
+                        </when>
+                        <otherwise>
+                            AND MATCH (customer_name) AGAINST(CONCAT(#{dto.sector},'*') IN BOOLEAN MODE)
+                        </otherwise>
+                    </choose>
+                </when>
+            </choose>
+            <choose>
+                <when test="dto.customerName == '' and dto.sector == ''">
+                    customer_code LIKE CONCAT('%', #{dto.customerCode}, '%')
+                </when>
+                <otherwise>
+                    AND customer_code LIKE CONCAT('%', #{dto.customerCode}, '%')
+                </otherwise>
+            </choose>
         AND hide = 0
+        </where>
     </select>
 
     <select id="findCustomers" parameterType="com.douzon.blooming.customer.dto.request.CustomerSearchDto" resultType="com.douzon.blooming.customer.dto.response.ResponseCustomerDto">
         SELECT customer_no, customer_code, customer_name, customer_tel, ceo, sector
         FROM project.customer
-        WHERE customer_code LIKE CONCAT('%', #{dto.customerCode}, '%')
-        AND customer_name LIKE CONCAT('%', #{dto.customerName}, '%')
-        AND sector LIKE CONCAT('%', #{dto.sector}, '%')
-        AND hide = 0
+        <where>
+            <choose>
+                <when test="dto.customerName != ''">
+                    MATCH (customer_name) AGAINST(CONCAT(#{dto.customerName},'*') IN BOOLEAN MODE)
+                </when>
+            </choose>
+            <choose>
+                <when test="dto.sector != ''">
+                    <choose>
+                        <when test="dto.customerName == ''">
+                            MATCH (sector) AGAINST(CONCAT(#{dto.sector},'*') IN BOOLEAN MODE)
+                        </when>
+                        <otherwise>
+                            AND MATCH (customer_name) AGAINST(CONCAT(#{dto.sector},'*') IN BOOLEAN MODE)
+                        </otherwise>
+                    </choose>
+                </when>
+            </choose>
+            <choose>
+                <when test="dto.customerName == '' and dto.sector == ''">
+                    customer_code LIKE CONCAT('%', #{dto.customerCode}, '%')
+                </when>
+                <otherwise>
+                    AND customer_code LIKE CONCAT('%', #{dto.customerCode}, '%')
+                </otherwise>
+            </choose>
+            AND hide = 0
+        </where>
         LIMIT #{start}, #{pageSize}
     </select>
   <select id="findManyTransactionCustomers"

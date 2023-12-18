@@ -37,9 +37,22 @@
     resultType="com.douzon.blooming.product.dto.response.ProductListDto">
     SELECT *
     FROM project.product
-    WHERE product_code LIKE CONCAT('%', #{productSearchDto.productCode}, '%')
-    AND product_name LIKE CONCAT('%', #{productSearchDto.productName}, '%')
-    AND hide = 0
+    <where>
+      <choose>
+        <when test="productSearchDto.productName != ''">
+          MATCH (product_name) AGAINST(CONCAT(#{productSearchDto.productName},'*') IN BOOLEAN MODE)
+        </when>
+      </choose>
+      <choose>
+        <when test="productSearchDto.productName == ''">
+          product_code LIKE CONCAT('%', #{productSearchDto.productCode}, '%')
+        </when>
+        <otherwise>
+          AND product_code LIKE CONCAT('%', #{productSearchDto.productCode}, '%')
+        </otherwise>
+      </choose>
+      AND hide = 0
+    </where>
     <choose>
       <when test='productSearchDto.page == 0'>
         LIMIT #{productSearchDto.pageSize}
@@ -53,9 +66,22 @@
   <select id="getProductsCountBySearchProductDto" resultType="java.lang.Integer">
     SELECT COUNT(*)
     FROM project.product
-    WHERE product_code LIKE CONCAT('%', #{productCode}, '%')
-    AND product_name LIKE CONCAT('%', #{productName}, '%')
-    AND hide = 0
+    <where>
+      <choose>
+        <when test="productSearchDto.productName != ''">
+          MATCH (product_name) AGAINST(CONCAT(#{productSearchDto.productName},'*') IN BOOLEAN MODE)
+        </when>
+      </choose>
+      <choose>
+        <when test="productSearchDto.productName == ''">
+          product_code LIKE CONCAT('%', #{productSearchDto.productCode}, '%')
+        </when>
+        <otherwise>
+          AND product_code LIKE CONCAT('%', #{productSearchDto.productCode}, '%')
+        </otherwise>
+      </choose>
+      AND hide = 0
+    </where>
   </select>
 
   <select id="existByproductCode" resultType="boolean">
