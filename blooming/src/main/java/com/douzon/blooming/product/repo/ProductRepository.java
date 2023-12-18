@@ -25,7 +25,7 @@ public interface ProductRepository {
   List<ProductListDto> findAllBySearchProductDto(
       @Param("productSearchDto") ProductSearchDto productSearchDto, @Param("start") int start);
 
-  int getProductsCountBySearchProductDto(ProductSearchDto productSearchDto);
+  int getProductsCountBySearchProductDto(@Param("productSearchDto") ProductSearchDto productSearchDto);
 
   boolean existByproductCode(String productCode);
 }
