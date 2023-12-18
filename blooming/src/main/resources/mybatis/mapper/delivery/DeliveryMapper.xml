@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.douzon.blooming.delivery.repo.DeliveryRepository">
+
+  <insert id="insertDelivery"
+    parameterType="com.douzon.blooming.delivery.dto.request.RequestDeliveryDto">
+    INSERT INTO project.delivery(employee_no, delivery_date, progress_status)
+    VALUES (#{employeeNo}, #{dto.deliveryDate}, #{status})
+  </insert>
+
+  <select id="getDeliveryNo" resultType="java.lang.String">
+    SELECT delivery_no
+    FROM project.delivery
+    ORDER BY SUBSTRING(delivery_no, 2, 4) DESC, SUBSTRING(delivery_no, 7) DESC
+    LIMIT 1
+  </select>
+
+  <select id="findDelivery" parameterType="java.lang.String"
+    resultType="com.douzon.blooming.delivery.dto.response.GetDeliveryDto">
+    SELECT D.delivery_no     AS delivery_no,
+           E.name            AS employee_name,
+           D.delivery_date   AS delivery_date,
+           D.progress_status AS delivery_status
+    FROM project.delivery D
+           LEFT JOIN project.employee E ON D.employee_no = E.employee_no
+    WHERE D.delivery_no = #{delivery_no}
+  </select>
+
+  <select id="findDeliveries"
+    parameterType="com.douzon.blooming.delivery.dto.request.DeliverySearchDto"
+    resultType="com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstructionDto">
+    SELECT D.delivery_no as delivery_no,
+    E.name as employee_name,
+    D.delivery_date as delivery_date,
+    D.progress_status as delivery_status
+    FROM project.delivery D
+    LEFT JOIN project.employee E ON D.employee_no = E.employee_no
+    <where>
+      <if test="dto.startDate != null or dto.endDate != null">
+        <choose>
+          <when test="dto.startDate != null and dto.endDate == null">
+            <![CDATA[
+                        D.delivery_date >= #{dto.startDate}
+                        ]]>
+          </when>
+          <when test="dto.startDate == null and dto.endDate != null">
+            <![CDATA[
+                        D.delivery_date <= #{dto.endDate}
+                        ]]>
+          </when>
+          <otherwise>
+            <![CDATA[
+                        D.delivery_date BETWEEN #{dto.startDate} AND #{dto.endDate}
+                        ]]>
+          </otherwise>
+        </choose>
+      </if>
+      <if test="dto.employeeName != null">
+        <choose>
+          <when test="dto.startDate == null and dto.endDate == null">
+            E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
+          </when>
+          <otherwise>
+            AND E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
+          </otherwise>
+        </choose>
+      </if>
+      <if test="dto.progressStatus != null">
+        <choose>
+          <when test="dto.startDate == null and dto.endDate == null and dto.employeeName == null">
+            D.progress_status = #{dto.progressStatus}
+          </when>
+          <otherwise>
+            AND D.progress_status = #{dto.progressStatus}
+          </otherwise>
+        </choose>
+      </if>
+    </where>
+    ORDER BY RIGHT(delivery_no,6) DESC
+    LIMIT #{start}, #{pageSize}
+  </select>
+
+  <select id="getCountDeliveries"
+    parameterType="com.douzon.blooming.delivery.dto.request.DeliverySearchDto"
+    resultType="java.lang.Integer">
+    SELECT COUNT(*)
+    FROM project.delivery D
+    LEFT JOIN project.employee E ON D.employee_no = E.employee_no
+    <where>
+      <if test="dto.startDate != null or dto.endDate != null">
+        <choose>
+          <when test="dto.startDate != null and dto.endDate == null">
+            <![CDATA[
+                        D.delivery_date >= #{dto.startDate}
+                        ]]>
+          </when>
+          <when test="dto.startDate == null and dto.endDate != null">
+            <![CDATA[
+                        D.delivery_date <= #{dto.endDate}
+                        ]]>
+          </when>
+          <otherwise>
+            <![CDATA[
+                        D.delivery_date BETWEEN #{dto.startDate} AND #{dto.endDate}
+                        ]]>
+          </otherwise>
+        </choose>
+      </if>
+      <if test="dto.employeeName != null">
+        <choose>
+          <when test="dto.startDate == null and dto.endDate == null">
+            E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
+          </when>
+          <otherwise>
+            AND E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
+          </otherwise>
+        </choose>
+      </if>
+      <if test="dto.progressStatus != null">
+        <choose>
+          <when test="dto.startDate == null and dto.endDate == null and dto.employeeName == null">
+            D.progress_status = #{dto.progressStatus}
+          </when>
+          <otherwise>
+            AND D.progress_status = #{dto.progressStatus}
+          </otherwise>
+        </choose>
+      </if>
+        <if test="dto.deliveryNo == ''">
+            AND delivery_no = #{dto.deliveryNo}
+        </if>
+    </where>
+  </select>
+
+  <select id="findDeliveryCount" resultType="java.lang.Long">
+    SELECT COUNT(*)
+    FROM project.delivery;
+  </select>
+
+  <select id="findThisMonthDeliveryCount" resultType="java.lang.Long">
+    SELECT COUNT(*)
+    FROM project.delivery
+    WHERE YEAR(delivery_date) = YEAR(CURRENT_DATE)
+      AND MONTH(delivery_date) = MONTH(CURRENT_DATE);
+  </select>
+
+  <select id="findMyDelivery"
+    resultType="com.douzon.blooming.delivery.dto.response.ResponseMyDeliveryDto">
+    SELECT *
+    FROM project.delivery
+    WHERE employee_no = #{employeeNo}
+    ORDER BY SUBSTRING(delivery_no, 2, 4) DESC, SUBSTRING(delivery_no, 7) DESC
+    LIMIT 6
+  </select>
+  <select id="findMainPageBarGraphData"
+    resultType="com.douzon.blooming.main.dto.BarGraphDto">
+    <choose>
+      <when test="type == 'month'">
+        SELECT date, COUNT(CASE WHEN delivery_no IS NOT NULL THEN 1 END) as count
+        FROM project.delivery
+        RIGHT JOIN (SELECT DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL t.n - 2 MONTH), '%Y-%m') AS date
+        FROM (
+        SELECT 0 AS n UNION ALL
+        SELECT 1 UNION ALL
+        SELECT 2 UNION ALL
+        SELECT 3 UNION ALL
+        SELECT 4) t) t ON t.date = DATE_FORMAT(delivery_date, '%Y-%m')
+        GROUP BY t.date;
+      </when>
+      <when test="type == 'year'">
+        SELECT date, COUNT(CASE WHEN delivery_no IS NOT NULL THEN 1 END) as count
+        FROM project.delivery
+        RIGHT JOIN (SELECT DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL t.n - 2 YEAR), '%Y') AS date
+        FROM (
+        SELECT 0 AS n UNION ALL
+        SELECT 1 UNION ALL
+        SELECT 2 UNION ALL
+        SELECT 3 UNION ALL
+        SELECT 4 ) t) t ON t.date = DATE_FORMAT(delivery_date, '%Y')
+        GROUP BY t.date;
+      </when>
+      <otherwise>
+        SELECT date, COUNT(CASE WHEN delivery_no IS NOT NULL THEN 1 END) as count
+        FROM project.delivery
+        RIGHT JOIN (SELECT DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL t.n - 2 DAY), '%Y-%m-%d') AS
+        date
+        FROM (
+        SELECT 0 AS n UNION ALL
+        SELECT 1 UNION ALL
+        SELECT 2 UNION ALL
+        SELECT 3 UNION ALL
+        SELECT 4) t) t ON t.date = DATE_FORMAT(delivery_date, '%Y-%m-%d')
+        GROUP BY t.date;
+      </otherwise>
+    </choose>
+  </select>
+
+  <select id="findMainPageCircleGraphData"
+    resultType="com.douzon.blooming.main.dto.CircleGraphDeliveryDto">
+      <choose>
+          <when test="type == 'month'">
+              SELECT progress_status AS progress,
+              COUNT(*) AS count
+              FROM project.delivery
+              WHERE delivery_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
+              AND DATE_ADD(CURDATE(), INTERVAL 2 MONTH)
+              GROUP BY progress_status
+          </when>
+          <when test="type == 'year'">
+              SELECT progress_status AS progress,
+              COUNT(*) AS count
+              FROM project.delivery
+              WHERE delivery_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 3 YEAR)
+              AND DATE_ADD(CURDATE(), INTERVAL 2 YEAR)
+              GROUP BY progress_status
+          </when>
+          <otherwise>
+              SELECT progress_status AS progress,
+              COUNT(*) AS count
+              FROM project.delivery
+              WHERE delivery_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 3 DAY)
+              AND DATE_ADD(CURDATE(), INTERVAL 2 DAY)
+              GROUP BY progress_status
+          </otherwise>
+      </choose>
+  </select>
+
+
+  <update id="updateDelivery"
+    parameterType="com.douzon.blooming.delivery.dto.request.UpdateDeliveryDto">
+    UPDATE project.delivery
+    SET delivery_date = #{dto.deliveryDate}
+    WHERE delivery_no = #{deliveryNo}
+  </update>
+
+  <delete id="deleteDelivery" parameterType="java.lang.String">
+    DELETE
+    FROM project.delivery
+    WHERE delivery_no = #{deliveryNo}
+    AND progress_status = 0
+  </delete>
+
+  <update id="changeStatus" parameterType="java.lang.String">
+    UPDATE project.delivery
+    SET progress_status = !progress_status
+    WHERE delivery_no = #{deliveryNo}
+  </update>
+</mapper>

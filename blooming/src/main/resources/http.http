@@ -1,0 +1,111 @@
+POST http://localhost:8080/products
+Content-Type: application/json;charset=UTF-8
+
+{
+  "productNo": null,
+  "productCode": "TT0002",
+  "designation": "Test Product",
+  "standard": "standard : X",
+  "unit": 10
+}
+
+###
+
+GET http://localhost:8080/products/1
+Content-Type: application/json
+
+
+###
+PUT http://localhost:8080/employees/1
+Content-Type: application/json
+
+{
+  "target": 1,
+  "newValue": "AAA"
+}
+###
+
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "id": "tester",
+  "password": "1234",
+  "name": "tester",
+  "role": 1
+}
+
+### 어드민 로그인
+
+POST http://localhost:8080/employees/login
+Content-Type: application/json
+
+{
+  "id": "admin",
+  "password": "admin"
+}
+
+### 맴버 로그인
+
+POST http://localhost:8080/employees/login
+Content-Type: application/json
+
+{
+  "id": "member",
+  "password": "member"
+}
+
+### 맴버 로그인
+
+PUT http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "id": "member",
+  "password": "member"
+}
+
+### 임폴리 번호 중복 확인
+
+GET http://localhost:8080/auth/employees/no/check
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImVtcGxveWVlTm8iOjIwMDAwMSwiYXV0aCI6IlJPTEVfQURNSU4iLCJleHAiOjE2OTg4MzgwNTd9.S0kj0xeBEpNGxeQGZU_TEsu6MDWwOp2MDlgftfEcfBA
+
+{
+  "employeeNo" : 200001
+}
+
+### 메인페이지
+
+GET http://localhost:8080/main-page
+Content-Type: application/json
+
+### 메인페이지 - 바 그래프 - 일
+
+GET http://localhost:8080/main-page/bar-graph/day
+Content-Type: application/json
+
+### 메인페이지 - 바 그래프 - 달
+
+GET http://localhost:8080/main-page/bar-graph/month
+Content-Type: application/json
+
+### 메인페이지 - 바 그래프 - 년
+
+GET http://localhost:8080/main-page/bar-graph/year
+Content-Type: application/json
+
+### 메인페이지 - 사이클 그래프 - 일
+
+GET http://localhost:8080/main-page/circle-graph/day
+Content-Type: application/json
+
+### 메인페이지 - 사이클 그래프 - 달
+
+GET http://localhost:8080/main-page/circle-graph/month
+Content-Type: application/json
+
+### 메인페이지 - 사이클 그래프 - 년
+
+GET http://localhost:8080/main-page/circle-graph/year
+Content-Type: application/json

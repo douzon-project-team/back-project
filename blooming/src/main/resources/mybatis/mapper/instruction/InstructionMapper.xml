@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.douzon.blooming.instruction.repo.InstructionRepository">
+  <insert id="insertInstruction"
+    parameterType="com.douzon.blooming.instruction.dto.request.RequestInstructionDto">
+    INSERT INTO project.instruction(instruction_date, customer_no, employee_no, progress_status,
+                                    expiration_date)
+    VALUES (#{instructionDate}, #{customerNo}, #{employeeNo}, #{progressStatus}, #{expirationDate})
+  </insert>
+
+  <select id="getInstructionNo" resultType="java.lang.String">
+    SELECT instruction_no
+    FROM project.instruction
+    ORDER BY SUBSTRING(instruction_no, 2, 4) DESC, SUBSTRING(instruction_no, 7) DESC
+    LIMIT 1
+  </select>
+
+  <select id="findInstruction" parameterType="java.lang.String"
+    resultType="com.douzon.blooming.instruction.dto.response.ResponseInstructionDto">
+    SELECT I.instruction_no   AS instruction_no,
+           I.instruction_date AS instruction_date,
+           C.customer_name    AS customer_name,
+           E.name             AS employee_name,
+           I.progress_status  AS progress_status,
+           I.expiration_date  AS expiration_date,
+           C.customer_no      AS customer_no
+    FROM project.instruction I
+           INNER JOIN project.customer C ON I.customer_no = C.customer_no
+           INNER JOIN project.employee E ON I.employee_no = E.employee_no
+    WHERE I.instruction_no = #{instructionNo}
+  </select>
+
+  <select id="findInstructions"
+    parameterType="com.douzon.blooming.instruction.dto.request.InstructionSearchDto"
+    resultType="com.douzon.blooming.instruction.dto.response.ListInstructionDto">
+    SELECT I.instruction_no AS instruction_no,
+    E.name AS employee_name,
+    C.customer_no AS customer_no,
+    C.customer_name AS customer_name,
+    I.instruction_date AS instruction_date,
+    I.expiration_date AS expiration_date,
+    I.progress_status AS progress_status
+    FROM project.instruction I
+    INNER JOIN project.customer C ON I.customer_no = C.customer_no
+    INNER JOIN project.employee E ON I.employee_no = E.employee_no
+    <where>
+      <if test="dto.startDate != null or dto.endDate != null">
+        <choose>
+          <when test="dto.startDate != null and dto.endDate == null">
+            <![CDATA[
+                I.instruction_date >= #{dto.startDate}
+            ]]>
+          </when>
+          <when test="dto.startDate == null and dto.endDate != null">
+            <![CDATA[
+                I.instruction_date <= #{dto.endDate}
+            ]]>
+          </when>
+          <otherwise>
+            <![CDATA[
+                I.instruction_date BETWEEN #{dto.startDate} AND #{dto.endDate}
+            ]]>
+          </otherwise>
+        </choose>
+      </if>
+      <if test="dto.expirationStartDate != null or dto.expirationEndDate != null">
+        <choose>
+          <when test="dto.startDate == null and dto.endDate == null">
+            <choose>
+              <when test="dto.expirationStartDate != null and dto.expirationEndDate == null">
+                <![CDATA[
+                    I.expiration_date >= #{dto.expirationStartDate}
+                ]]>
+              </when>
+              <when test="dto.expirationStartDate == null and dto.expirationEndDate != null">
+                <![CDATA[
+                    I.expiration_date <= #{dto.expirationEndDate}
+                ]]>
+              </when>
+              <otherwise>
+                <![CDATA[
+                    I.expiration_date BETWEEN #{dto.expirationStartDate} AND #{dto.expirationEndDate}
+                ]]>
+              </otherwise>
+            </choose>
+          </when>
+          <otherwise>
+            <choose>
+              <when test="dto.expirationStartDate != null and dto.expirationEndDate == null">
+                <![CDATA[
+                    AND I.expiration_date >= #{dto.expirationStartDate}
+                ]]>
+              </when>
+              <when test="dto.expirationStartDate == null and dto.expirationEndDate != null">
+                <![CDATA[
+                    AND I.expiration_date <= #{dto.expirationEndDate}
+                ]]>
+              </when>
+              <otherwise>
+                <![CDATA[
+                    AND I.expiration_date BETWEEN #{dto.expirationStartDate} AND #{dto.expirationEndDate}
+                ]]>
+              </otherwise>
+            </choose>
+          </otherwise>
+        </choose>
+      </if>
+      <if test="dto.progressStatus != null">
+        <choose>
+          <when
+            test="dto.startDate == null and dto.endDate == null and dto.expirationStartDate == null and dto.expirationEndDate == null">
+            I.progress_status = #{dto.progressStatus}
+          </when>
+          <otherwise>
+            AND I.progress_status = #{dto.progressStatus}
+          </otherwise>
+        </choose>
+      </if>
+      <if test="dto.employeeName != null">
+        <choose>
+          <when
+            test="dto.progressStatus == null and dto.startDate == null and dto.endDate == null and dto.expirationStartDate == null and dto.expirationEndDate == null">
+            E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
+          </when>
+          <otherwise>
+            AND E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
+          </otherwise>
+        </choose>
+      </if>
+    <if test="dto.instructionNo != ''">
+      AND instruction_no = #{dto.instructionNo}
+    </if>
+    </where>
+    ORDER BY RIGHT(instruction_no,6) DESC
+    LIMIT #{start}, #{pageSize}
+  </select>
+
+  <select id="getCountInstructions"
+    parameterType="com.douzon.blooming.instruction.dto.request.InstructionSearchDto"
+    resultType="java.lang.Integer">
+    SELECT COUNT(*)
+    FROM project.instruction I
+    INNER JOIN project.customer C ON I.customer_no = C.customer_no
+    INNER JOIN project.employee E ON I.employee_no = E.employee_no
+    <where>
+      <if test="dto.startDate != null or dto.endDate != null">
+        <choose>
+          <when test="dto.startDate != null and dto.endDate == null">
+            <![CDATA[
+                I.instruction_date >= #{dto.startDate}
+            ]]>
+          </when>
+          <when test="dto.startDate == null and dto.endDate != null">
+            <![CDATA[
+                I.instruction_date <= #{dto.endDate}
+            ]]>
+          </when>
+          <otherwise>
+            <![CDATA[
+                I.instruction_date BETWEEN #{dto.startDate} AND #{dto.endDate}
+            ]]>
+          </otherwise>
+        </choose>
+      </if>
+      <if test="dto.expirationStartDate != null or dto.expirationEndDate != null">
+        <choose>
+          <when test="dto.startDate == null and dto.endDate == null">
+            <choose>
+              <when test="dto.expirationStartDate != null and dto.expirationEndDate == null">
+                <![CDATA[
+                    I.expiration_date >= #{dto.expirationStartDate}
+                ]]>
+              </when>
+              <when test="dto.expirationStartDate == null and dto.expirationEndDate != null">
+                <![CDATA[
+                    I.expiration_date <= #{dto.expirationEndDate}
+                ]]>
+              </when>
+              <otherwise>
+                <![CDATA[
+                    I.expiration_date BETWEEN #{dto.expirationStartDate} AND #{dto.expirationEndDate}
+                ]]>
+              </otherwise>
+            </choose>
+          </when>
+          <otherwise>
+            <choose>
+              <when test="dto.expirationStartDate != null and dto.expirationEndDate == null">
+                <![CDATA[
+                    AND I.expiration_date >= #{dto.expirationStartDate}
+                ]]>
+              </when>
+              <when test="dto.expirationStartDate == null and dto.expirationEndDate != null">
+                <![CDATA[
+                    AND I.expiration_date <= #{dto.expirationEndDate}
+                ]]>
+              </when>
+              <otherwise>
+                <![CDATA[
+                    AND I.expiration_date BETWEEN #{dto.expirationStartDate} AND #{dto.expirationEndDate}
+                ]]>
+              </otherwise>
+            </choose>
+          </otherwise>
+        </choose>
+      </if>
+      <if test="dto.progressStatus != null">
+        <choose>
+          <when
+            test="dto.startDate == null and dto.endDate == null and dto.expirationStartDate == null and dto.expirationEndDate == null">
+            I.progress_status = #{dto.progressStatus}
+          </when>
+          <otherwise>
+            AND I.progress_status = #{dto.progressStatus}
+          </otherwise>
+        </choose>
+      </if>
+      <if test="dto.employeeName != null">
+        <choose>
+          <when
+            test="dto.progressStatus == null and dto.startDate == null and dto.endDate == null and dto.expirationStartDate == null and dto.expirationEndDate == null">
+            E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
+          </when>
+          <otherwise>
+            AND E.name LIKE CONCAT('%', #{dto.employeeName}, '%')
+          </otherwise>
+        </choose>
+      </if>
+    </where>
+  </select>
+
+  <select id="findInstructionCount" resultType="java.lang.Long">
+    SELECT COUNT(*)
+    FROM project.instruction;
+  </select>
+
+  <select id="findThisMonthInstructionCount" resultType="java.lang.Long">
+    SELECT COUNT(*)
+    FROM project.instruction
+    WHERE YEAR(instruction_date) = YEAR(CURRENT_DATE)
+      AND MONTH(instruction_date) = MONTH(CURRENT_DATE);
+  </select>
+
+  <select id="findExpirationDateNearInstruction"
+    resultType="com.douzon.blooming.main.dto.ExpirationDateNearInstruction">
+    SELECT instruction_no, expiration_date
+    FROM project.instruction
+    WHERE expiration_date >= CURDATE()
+    ORDER BY expiration_date
+    LIMIT 2;
+  </select>
+
+  <select id="findMainPageBarGraphData" resultType="com.douzon.blooming.main.dto.BarGraphDto">
+    <choose>
+      <when test="type == 'month'">
+        SELECT date, COUNT(CASE WHEN instruction_no IS NOT NULL THEN 1 END) as count
+        FROM project.instruction
+        RIGHT JOIN (SELECT DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL t.n - 2 MONTH), '%Y-%m') AS date
+        FROM (
+        SELECT 0 AS n UNION ALL
+        SELECT 1 UNION ALL
+        SELECT 2 UNION ALL
+        SELECT 3 UNION ALL
+        SELECT 4) t) t ON t.date = DATE_FORMAT(instruction_date, '%Y-%m')
+        GROUP BY t.date;
+      </when>
+      <when test="type == 'year'">
+        SELECT date, COUNT(CASE WHEN instruction_no IS NOT NULL THEN 1 END) as count
+        FROM project.instruction
+        RIGHT JOIN (SELECT DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL t.n - 2 YEAR), '%Y') AS date
+        FROM (
+        SELECT 0 AS n UNION ALL
+        SELECT 1 UNION ALL
+        SELECT 2 UNION ALL
+        SELECT 3 UNION ALL
+        SELECT 4 ) t) t ON t.date = DATE_FORMAT(instruction_date, '%Y')
+        GROUP BY t.date;
+      </when>
+      <otherwise>
+        SELECT date, COUNT(CASE WHEN instruction_no IS NOT NULL THEN 1 END) as count
+        FROM project.instruction
+        RIGHT JOIN (SELECT DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL t.n - 2 DAY), '%Y-%m-%d') AS date
+        FROM (
+        SELECT 0 AS n UNION ALL
+        SELECT 1 UNION ALL
+        SELECT 2 UNION ALL
+        SELECT 3 UNION ALL
+        SELECT 4) t) t ON t.date = DATE_FORMAT(instruction_date, '%Y-%m-%d')
+        GROUP BY t.date;
+      </otherwise>
+    </choose>
+  </select>
+
+  <select id="findMainPageCircleGraphData" resultType="com.douzon.blooming.main.dto.CircleGraphInstructionDto">
+    <choose>
+      <when test="type == 'month'">
+        SELECT progress_status AS progress,
+        COUNT(*) AS count
+        FROM project.instruction
+        WHERE instruction_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
+        AND DATE_ADD(CURDATE(), INTERVAL 2 MONTH)
+        GROUP BY progress_status
+      </when>
+      <when test="type == 'year'">
+        SELECT progress_status AS progress,
+        COUNT(*) AS count
+        FROM project.instruction
+        WHERE instruction_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 3 YEAR)
+        AND DATE_ADD(CURDATE(), INTERVAL 2 YEAR)
+        GROUP BY progress_status
+      </when>
+      <otherwise>
+        SELECT progress_status AS progress,
+        COUNT(*) AS count
+        FROM project.instruction
+        WHERE instruction_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 3 DAY)
+        AND DATE_ADD(CURDATE(), INTERVAL 2 DAY)
+        GROUP BY progress_status
+      </otherwise>
+    </choose>
+  </select>
+
+  <select id="findMyInstruction"
+          resultType="com.douzon.blooming.instruction.dto.response.ResponseMyInstructionDto">
+    SELECT instruction_no, instruction_date, expiration_date, progress_status
+    FROM project.instruction
+    WHERE employee_no = #{employeeNo}
+    ORDER BY SUBSTRING(instruction_no, 2, 4) DESC, SUBSTRING(instruction_no, 7) DESC LIMIT 6
+  </select>
+
+  <update id="updateInstruction"
+    parameterType="com.douzon.blooming.instruction.dto.request.RequestInstructionDto">
+    UPDATE project.instruction
+    SET customer_no      = #{dto.customerNo},
+        instruction_date = #{dto.instructionDate},
+        expiration_date  = #{dto.expirationDate}
+    WHERE instruction_no = #{dto.instructionNo}
+  </update>
+
+  <delete id="deleteInstruction" parameterType="java.lang.String">
+    DELETE
+    FROM project.instruction
+    WHERE instruction_no = #{instructionNo}
+    AND progress_status = 0
+  </delete>
+</mapper>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.douzon.blooming.employee.repo.EmployeeRepository">
+
+  <select id="findEmployeeNoByName" resultType="java.lang.Long">
+    SELECT employee_no
+    FROM project.employee
+    WHERE name = #{employeeName}
+  </select>
+
+  <select id="findEmployeeByNo"
+    resultType="com.douzon.blooming.employee.dto.response.ResponseEmployeeDto">
+    SELECT employee_no, id, password, name, tel, email, role
+    FROM project.employee
+    WHERE employee_no = #{employeeId}
+  </select>
+
+  <select id="getEmployeesCountBySearchEmployeeDto" resultType="java.lang.Integer"
+    parameterType="com.douzon.blooming.employee.dto.request.EmployeeSearchDto">
+    SELECT COUNT(*)
+    FROM project.employee
+    WHERE employee_no LIKE CONCAT('%', #{employeeNo}, '%')
+    AND name LIKE CONCAT('%', #{name}, '%')
+    <if test='role != null'>
+      AND role = #{role}
+    </if>
+  </select>
+
+  <select id="findAllByEmployeeSearchDto"
+    resultType="com.douzon.blooming.employee.dto.response.EmployeeListDto">
+    SELECT employee_no as employeeNo, name, tel, email, role
+    FROM project.employee
+    WHERE name LIKE CONCAT('%', #{employeeSearchDto.name}, '%')
+    <if test="employeeSearchDto.employeeNo != null">
+      AND employee_no LIKE CONCAT('%', #{employeeSearchDto.employeeNo}, '%')
+    </if>
+    <if test='employeeSearchDto.role != null'>
+      AND role = #{employeeSearchDto.role}
+    </if>
+    <choose>
+      <when test='employeeSearchDto.page == 0'>
+        LIMIT #{employeeSearchDto.pageSize}
+      </when>
+      <otherwise>
+        LIMIT #{start},
+        #{employeeSearchDto.pageSize}
+      </otherwise>
+    </choose>
+  </select>
+
+  <update id="updateEmployeeByUpdateEmployeeDto">
+    UPDATE project.employee
+    SET tel      =  CONCAT(SUBSTRING(#{dto.tel}, 1, 3), '-',SUBSTRING(#{dto.tel}, 4, 4), '-',SUBSTRING(#{dto.tel}, 8, 4)),
+        email    = #{dto.email}
+        <if test="dto.oldPassword != '' and dto.oldPassword != null">
+          , password = #{dto.password}
+        </if>
+    WHERE employee_no = #{employeeNo}
+  </update>
+
+  <update id="updateEmployeeByAuthUpdateEmployeeDto">
+    UPDATE project.employee
+    SET id       = #{dto.id},
+        password = #{dto.password},
+        name     = #{dto.name},
+        role     = #{dto.role},
+        tel      =  CONCAT(SUBSTRING(#{dto.tel}, 1, 3), '-',SUBSTRING(#{dto.tel}, 4, 4), '-',SUBSTRING(#{dto.tel}, 8, 4)),
+        email    = #{dto.email}
+    WHERE employee_no = #{employeeNo}
+  </update>
+
+  <delete id="deleteEmployee">
+    DELETE
+    FROM project.employee
+    WHERE employee_no = #{employeeNo}
+  </delete>
+
+  <insert id="insertEmployee">
+    INSERT INTO project.employee (employee_no, id, password, name, role, tel, email)
+    VALUES (#{employeeNo}, #{id}, #{password}, #{name}, #{role}, CONCAT(SUBSTRING(#{tel}, 1, 3), '-',SUBSTRING(#{tel}, 4, 4), '-',SUBSTRING(#{tel}, 8, 4)), #{email})
+  </insert>
+
+  <select id="findEmployeeById" resultType="com.douzon.blooming.employee.dto.response.EmployeeDto">
+    SELECT employee_no, id, name, password, role
+    FROM project.employee
+    WHERE id = #{id}
+  </select>
+
+  <select id="existById" resultType="boolean">
+    SELECT COUNT(*)
+    FROM project.employee
+    WHERE id = #{id}
+  </select>
+
+  <select id="existByEmployeeNo" resultType="boolean">
+    SELECT COUNT(*)
+    FROM project.employee
+    WHERE employee_no = #{employeeNo}
+  </select>
+
+  <select id="findEmployeeNoByDto" resultType="com.douzon.blooming.employee.dto.response.FindEmployeeDto">
+    SELECT employee_no, password
+    FROM project.employee
+    WHERE id = #{id}
+  </select>
+
+
+  <update id="updateEmployeeImage">
+    UPDATE project.employee
+    SET img = #{imageUrl}
+    WHERE employee_no = #{employeeNo};
+  </update>
+
+  <select id="findEmployeeImageByEmployeeNo" resultType="java.lang.String">
+    SELECT img
+    FROM project.employee
+    WHERE employee_no = #{employeeNo};
+  </select>
+
+  <insert id="addImageByImageNameAndEmployeeNo">
+    UPDATE project.employee SET img = #{imageName} WHERE employee_no = #{employeeNo}
+  </insert>
+</mapper>

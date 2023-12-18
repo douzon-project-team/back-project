@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "jwt.secret.symbol",
+      "type": "java.lang.String",
+      "description": "Description for jwt.secret.symbol."
+    },
+    {
+      "name": "jwt.secret.access-expire-time",
+      "type": "java.lang.Long",
+      "description": "Description for jwt.secret.access-expire-time."
+    }
+  ] }
