@@ -2,19 +2,19 @@ package com.douzon.blooming;
 
 import com.douzon.blooming.auth.EmployeeRole;
 import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
-import com.douzon.blooming.employee.service.EmployeeImageService;
-import com.douzon.blooming.employee.service.EmployeeService;
+import com.douzon.blooming.employee.repo.EmployeeRepository;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class InitEmployeeDate {
 
-  private final EmployeeService employeeService;
-  private final EmployeeImageService employeeImageService;
+  private final EmployeeRepository employeeRepository;
+  private final PasswordEncoder passwordEncoder;
 
   @PostConstruct
   public void init() {
@@ -39,6 +39,10 @@ public class InitEmployeeDate {
             "01063216912", "awdawgjki44@google.com"),
         new InsertEmployeeDto(2000010L, "m9", "1234", "이지훈", EmployeeRole.ROLE_MEMBER,
             "01042118912", "esfse1111@google.com"));
-    employeeList.forEach(employeeService::signup);
+    employeeList.forEach(employee -> employeeRepository.insertEmployee(
+        employee.encodingPassword(passwordEncoder)));
+    employeeRepository.addImageByImageNameAndEmployeeNo("93699f74-638d-4026-a22f-18cfa4d2f930.png",200001L);
+    employeeRepository.addImageByImageNameAndEmployeeNo("4bce5389-8191-46f8-ad91-a5ee197ee837.png",200002L);
+    employeeRepository.addImageByImageNameAndEmployeeNo("4287e7f7-17a8-4710-b32f-d21255ea53e2.png",200003L);
   }
 }
