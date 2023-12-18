@@ -15,7 +15,7 @@ import java.util.Date;
 @Getter
 @ToString
 public class DeliverySearchDto extends SearchDto {
-
+    private String deliveryNo;
     private final DeliveryStatus progressStatus;
     private String employeeName;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -23,10 +23,11 @@ public class DeliverySearchDto extends SearchDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
-    public DeliverySearchDto(DeliveryStatus progressStatus, String employeeName,
+    public DeliverySearchDto(String deliveryNo, DeliveryStatus progressStatus, String employeeName,
                              LocalDate startDate, LocalDate endDate, Integer pageSize,
                              Integer page) {
         super(pageSize, page);
+        this.deliveryNo = deliveryNo == null ? DEFAULT_STRING : deliveryNo;
         this.progressStatus = progressStatus;
         this.employeeName = employeeName;
         this.startDate = startDate;

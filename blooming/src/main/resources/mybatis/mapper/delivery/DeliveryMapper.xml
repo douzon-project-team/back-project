@@ -127,6 +127,9 @@
           </otherwise>
         </choose>
       </if>
+        <if test="dto.deliveryNo == ''">
+            AND delivery_no = #{dto.deliveryNo}
+        </if>
     </where>
   </select>
 

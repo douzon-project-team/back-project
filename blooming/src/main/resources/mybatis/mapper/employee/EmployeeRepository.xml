@@ -117,4 +117,8 @@
     FROM project.employee
     WHERE employee_no = #{employeeNo};
   </select>
+
+  <insert id="addImageByImageNameAndEmployeeNo">
+    UPDATE project.employee SET img = #{imageName} WHERE employee_no = #{employeeNo}
+  </insert>
 </mapper>

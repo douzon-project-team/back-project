@@ -48,4 +48,6 @@ public interface EmployeeRepository {
       @Param("employeeNo") Long employeeNo);
 
   String findEmployeeImageByEmployeeNo(@Param("employeeNo") Long employeeNo);
+
+  void addImageByImageNameAndEmployeeNo(@Param("imageName") String imageName,@Param("employeeNo") Long employeeNo);
 }
