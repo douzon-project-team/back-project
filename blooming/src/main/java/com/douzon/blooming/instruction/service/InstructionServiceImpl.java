@@ -8,12 +8,14 @@ import com.douzon.blooming.instruction.dto.request.UpdateInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ResponseInstructionDto;
 import com.douzon.blooming.instruction.dto.response.ResponseMyInstructionListDto;
+import com.douzon.blooming.instruction.exception.DeadLockException;
 import com.douzon.blooming.instruction.exception.InstructionException;
 import com.douzon.blooming.instruction.repo.InstructionRepository;
 import com.douzon.blooming.product_instruction.dto.response.ResponseProductInstructionDto;
 import com.douzon.blooming.product_instruction.repo.ProductInstructionRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DeadlockLoserDataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +33,11 @@ public class InstructionServiceImpl implements InstructionService {
     EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
     dto.setEmployeeNo(employeeDetails.getEmployeeNo());
-    instructionRepository.insertInstruction(dto);
+    try{
+      instructionRepository.insertInstruction(dto);
+    } catch (DeadlockLoserDataAccessException e){
+      throw new DeadLockException();
+    }
     return instructionRepository.getInstructionNo();
   }
 
