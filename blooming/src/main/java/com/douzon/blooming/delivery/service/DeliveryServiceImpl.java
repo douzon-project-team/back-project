@@ -50,8 +50,6 @@ public class DeliveryServiceImpl implements DeliveryService {
 
   @Override
   public PageDto<DeliveryListInstructionDto> findDeliveries(DeliverySearchDto searchDto) {
-    log.error(searchDto.toString());
-    log.info(searchDto.getPage()+"AND"+ searchDto.getPageSize());
     int start = (searchDto.getPage()) * searchDto.getPageSize();
     List<DeliveryListInstructionDto> deliveries = deliveryRepository.findDeliveries(searchDto,
             start, searchDto.getPageSize());
