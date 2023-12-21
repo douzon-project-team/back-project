@@ -10,6 +10,7 @@ import com.douzon.blooming.employee.exception.ImageUploadException;
 import com.douzon.blooming.employee.exception.NotFoundImageException;
 import com.douzon.blooming.employee.exception.PasswordDoesNotMatchException;
 import com.douzon.blooming.employee.exception.UnsupportedTargetTypeException;
+import com.douzon.blooming.instruction.exception.DeadLockException;
 import com.douzon.blooming.instruction.exception.InstructionException;
 import com.douzon.blooming.log.exception.UnsupportedLogTypeException;
 import com.douzon.blooming.product.exception.NotFoundProductException;
@@ -61,7 +62,8 @@ public class ProjectAdvice {
       PasswordDoesNotMatchException.class,
       UnsupportedProductStatusException.class,
       ImageUploadException.class,
-      NotFoundRefreshTokenException.class
+      NotFoundRefreshTokenException.class,
+      DeadLockException.class
   })
   public ResponseEntity<String> requestError(Exception e) {
     return ResponseEntity.badRequest().body(e.getMessage());
