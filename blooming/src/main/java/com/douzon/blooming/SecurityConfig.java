@@ -35,7 +35,7 @@ public class SecurityConfig {
       @Override
       public void addCorsMappings(@NonNull CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOrigins("http://localhost:3000")
+            .allowedOrigins("http://localhost:3000","https://blooming-eytrri2ab-sangwoongparks-projects.vercel.app")
             .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
             .allowedHeaders("*")
             .exposedHeaders(HttpHeaders.LOCATION, HttpHeaders.SET_COOKIE)
