@@ -76,6 +76,9 @@
           </otherwise>
         </choose>
       </if>
+      <if test="dto.deliveryNo != ''">
+        AND delivery_no = #{dto.deliveryNo}
+      </if>
     </where>
     ORDER BY RIGHT(delivery_no,6) DESC
     LIMIT #{start}, #{pageSize}
@@ -127,9 +130,9 @@
           </otherwise>
         </choose>
       </if>
-        <if test="dto.deliveryNo == ''">
-            AND delivery_no = #{dto.deliveryNo}
-        </if>
+      <if test="dto.deliveryNo != ''">
+        AND delivery_no = #{dto.deliveryNo}
+      </if>
     </where>
   </select>
 

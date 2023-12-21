@@ -227,6 +227,9 @@
           </otherwise>
         </choose>
       </if>
+      <if test="dto.instructionNo != ''">
+        AND instruction_no = #{dto.instructionNo}
+      </if>
     </where>
   </select>
 
