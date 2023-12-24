@@ -7,7 +7,6 @@ import com.douzon.blooming.kafka.message.dto.RequestMessageDto;
 import com.douzon.blooming.kafka.message.dto.ResponseMessageDto;
 import com.douzon.blooming.kafka.message.repo.MessageRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,6 @@ import java.time.format.DateTimeFormatter;
 @RestController
 @RequestMapping("/employees/messages")
 @RequiredArgsConstructor
-@Slf4j
 public class MessageController {
 
     private final KafkaProducerService kafkaProducerService;
@@ -31,7 +29,6 @@ public class MessageController {
         EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
         String clientId = employeeDetails.getUsername();
-        System.out.println(messageRepository.findMessagesById(clientId));
         return ResponseEntity.ok().body(new ResponseMessageDto(messageRepository.findMessagesById(clientId)));
     }
 
@@ -39,7 +36,6 @@ public class MessageController {
     public ResponseEntity<Void> sendMessage(@PathVariable Long sendId,
                                       @PathVariable Long targetId,
                                       @RequestBody RequestMessageDto message){
-        log.info(message.toString());
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm");
         kafkaProducerService.sendMessage(sendId+"&&"+employeeService.getEmployeeByNo(sendId).getName()+"&&"
@@ -49,7 +45,6 @@ public class MessageController {
 
     @PutMapping("/{messageNo}")
     public ResponseEntity<Void> checkMessage(@PathVariable Long messageNo){
-        log.info("Checking message");
         messageRepository.checkMessage(messageNo);
         return ResponseEntity.ok().build();
     }

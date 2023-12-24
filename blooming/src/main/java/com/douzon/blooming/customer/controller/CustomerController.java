@@ -8,7 +8,6 @@ import com.douzon.blooming.customer.dto.request.UpdateCustomerDto;
 import com.douzon.blooming.customer.dto.response.ResponseCustomerDto;
 import com.douzon.blooming.customer.service.CustomerService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +16,6 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/customers")
-@Slf4j
 public class CustomerController {
     private final CustomerService service;
 
@@ -47,7 +45,6 @@ public class CustomerController {
     @PutMapping("/{customerNo}")
     public ResponseEntity<Void> updateCustomer(@PathVariable Long customerNo,
                                                 @RequestBody @Valid UpdateCustomerDto dto){
-        log.error(dto.toString());
         service.updateCustomer(dto, customerNo);
         return ResponseEntity.ok().build();
     }

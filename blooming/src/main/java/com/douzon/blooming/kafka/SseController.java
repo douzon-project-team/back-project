@@ -3,7 +3,6 @@ package com.douzon.blooming.kafka;
 import com.douzon.blooming.auth.EmployeeDetails;
 import com.douzon.blooming.kafka.message.dto.InsertMessageDto;
 import com.douzon.blooming.kafka.message.repo.MessageRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.scheduling.annotation.Async;
@@ -22,7 +21,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/sse")
-@Slf4j
 public class SseController {
 
     private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
@@ -57,7 +55,6 @@ public class SseController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        log.error(emitters.toString());
         return emitter;
     }
 
@@ -65,7 +62,7 @@ public class SseController {
     @Service
     public class KafkaConsumerService {
 
-        @KafkaListener(topics = "blooming-events", groupId = "my-group")
+        @KafkaListener(topics = "blooming-events", groupId = "my-group", concurrency = "3")
         public void consumerCRUDEvent(String event) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd/HH:mm");
             String formattedDate = LocalDateTime.now().format(formatter);
