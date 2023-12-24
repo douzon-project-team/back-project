@@ -5,6 +5,7 @@ import com.douzon.blooming.auth.exception.TokenMissingAuthorizationInfoException
 import com.douzon.blooming.auth.exception.UnsupportedEmployeeRoleException;
 import com.douzon.blooming.customer.exception.NotFoundCustomerException;
 import com.douzon.blooming.delivery.exception.DeliveryException;
+import com.douzon.blooming.delivery_instruction.exception.RemainAmountException;
 import com.douzon.blooming.employee.exception.NotFoundEmployeeException;
 import com.douzon.blooming.employee.exception.ImageUploadException;
 import com.douzon.blooming.employee.exception.NotFoundImageException;
@@ -63,7 +64,8 @@ public class ProjectAdvice {
       UnsupportedProductStatusException.class,
       ImageUploadException.class,
       NotFoundRefreshTokenException.class,
-      DeadLockException.class
+      DeadLockException.class,
+      RemainAmountException.class
   })
   public ResponseEntity<String> requestError(Exception e) {
     return ResponseEntity.badRequest().body(e.getMessage());

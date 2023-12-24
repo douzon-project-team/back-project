@@ -15,8 +15,10 @@ import com.douzon.blooming.delivery_instruction.dto.response.DeliveryListInstruc
 import com.douzon.blooming.delivery_instruction.repo.DeliveryInstructionRepository;
 
 import java.util.List;
+
+import com.douzon.blooming.instruction.exception.DeadLockException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DeadlockLoserDataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,6 @@ import static java.time.LocalDate.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class DeliveryServiceImpl implements DeliveryService {
 
   private final DeliveryRepository deliveryRepository;
@@ -35,7 +36,11 @@ public class DeliveryServiceImpl implements DeliveryService {
     EmployeeDetails employeeDetails = (EmployeeDetails) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
     DeliveryStatus status= dto.getDeliveryDate().isBefore(now())? DeliveryStatus.COMPLETED : DeliveryStatus.INCOMPLETE;
-    deliveryRepository.insertDelivery(employeeDetails.getEmployeeNo(), dto, status);
+    try{
+      deliveryRepository.insertDelivery(employeeDetails.getEmployeeNo(), dto, status);
+    } catch (DeadlockLoserDataAccessException e){
+      throw new DeadLockException();
+    }
     return new ResponseDeliveryDto(deliveryRepository.getDeliveryNo());
   }
 
