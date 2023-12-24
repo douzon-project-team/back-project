@@ -1,9 +1,7 @@
 package com.douzon.blooming.product.dto.request;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +16,7 @@ public class InsertProductDto {
   @Pattern(regexp = "^[a-zA-Z]{2}\\d{4}$")
   private String productCode;
   @NotBlank(message = "명칭은 필수 값입니다.")
-  @Max(45)
+  @Size(max = 45)
   private String productName;
   @NotBlank(message = "규격은 필수 값입니다.")
   private String standard;

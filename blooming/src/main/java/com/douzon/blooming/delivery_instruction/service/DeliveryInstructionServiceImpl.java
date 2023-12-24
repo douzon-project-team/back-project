@@ -2,13 +2,20 @@ package com.douzon.blooming.delivery_instruction.service;
 
 import com.douzon.blooming.delivery_instruction.dto.request.InsertDeliveryInstructionDto;
 import com.douzon.blooming.delivery_instruction.dto.request.UpdateInstructionProductDto;
+import com.douzon.blooming.delivery_instruction.exception.RemainAmountException;
 import com.douzon.blooming.delivery_instruction.repo.DeliveryInstructionRepository;
 import com.douzon.blooming.product.exception.NotFoundProductException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DeliveryInstructionServiceImpl implements DeliveryInstructionService{
 
     private final DeliveryInstructionRepository deliveryInstructionRepository;
@@ -32,14 +39,25 @@ public class DeliveryInstructionServiceImpl implements DeliveryInstructionServic
         stringBuffer.append(";");
 
         String insertQuery = stringBuffer.toString();
-        deliveryInstructionRepository.insert(insertQuery);
+            deliveryInstructionRepository.insert(insertQuery);
     }
 
     @Override
     public void updateDeliveryInstructions(String deliveryNo, UpdateInstructionProductDto dto) {
-        if(deliveryInstructionRepository.updateProduct(deliveryNo, dto.getInstructionNo(), dto.getProductNo(), dto.getAmount()) <= 0){
-            throw new NotFoundProductException();
-        };
+        try {
+            if(deliveryInstructionRepository.updateProduct(deliveryNo, dto.getInstructionNo(), dto.getProductNo(), dto.getAmount()) <= 0){
+                throw new NotFoundProductException();
+            }
+        } catch (DataIntegrityViolationException e) {
+            if (e.getCause() instanceof SQLException) {
+                SQLException sqlException = (SQLException) e.getCause();
+                if ("23000".equals(sqlException.getSQLState())) {
+                    throw new RemainAmountException();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

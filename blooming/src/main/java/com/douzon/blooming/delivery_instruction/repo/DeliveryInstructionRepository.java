@@ -6,6 +6,7 @@ import com.douzon.blooming.instruction.dto.response.ListInstructionDto;
 import com.douzon.blooming.product_instruction.dto.request.ProductInstructionDto;
 import org.apache.ibatis.annotations.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Mapper
@@ -44,7 +45,7 @@ public interface DeliveryInstructionRepository {
             "WHERE delivery_no = #{deliveryNo} " +
             "AND instruction_no = #{instructionNo} " +
             "AND product_no = #{productNo}")
-    Integer updateProduct(String deliveryNo, String instructionNo, Long productNo, Integer amount);
+    Integer updateProduct(String deliveryNo, String instructionNo, Long productNo, Integer amount) throws SQLException;
 
     @Delete("DELETE FROM project.delivery_instruction " +
             "WHERE delivery_no = #{deliveryNo} " +
