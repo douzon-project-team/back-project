@@ -223,6 +223,17 @@ BEGIN
         SET progress_status = 0
         WHERE instruction_no = OLD.instruction_no;
     END IF;
+
+    IF (SELECT COUNT(*)
+        FROM product_instruction
+        WHERE instruction_no = OLD.instruction_no
+          AND remain_amount = amount) < (SELECT COUNT(*)
+                                         FROM product_instruction
+                                         WHERE instruction_no = OLD.instruction_no) THEN
+        UPDATE instruction
+        SET progress_status = 1
+        WHERE instruction_no = OLD.instruction_no;
+    END IF;
 END;
 DELIMITER ;
 
