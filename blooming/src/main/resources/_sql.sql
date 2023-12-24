@@ -99,7 +99,8 @@ CREATE TABLE `product_instruction`
     `remain_amount`  INT         NOT NULL
 );
 
-
+ALTER TABLE product_instruction
+    ADD CONSTRAINT check_non_negative_remain_amount CHECK (product_instruction.remain_amount >= 0);
 
 CREATE TABLE `delivery`
 (
@@ -169,138 +170,6 @@ CREATE TABLE `delivery_log`
     `delivery_no` VARCHAR(12) NULL,
     `type`        TINYINT(1)  NOT NULL
 );
-
-# ALTER TABLE `product_instruction`
-#     ADD CONSTRAINT `PK_PRODUCT_INSTRUCTION` PRIMARY KEY (
-#                                                          `product_no`,
-#                                                          `instruction_no`
-#         );
-
-# ALTER TABLE `delivery_instruction`
-#     ADD CONSTRAINT `PK_DELIVERY_INSTRUCTION` PRIMARY KEY (
-#                                                           `delivery_no`,
-#                                                           `instruction_no`
-#                                                           `product_no`
-#         );
-
-# ALTER TABLE `product_instruction`
-#     ADD CONSTRAINT `FK_product_TO_product_instruction_1` FOREIGN KEY (
-#                                                                       `product_no`
-#         )
-#         REFERENCES `product` (
-#                               `product_no`
-#             );
-
-#
-# ALTER TABLE `product_instruction`
-#     ADD CONSTRAINT `FK_instruction_TO_product_instruction_1` FOREIGN KEY (
-#                                                                           `instruction_no`
-#         )
-#         REFERENCES `instruction` (
-#                                   `instruction_no`
-#             )
-#     ON DELETE CASCADE;
-#
-# ALTER TABLE `delivery_instruction`
-#     ADD CONSTRAINT `FK_delivery_TO_delivery_instruction_1` FOREIGN KEY (
-#                                                                         `delivery_no`
-#         )
-#         REFERENCES `delivery` (
-#                                `delivery_no`
-#             )
-#     ON DELETE CASCADE;
-#
-# ALTER TABLE `delivery_instruction`
-#     ADD CONSTRAINT `FK_instruction_TO_delivery_instruction_1` FOREIGN KEY (
-#                                                                            `instruction_no`
-#         )
-#         REFERENCES `instruction` (
-#                                   `instruction_no`
-#             );
-
-
-# ALTER TABLE `instruction` ADD CONSTRAINT `FK_customer_TO_instruction_1` FOREIGN KEY (
-#                                                                                      `customer_no`
-#     )
-#     REFERENCES `customer` (
-#                            `customer_no`
-#         );
-#
-# ALTER TABLE `instruction` ADD CONSTRAINT `FK_employee_TO_instruction_1` FOREIGN KEY (
-#                                                                                      `employee_no`
-#     )
-#     REFERENCES `employee` (
-#                            `employee_no`
-#         );
-#
-# ALTER TABLE `delivery` ADD CONSTRAINT `FK_employee_TO_delivery_1` FOREIGN KEY (
-#                                                                                `employee_no`
-#     )
-#     REFERENCES `employee` (
-#                            `employee_no`
-#         );
-# ALTER TABLE `todo` ADD CONSTRAINT `FK_employee_TO_todo_1` FOREIGN KEY (
-#                                                                                `employee_no`
-#     )
-#     REFERENCES `employee` (
-#                            `employee_no`
-#         );
-#
-# ALTER TABLE `employee_log` ADD CONSTRAINT `FK_employee_TO_employee_log_1` FOREIGN KEY (
-#                                                                                        `modifier_no`
-#     )
-#     REFERENCES `employee` (
-#                            `employee_no`
-#         );
-#
-# ALTER TABLE `employee_log` ADD CONSTRAINT `FK_employee_TO_employee_log_2` FOREIGN KEY (
-#                                                                                        `target_no`
-#     )
-#     REFERENCES `employee` (
-#                            `employee_no`
-#         );
-#
-# ALTER TABLE `product_log` ADD CONSTRAINT `FK_employee_TO_product_log_1` FOREIGN KEY (
-#                                                                                      `modifier_no`
-#     )
-#     REFERENCES `employee` (
-#                            `employee_no`
-#         );
-#
-# ALTER TABLE `product_log` ADD CONSTRAINT `FK_product_TO_product_log_1` FOREIGN KEY (
-#                                                                                     `product_no`
-#     )
-#     REFERENCES `product` (
-#                           `product_no`
-#         );
-#
-# ALTER TABLE `instruction_log` ADD CONSTRAINT `FK_employee_TO_instruction_log_1` FOREIGN KEY (
-#                                                                                              `modifier_no`
-#     )
-#     REFERENCES `employee` (
-#                            `employee_no`
-#         );
-#
-# ALTER TABLE `instruction_log` ADD CONSTRAINT `FK_instruction_TO_instruction_log_1` FOREIGN KEY (
-#                                                                                                 `instruction_no`
-#     )
-#     REFERENCES `instruction` (
-#                               `instruction_no`
-#         );
-#
-# ALTER TABLE `delivery_log` ADD CONSTRAINT `FK_employee_TO_delivery_log_1` FOREIGN KEY (
-#                                                                                        `modifier_no`
-#     )
-#     REFERENCES `employee` (
-#                            `employee_no`
-#         );
-#
-# ALTER TABLE `delivery_log` ADD CONSTRAINT `FK_delivery_TO_delivery_log_1` FOREIGN KEY (
-#                                                                                        `delivery_no`
-#     )
-#     REFERENCES `delivery` (
-#                            `delivery_no`
-#         );
 
 
 # Instruction 자동 채번 Trigger
@@ -497,7 +366,7 @@ values  (3, 'WO2312000001', 15, 25),
         (17, 'WO2312000014', 25, 25),
         (12, 'WO2312000015', 15, 15),
         (14, 'WO2312000016', 15, 15),
-        (6, 'WO2312000017', 25, 15),
+        (6, 'WO2312000017', 25, 25),
         (7, 'WO2312000018', 26, 26),
         (5, 'WO2312000019', 25, 25),
         (5, 'WO2312000020', 25, 25),
@@ -700,3 +569,136 @@ BEGIN
 END;
 //
 DELIMITER ;
+
+ALTER TABLE `product_instruction`
+    ADD CONSTRAINT `PK_PRODUCT_INSTRUCTION` PRIMARY KEY (
+                                                         `product_no`,
+                                                         `instruction_no`
+        );
+
+ALTER TABLE `delivery_instruction`
+    ADD CONSTRAINT `PK_DELIVERY_INSTRUCTION` PRIMARY KEY (
+                                                          `delivery_no`,
+                                                          `instruction_no`,
+                                                          `product_no`
+        );
+
+ALTER TABLE `product_instruction`
+    ADD CONSTRAINT `FK_product_TO_product_instruction_1` FOREIGN KEY (
+                                                                      `product_no`
+        )
+        REFERENCES `product` (
+                              `product_no`
+            );
+
+
+ALTER TABLE `product_instruction`
+    ADD CONSTRAINT `FK_instruction_TO_product_instruction_1` FOREIGN KEY (
+                                                                          `instruction_no`
+        )
+        REFERENCES `instruction` (
+                                  `instruction_no`
+            )
+        ON DELETE CASCADE;
+
+ALTER TABLE `delivery_instruction`
+    ADD CONSTRAINT `FK_delivery_TO_delivery_instruction_1` FOREIGN KEY (
+                                                                        `delivery_no`
+        )
+        REFERENCES `delivery` (
+                               `delivery_no`
+            )
+        ON DELETE CASCADE;
+
+ALTER TABLE `delivery_instruction`
+    ADD CONSTRAINT `FK_instruction_TO_delivery_instruction_1` FOREIGN KEY (
+                                                                           `instruction_no`
+        )
+        REFERENCES `instruction` (
+                                  `instruction_no`
+            );
+
+
+ALTER TABLE `instruction` ADD CONSTRAINT `FK_customer_TO_instruction_1` FOREIGN KEY (
+                                                                                     `customer_no`
+    )
+    REFERENCES `customer` (
+                           `customer_no`
+        );
+
+ALTER TABLE `instruction` ADD CONSTRAINT `FK_employee_TO_instruction_1` FOREIGN KEY (
+                                                                                     `employee_no`
+    )
+    REFERENCES `employee` (
+                           `employee_no`
+        );
+
+ALTER TABLE `delivery` ADD CONSTRAINT `FK_employee_TO_delivery_1` FOREIGN KEY (
+                                                                               `employee_no`
+    )
+    REFERENCES `employee` (
+                           `employee_no`
+        );
+ALTER TABLE `todo` ADD CONSTRAINT `FK_employee_TO_todo_1` FOREIGN KEY (
+                                                                       `employee_no`
+    )
+    REFERENCES `employee` (
+                           `employee_no`
+        );
+#
+
+# ALTER TABLE `employee_log` ADD CONSTRAINT `FK_employee_TO_employee_log_1` FOREIGN KEY (
+#                                                                                        `modifier_no`
+#     )
+#     REFERENCES `employee` (
+#                            `employee_no`
+#         );
+#
+# ALTER TABLE `employee_log` ADD CONSTRAINT `FK_employee_TO_employee_log_2` FOREIGN KEY (
+#                                                                                        `target_no`
+#     )
+#     REFERENCES `employee` (
+#                            `employee_no`
+#         );
+#
+# ALTER TABLE `product_log` ADD CONSTRAINT `FK_employee_TO_product_log_1` FOREIGN KEY (
+#                                                                                      `modifier_no`
+#     )
+#     REFERENCES `employee` (
+#                            `employee_no`
+#         );
+#
+# ALTER TABLE `product_log` ADD CONSTRAINT `FK_product_TO_product_log_1` FOREIGN KEY (
+#                                                                                     `product_no`
+#     )
+#     REFERENCES `product` (
+#                           `product_no`
+#         );
+#
+# ALTER TABLE `instruction_log` ADD CONSTRAINT `FK_employee_TO_instruction_log_1` FOREIGN KEY (
+#                                                                                              `modifier_no`
+#     )
+#     REFERENCES `employee` (
+#                            `employee_no`
+#         );
+#
+# ALTER TABLE `instruction_log` ADD CONSTRAINT `FK_instruction_TO_instruction_log_1` FOREIGN KEY (
+#                                                                                                 `instruction_no`
+#     )
+#     REFERENCES `instruction` (
+#                               `instruction_no`
+#         );
+#
+# ALTER TABLE `delivery_log` ADD CONSTRAINT `FK_employee_TO_delivery_log_1` FOREIGN KEY (
+#                                                                                        `modifier_no`
+#     )
+#     REFERENCES `employee` (
+#                            `employee_no`
+#         );
+#
+# ALTER TABLE `delivery_log` ADD CONSTRAINT `FK_delivery_TO_delivery_log_1` FOREIGN KEY (
+#                                                                                        `delivery_no`
+#     )
+#     REFERENCES `delivery` (
+#                            `delivery_no`
+#         );
