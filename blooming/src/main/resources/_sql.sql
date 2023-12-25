@@ -88,7 +88,8 @@ CREATE TABLE `instruction`
     `customer_no`      BIGINT     NOT NULL,
     `employee_no`      BIGINT     NOT NULL,
     `progress_status`  TINYINT(1) NOT NULL DEFAULT 0,
-    `expiration_date`  DATE       NOT NULL
+    `expiration_date`  DATE       NOT NULL,
+    INDEX idx_instruction_date (`instruction_date`)
 );
 
 CREATE TABLE `product_instruction`
@@ -107,7 +108,8 @@ CREATE TABLE `delivery`
     `delivery_no`     VARCHAR(12) PRIMARY KEY,
     `progress_status` TINYINT(1) NOT NULL DEFAULT 0,
     `delivery_date`   DATE       NOT NULL,
-    `employee_no`     BIGINT     NOT NULL
+    `employee_no`     BIGINT     NOT NULL,
+    INDEX idx_delivery_date (`delivery_date`)
 );
 
 
@@ -656,6 +658,7 @@ ALTER TABLE `todo` ADD CONSTRAINT `FK_employee_TO_todo_1` FOREIGN KEY (
     REFERENCES `employee` (
                            `employee_no`
         );
+
 #
 
 # ALTER TABLE `employee_log` ADD CONSTRAINT `FK_employee_TO_employee_log_1` FOREIGN KEY (
