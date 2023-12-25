@@ -6,21 +6,21 @@ import com.douzon.blooming.delivery_instruction.exception.RemainAmountException;
 import com.douzon.blooming.delivery_instruction.repo.DeliveryInstructionRepository;
 import com.douzon.blooming.product.exception.NotFoundProductException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class DeliveryInstructionServiceImpl implements DeliveryInstructionService{
 
     private final DeliveryInstructionRepository deliveryInstructionRepository;
     @Override
-    public void addDeliveryInstructions(String deliveryNo, InsertDeliveryInstructionDto dto) {
+    public synchronized void addDeliveryInstructions(String deliveryNo, InsertDeliveryInstructionDto dto) {
         StringBuilder stringBuffer = new StringBuilder();
         stringBuffer.append("INSERT INTO project.delivery_instruction VALUES ");
         dto.getProducts().forEach(product -> {
@@ -43,7 +43,7 @@ public class DeliveryInstructionServiceImpl implements DeliveryInstructionServic
     }
 
     @Override
-    public void updateDeliveryInstructions(String deliveryNo, UpdateInstructionProductDto dto) {
+    public synchronized void updateDeliveryInstructions(String deliveryNo, UpdateInstructionProductDto dto) {
         try {
             if(deliveryInstructionRepository.updateProduct(deliveryNo, dto.getInstructionNo(), dto.getProductNo(), dto.getAmount()) <= 0){
                 throw new NotFoundProductException();
@@ -61,7 +61,7 @@ public class DeliveryInstructionServiceImpl implements DeliveryInstructionServic
     }
 
     @Override
-    public void deleteDeliveryInstructions(String deliveryNo, String instructionNo, String productNo) {
+    public synchronized void deleteDeliveryInstructions(String deliveryNo, String instructionNo, String productNo) {
         if(deliveryInstructionRepository.deleteProduct(deliveryNo, instructionNo, productNo)<=0){
             throw new NotFoundProductException();
         };
