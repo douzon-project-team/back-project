@@ -197,7 +197,7 @@ public class DeliveryControllerTest {
     @Test
     @Transactional
     void deleteDelivery() throws Exception {
-        mockMvc.perform(delete("/deliveries/{deliveryNo}", "MW2312000002")
+        mockMvc.perform(delete("/deliveries/{deliveryNo}", "MW2312000026")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
                 .andExpect(status().isNoContent())

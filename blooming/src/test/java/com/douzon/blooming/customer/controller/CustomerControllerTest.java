@@ -135,9 +135,9 @@ class CustomerControllerTest {
     void getCustomers() throws Exception{
         mockMvc.perform(get("/customers/list")
                 .contentType(MediaType.APPLICATION_JSON)
-                        .param("customerCode", "C")
-                        .param("customerName", "스")
-                        .param("sector", "업")
+                        .param("customerCode", "")
+                        .param("customerName", "더존")
+                        .param("sector", "서비스")
                         .param("page", "1")
                         .param("pageSize", "10")
                 .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())

@@ -69,7 +69,7 @@
                             MATCH (sector) AGAINST(CONCAT(#{dto.sector},'*') IN BOOLEAN MODE)
                         </when>
                         <otherwise>
-                            AND MATCH (customer_name) AGAINST(CONCAT(#{dto.sector},'*') IN BOOLEAN MODE)
+                            AND MATCH (sector) AGAINST(CONCAT(#{dto.sector},'*') IN BOOLEAN MODE)
                         </otherwise>
                     </choose>
                 </when>

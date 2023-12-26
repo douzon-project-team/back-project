@@ -25,6 +25,9 @@ CREATE TABLE `todo`
     `checked`     TINYINT(1) DEFAULT 0
 );
 
+INSERT INTO `todo` (employee_no, content)
+VALUES(200002, '새로운 지시 등록'),
+      (200002, '거래처 수정');
 
 CREATE TABLE `product`
 (
