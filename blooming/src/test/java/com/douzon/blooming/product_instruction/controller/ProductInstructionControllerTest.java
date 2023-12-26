@@ -70,7 +70,7 @@ class ProductInstructionControllerTest {
   @Transactional
   void addProductInstruction() throws Exception {
     TestAddDto testAddDto = new TestAddDto(5L, 10);
-    mockMvc.perform(post("/product-instruction/instruction/{instructionNo}", "WO2311000001")
+    mockMvc.perform(post("/product-instruction/instruction/{instructionNo}", "WO2312000001")
             .contentType(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
             .content(objectMapper.writeValueAsString(testAddDto))
