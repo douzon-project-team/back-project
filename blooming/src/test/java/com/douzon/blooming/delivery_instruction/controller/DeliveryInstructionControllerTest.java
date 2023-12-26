@@ -72,11 +72,11 @@ public class DeliveryInstructionControllerTest {
   void addDeliveryInstructionTest() throws Exception {
     List<InsertDeliveryInstructionProductDto> productDtoList = new ArrayList<>();
     productDtoList.add(new InsertDeliveryInstructionProductDto(1L, 5));
-    productDtoList.add(new InsertDeliveryInstructionProductDto(2L, 15));
+    productDtoList.add(new InsertDeliveryInstructionProductDto(4L, 15));
     InsertDeliveryInstructionDto insertDeliveryInstructionDto =
-            new InsertDeliveryInstructionDto("WO2311000002", productDtoList);
+            new InsertDeliveryInstructionDto("WO2312000002", productDtoList);
 
-    mockMvc.perform(post("/delivery-instructions/{deliveryNo}", "MW2311000002")
+    mockMvc.perform(post("/delivery-instructions/{deliveryNo}", "MW2312000002")
                     .contentType(MediaType.APPLICATION_JSON)
                     .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken())
                     .content(objectMapper.writeValueAsString(insertDeliveryInstructionDto)))
@@ -108,7 +108,7 @@ public class DeliveryInstructionControllerTest {
   void updateDeliveryInstructionTest() throws Exception {
 
     UpdateInstructionProductDto dto = new UpdateInstructionProductDto(
-            "WO2312000002", 1L, 10);
+            "WO2312000001", 3L, 10);
 
     mockMvc.perform(put("/delivery-instructions/{deliveryNo}", "MW2312000001")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -139,7 +139,7 @@ public class DeliveryInstructionControllerTest {
   @Transactional
   void deleteDeliveryInstructionTest() throws Exception {
     mockMvc.perform(delete("/delivery-instructions/{deliveryNo}/{instructionNo}/{productNo}",
-                    "MW2312000001", "WO2312000002", 2L)
+                    "MW2312000002", "WO2312000002", 5L)
                     .contentType(MediaType.APPLICATION_JSON)
                     .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + tokenDto.getAccessToken()))
             .andExpect(status().isNoContent())

@@ -68,7 +68,7 @@ class TodoControllerTest {
         .addFilters(new CharacterEncodingFilter("UTF-8", true))
         .addFilters(new JwtFilter(tokenProvider))
         .build();
-    tokenDto = tokenService.getToken("admin", "1234", 200001L);
+    tokenDto = tokenService.getToken("m1", "1234", 200002L);
   }
 
   @Test
