@@ -37,7 +37,7 @@ public class InitEmployeeDate {
             "01094375112", "awfvvbf654@google.com"),
         new InsertEmployeeDto(200009L, "member8", "123456", "한지민", EmployeeRole.ROLE_MEMBER,
             "01063216912", "awdawgjki44@google.com"),
-        new InsertEmployeeDto(2000010L, "member9", "123456", "이지훈", EmployeeRole.ROLE_MEMBER,
+        new InsertEmployeeDto(200010L, "member9", "123456", "이지훈", EmployeeRole.ROLE_MEMBER,
             "01042118912", "esfse1111@google.com"));
     employeeList.forEach(employee -> employeeRepository.insertEmployee(
         employee.encodingPassword(passwordEncoder)));
