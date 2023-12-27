@@ -117,8 +117,13 @@
     FROM project.employee
     WHERE employee_no = #{employeeNo};
   </select>
+  <select id="findAllEmployeeList" resultType="com.douzon.blooming.employee.dto.response.EmployeeListDto">
+    SELECT *
+    FROM project.employee
+    WHERE hide = 0
+  </select>
 
-  <insert id="addImageByImageNameAndEmployeeNo">
+    <insert id="addImageByImageNameAndEmployeeNo">
     UPDATE project.employee SET img = #{imageName} WHERE employee_no = #{employeeNo}
   </insert>
 </mapper>

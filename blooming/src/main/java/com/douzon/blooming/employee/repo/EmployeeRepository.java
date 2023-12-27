@@ -4,10 +4,8 @@ import com.douzon.blooming.employee.dto.request.AuthUpdateEmployeeDto;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
-import com.douzon.blooming.employee.dto.response.EmployeeDto;
-import com.douzon.blooming.employee.dto.response.EmployeeListDto;
-import com.douzon.blooming.employee.dto.response.FindEmployeeDto;
-import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
+import com.douzon.blooming.employee.dto.response.*;
+
 import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
@@ -50,4 +48,6 @@ public interface EmployeeRepository {
   String findEmployeeImageByEmployeeNo(@Param("employeeNo") Long employeeNo);
 
   void addImageByImageNameAndEmployeeNo(@Param("imageName") String imageName,@Param("employeeNo") Long employeeNo);
+
+  List<EmployeeListDto> findAllEmployeeList();
 }

@@ -6,8 +6,11 @@ import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
 import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
+import com.douzon.blooming.employee.dto.response.AllEmployeeListDto;
 import com.douzon.blooming.employee.dto.response.EmployeeListDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
+
+import java.util.List;
 
 public interface EmployeeService {
 
@@ -29,4 +32,6 @@ public interface EmployeeService {
   void removeEmployee(Long employeeNo);
 
   Long findEmployeeNoByDto(LoginEmployeeDto loginEmployeeDto);
+
+  AllEmployeeListDto getAllEmployeeList();
 }
