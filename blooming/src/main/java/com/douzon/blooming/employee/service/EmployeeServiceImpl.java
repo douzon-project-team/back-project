@@ -6,6 +6,7 @@ import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.InsertEmployeeDto;
 import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
+import com.douzon.blooming.employee.dto.response.AllEmployeeListDto;
 import com.douzon.blooming.employee.dto.response.EmployeeListDto;
 import com.douzon.blooming.employee.dto.response.FindEmployeeDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
@@ -94,5 +95,10 @@ public class EmployeeServiceImpl implements EmployeeService {
       throw new NotFoundEmployeeException("아이디 또는 비밀번호가 틀렸습니다.");
     }
     return dto.getEmployeeNo();
+  }
+
+  @Override
+  public AllEmployeeListDto getAllEmployeeList() {
+    return new AllEmployeeListDto(employeeRepository.findAllEmployeeList());
   }
 }
