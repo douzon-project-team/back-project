@@ -6,6 +6,7 @@ import com.douzon.blooming.auth.dto.response.TokenDto;
 import com.douzon.blooming.employee.dto.request.EmployeeSearchDto;
 import com.douzon.blooming.employee.dto.request.LoginEmployeeDto;
 import com.douzon.blooming.employee.dto.request.UpdateEmployeeDto;
+import com.douzon.blooming.employee.dto.response.AllEmployeeListDto;
 import com.douzon.blooming.employee.dto.response.EmployeeListDto;
 import com.douzon.blooming.employee.dto.response.ResponseEmployeeDto;
 import com.douzon.blooming.employee.service.EmployeeImageService;
@@ -74,6 +75,11 @@ public class EmployeeController {
   public ResponseEntity<PageDto<EmployeeListDto>> findEmployeeList(
       @ModelAttribute EmployeeSearchDto searchDto) {
     return ResponseEntity.ok(employeeService.getEmployeeList(searchDto));
+  }
+
+  @GetMapping("/list/all")
+  public ResponseEntity<AllEmployeeListDto> findAllEmployeeList() {
+    return ResponseEntity.ok(employeeService.getAllEmployeeList());
   }
 
   @PutMapping("/{employeeNo}")

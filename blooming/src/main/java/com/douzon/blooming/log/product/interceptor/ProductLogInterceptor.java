@@ -26,7 +26,10 @@ public class ProductLogInterceptor extends AbstractLogInterceptor<ProductLogDto>
         .getAuthentication().getPrincipal();
     String target = getTarget(req);
     String message = target.isBlank()? "새로운 품목을 " :  "품목(품목번호: " + target + ")을 ";
-    kafkaProducerService.sendCRUDEvent(employeeDetails.getEmployeeNo() + "("+employeeDetails.getName()+ "), " + message + getVerb(req));
+    Runnable runnable = () -> kafkaProducerService.sendCRUDEvent(employeeDetails.getEmployeeNo() + "("+employeeDetails.getName()+ "), " + message + getVerb(req));
+    try {
+      new Thread(runnable).start();
+    }catch (Exception ignore) {}
     return ProductLogDto.builder()
         .ipAddress(getClientIp(req))
         .productNo(target.isBlank()?null: Long.valueOf(target))
